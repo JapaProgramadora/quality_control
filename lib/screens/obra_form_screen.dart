@@ -15,10 +15,9 @@ class _ObraFormPageState extends State<ObraFormPage> {
 
 
   final _formKey = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final _formData = <String, Object>{};
 
   bool _isLoading = false;
-
 
   @override
   void didChangeDependencies() {
@@ -39,7 +38,6 @@ class _ObraFormPageState extends State<ObraFormPage> {
     }
   }
 
-
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -58,7 +56,7 @@ class _ObraFormPageState extends State<ObraFormPage> {
       ).saveProduct(_formData);
 
       Navigator.of(context).pop();
-      print(_formData);
+      print(_formData.toString());
     } catch (error) {
       print(error);
       await showDialog<void>(
@@ -78,6 +76,8 @@ class _ObraFormPageState extends State<ObraFormPage> {
       setState(() => _isLoading = false);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

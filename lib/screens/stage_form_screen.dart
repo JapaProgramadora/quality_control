@@ -1,14 +1,10 @@
-import 'package:control/models/obra_list.dart';
 import 'package:control/models/stage.dart';
-import 'package:control/models/stage_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/obra.dart';
 import '../models/stage_list.dart';
 
 class StageFormScreen extends StatefulWidget {
-
   const StageFormScreen();
 
   @override
@@ -16,8 +12,8 @@ class StageFormScreen extends StatefulWidget {
 }
 
 class _StageFormScreenState extends State<StageFormScreen> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formData = <String, Object>{};
 
   bool _isLoading = false;
 
@@ -27,11 +23,17 @@ class _StageFormScreenState extends State<StageFormScreen> {
     super.didChangeDependencies();
     final arg = ModalRoute.of(context)?.settings.arguments;
 
-    if (_formData.isEmpty) {
+    if(arg != null){
+      final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
+      
+      if (listStages.isEmpty) {
+        _formData['matchmakingId'] = arg.toString();
+      }
+      else{        
+        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+        final Stage product = listStages.first;
+        
 
-      if (arg != null) {
-        final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-        final Stage product = provider[0];
         print(product.id);
         print(product.matchmakingId);
 
@@ -39,15 +41,10 @@ class _StageFormScreenState extends State<StageFormScreen> {
         _formData['stage'] = product.stage;
         _formData['matchmakingId'] = product.matchmakingId;
       }
-    }else{
-      if(arg != null){
-        _formData['matchmakingId'] = arg.toString();
-      }
     }
   }
 
   Future<void> _submitForm() async {
-
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -92,7 +89,6 @@ class _StageFormScreenState extends State<StageFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Item'),

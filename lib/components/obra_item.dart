@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/obra.dart';
 
+//ImagePicker()
 class ObraItem extends StatelessWidget {
 
   @override
@@ -33,6 +34,16 @@ class ObraItem extends StatelessWidget {
                   ),
                 ),
               ),
+              // Container(
+              //   color: Colors.green,
+              //   child: Row(
+              //     children: const [
+              //       Checkbox(value: true, onChanged: null),
+              //       Text('Completo'),
+              //       SizedBox(),
+              //     ],
+              //   ),
+              // )
               Positioned(
                 top: 5,
                 child: Consumer<Obra>(
