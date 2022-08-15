@@ -1,4 +1,6 @@
 
+// ignore_for_file: equal_keys_in_map
+
 import 'package:control/models/obra_list.dart';
 import 'package:control/models/stages_item_list.dart';
 import 'package:control/screens/home_screen.dart';
@@ -33,8 +35,8 @@ class MyApp extends StatelessWidget {
         title: 'Controle de Qualidade',
         theme: ThemeData(
           primarySwatch: Colors.purple,
-        ),
-        home: HomeScreen(),
+        ),        
+        home: const HomeScreen(),
         debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.OBRA_FORM_SCREEN: (ctx) => const ObraFormPage(),

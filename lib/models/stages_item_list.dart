@@ -9,7 +9,7 @@ import '../utils/constants.dart';
 import 'stage_item.dart';
 
 class StagesList with ChangeNotifier {
-  List<Items> _items = [];
+  final List<Items> _items = [];
 
   List<Items> get items {
     return [..._items];
@@ -76,7 +76,7 @@ class StagesList with ChangeNotifier {
       ),
     );
 
-    final id = jsonDecode(response.body)['item'];
+    final id = jsonDecode(response.body)['name'];
     _items.add(Items(
       id: id,
       item: product.item,

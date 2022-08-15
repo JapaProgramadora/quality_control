@@ -1,9 +1,9 @@
-import 'package:control/models/stage.dart';
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
+
 import 'package:control/models/stages_item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/stage_list.dart';
 
 class StageItemForm extends StatefulWidget {
   const StageItemForm();
@@ -155,9 +155,9 @@ class _StageItemFormState extends State<StageItemForm> {
                     ),
                     TextFormField(
                       initialValue: _formData['tolerance']?.toString(),
-                      decoration: InputDecoration(labelText: 'Tolerância'),
+                      decoration: const InputDecoration(labelText: 'Tolerância'),
                       textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                          decimal: true,
                       ),
                       onSaved: (tolerance) =>

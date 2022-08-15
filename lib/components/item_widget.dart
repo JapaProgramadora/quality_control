@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 
 class ItemWidget extends StatefulWidget {
@@ -20,13 +19,13 @@ class _ItemWidgetState extends State<ItemWidget> {
     return Card(
       child: Column(
         children: [
-          ListTile(
-            title: Text('Test'),
+          ListTile(            
+            title: const Text('Test'),
             //subtitle: Text(
               //DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
             //),
             trailing: IconButton(
-              icon: Icon(Icons.expand_more),
+              icon: const Icon(Icons.expand_more),
               onPressed: () {
                 setState(() {
                   _expanded = !_expanded;
