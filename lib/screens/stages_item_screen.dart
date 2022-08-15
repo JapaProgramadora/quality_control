@@ -1,6 +1,9 @@
 
 import 'package:control/components/stage_grid.dart';
+import 'package:control/components/stage_item_grid.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/app_routes.dart';
 
 
 class StagesItemScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
           
   @override
   Widget build(BuildContext context) {
+    final id = ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,12 +27,14 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
         title: const Text('Estágios da Obra'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
+            },
             icon: const Icon(Icons.add),
             ),
         ],
       ),
-      body: Text('hEllo'),
+      body: StageItemGrid(matchmakingId: id),
     );
   }
 }

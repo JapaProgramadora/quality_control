@@ -19,11 +19,11 @@ class StagesList with ChangeNotifier {
     return _items.length;
   }
 
-  Future<void> loaditems(String matchmakingId) async {
+  Future<void> loadItems(String matchmakingId) async {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.STAGE_BASE_URL}.json'),
+      Uri.parse('${Constants.ITEM_BASE_URL}.json'),
     );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -44,7 +44,7 @@ class StagesList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveProduct(Map<String, Object> data) {
+  Future<void> saveItem(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 
     final product = Items(
@@ -56,15 +56,15 @@ class StagesList with ChangeNotifier {
     );
 
     if (hasId) {
-      return updateProduct(product);
+      return updateItem(product);
     } else {
-      return addProduct(product);
+      return addItem(product);
     }
   }
 
-  Future<void> addProduct(Items product) async {
+  Future<void> addItem(Items product) async {
     final response = await http.post(
-      Uri.parse('${Constants.STAGE_BASE_URL}.json'),
+      Uri.parse('${Constants.ITEM_BASE_URL}.json'),
       body: jsonEncode(
         {
           "item": product.item,
@@ -76,7 +76,7 @@ class StagesList with ChangeNotifier {
       ),
     );
 
-    final id = jsonDecode(response.body)['stage'];
+    final id = jsonDecode(response.body)['item'];
     _items.add(Items(
       id: id,
       item: product.item,
@@ -88,12 +88,12 @@ class StagesList with ChangeNotifier {
   }
 
  
-  Future<void> updateProduct(Items product) async {
+  Future<void> updateItem(Items product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.STAGE_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.ITEM_BASE_URL}/${product.id}.json'),
         body: jsonEncode(
           {
             "item": product.item,
@@ -108,7 +108,7 @@ class StagesList with ChangeNotifier {
     }
   }
 
-  Future<void> removeProduct(Items product) async {
+  Future<void> removeItem(Items product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
@@ -117,7 +117,7 @@ class StagesList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.STAGE_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.ITEM_BASE_URL}/${product.id}.json'),
       );
 
       if (response.statusCode >= 400) {

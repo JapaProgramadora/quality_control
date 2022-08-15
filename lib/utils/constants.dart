@@ -3,4 +3,6 @@ class Constants {
       'https://quality-control-c49d8-default-rtdb.firebaseio.com/obras';
   static const STAGE_BASE_URL =
       'https://quality-control-c49d8-default-rtdb.firebaseio.com/stages';
+  static const ITEM_BASE_URL =
+      'https://quality-control-c49d8-default-rtdb.firebaseio.com/itens';    
 }

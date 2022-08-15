@@ -7,18 +7,20 @@ import '../models/stage_list.dart';
 import '../utils/app_routes.dart';
 
 class StageItem extends StatelessWidget {
+  final String matchmakingId;
   
-  const StageItem();
+  const StageItem(this.matchmakingId);
 
   @override
   Widget build(BuildContext context) {
     final stage = Provider.of<Stage>(context, listen: false);
     String teste = stage.id.toString();
+    print('here we are in stage item');
     print(teste);
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN);
+        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN, arguments: teste);
       },
       child: ListTile(
         leading: CircleAvatar(
