@@ -14,12 +14,7 @@ class StageItemGrid extends StatelessWidget {
     final provider = Provider.of<StagesList>(context);
     final List<Items> item = provider.testItems(matchmakingId);
 
-    _editItem(id) async {
-      await Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: {
-        'id' : id,
-        'matchmakingId' : matchmakingId,
-      });
-    }
+   
     
     return Padding(
         padding: const EdgeInsets.all(8),
@@ -27,12 +22,7 @@ class StageItemGrid extends StatelessWidget {
           itemCount: item.length,
           itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
             value: item[i],
-            child: Column(
-              children: [                
-                const ItemWidget(),
-                IconButton(onPressed: () async => _editItem(item[i].id), icon: const Icon(Icons.edit))
-              ],
-            ),
+            child: const ItemWidget(),
           ),
         ),
     );

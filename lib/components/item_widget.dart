@@ -50,6 +50,8 @@ class _ItemWidgetState extends State<ItemWidget> {
               ),
               height: (7 * 25) + 10,
               child: ListView(
+                shrinkWrap: true,
+                
                 children: [
                   const Text(
                       'Método:',
@@ -136,7 +138,10 @@ class _ItemWidgetState extends State<ItemWidget> {
                           icon: const Icon(Icons.edit),
                           color: Theme.of(context).colorScheme.primary,
                           onPressed: () {
-                            Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: item.id);
+                            Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: {
+                              'id' : item.id,
+                              'matchmakingId' : item.matchmakingId
+                            });
                           },
                         ),
                         IconButton(
