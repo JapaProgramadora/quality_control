@@ -22,8 +22,8 @@ class StagesList with ChangeNotifier {
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
 
-  List<Items> getSpecificItem(matchId){
-    return _items.where((prod) => prod.matchmakingId == matchId).toList();
+  Items getSpecificItem(matchId){
+    return _items.where((prod) => prod.id == matchId).toList().first;
   }
 
   Future<void> loadItems() async {
@@ -57,7 +57,7 @@ class StagesList with ChangeNotifier {
     final product = Items(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       item: data['item'] as String,
-      date: data['date'] as DateTime,
+      date: data['date'] == null ? DateTime.now() : data['date'] as DateTime,
       tolerance: data['tolerance'] as double,
       method: data['method'] as String,
       description: data['description'] as String,

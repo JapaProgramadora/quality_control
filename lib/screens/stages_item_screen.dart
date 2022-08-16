@@ -43,10 +43,13 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: id);
+              //para add vc passar
+              Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: {
+                'matchmakingId' : id
+              });
             },
             icon: const Icon(Icons.add),
-            ),
+          ),
         ],
       ),
       body: StageItemGrid(matchmakingId: id),

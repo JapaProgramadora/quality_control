@@ -45,25 +45,25 @@ class _StageItemFormState extends State<StageItemForm> {
     final arg = ModalRoute.of(context)?.settings.arguments;
 
     if(arg != null){
-      final List<Items> listItems = Provider.of<StagesList>(context).getSpecificItem(arg);      
       
-      if (listItems.isEmpty) {
-        _formData['matchmakingId'] = arg.toString();
-      }
-      else{        
-        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-        final Items product = listItems.first;
+      if((arg as Map)['id'] != null){
+        final Items product = Provider.of<StagesList>(context).getSpecificItem(arg['id']);
 
         _formData['id'] = product.id;
         _formData['item'] = product.item;
         _formData['description'] = product.description;
         _formData['method'] = product.method;
         _formData['tolerance'] = product.tolerance;
-         _formData['date'] = product.date;
+        _formData['date'] = product.date;
         _formData['matchmakingId'] = product.matchmakingId;
+      
+      }
+      else{
+        _formData['matchmakingId'] = arg['matchmakingId'];
       }
     }
   }
+  
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -203,7 +203,7 @@ class _StageItemFormState extends State<StageItemForm> {
                         return null;
                       },
                     ),
-                    Container(
+                    SizedBox(
                       height: 70,
                       child: Row(
                         children: <Widget> [
@@ -215,7 +215,7 @@ class _StageItemFormState extends State<StageItemForm> {
                                 ),
                             ),
                             TextButton(
-                              child: Text('Selecionar Data'),
+                              child: const Text('Selecionar Data'),
                               onPressed: _showDatePicker,
                             )
                         ],

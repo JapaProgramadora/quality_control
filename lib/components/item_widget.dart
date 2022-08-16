@@ -51,7 +51,7 @@ class _ItemWidgetState extends State<ItemWidget> {
               height: (7 * 25) + 10,
               child: ListView(
                 children: [
-                  Text(
+                  const Text(
                       'Método:',
                       style: TextStyle(
                         fontSize: 18,
@@ -60,12 +60,12 @@ class _ItemWidgetState extends State<ItemWidget> {
                     ),
                     Text(
                       item.method,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Tolerância:',
                       style: TextStyle(
                         fontSize: 18,
@@ -74,12 +74,12 @@ class _ItemWidgetState extends State<ItemWidget> {
                     ),
                     Text(
                       item.tolerance.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Descrição:',
                       style: TextStyle(
                         fontSize: 18,
@@ -88,25 +88,25 @@ class _ItemWidgetState extends State<ItemWidget> {
                     ),
                     Text(
                       item.description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 70,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
+                          const Text(
                             'Satisfatório:',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Padding(padding: EdgeInsets.all(60)),
-                          Text('Sim:'),
+                          const Padding(padding: EdgeInsets.all(60)),
+                          const Text('Sim:'),
                           Consumer<Items>(
                             builder: (ctx, item, _) => IconButton(
                               onPressed: () {
@@ -114,9 +114,8 @@ class _ItemWidgetState extends State<ItemWidget> {
                               }, 
                               icon: Icon(item.isGood == true? Icons.check_box : Icons.check_box_outline_blank )
                             ),
-                          ),
-                    
-                          Text('Não:'),
+                          ),                    
+                          const Text('Não:'),
                           Consumer<Items>(
                             builder: (ctx, item, _) => IconButton(
                               onPressed: () {
@@ -134,28 +133,28 @@ class _ItemWidgetState extends State<ItemWidget> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.edit),
+                          icon: const Icon(Icons.edit),
                           color: Theme.of(context).colorScheme.primary,
                           onPressed: () {
                             Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: item.id);
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: const Icon(Icons.delete),
                           color: Theme.of(context).errorColor,
                           onPressed: () {
                             showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: Text('Excluir Item?'),
-                                content: Text('Tem certeza?'),
+                                title: const Text('Excluir Item?'),
+                                content: const Text('Tem certeza?'),
                                 actions: [
                                   TextButton(
-                                    child: Text('Não'),
+                                    child: const Text('Não'),
                                     onPressed: () => Navigator.of(ctx).pop(false),
                                   ),
                                   TextButton(
-                                    child: Text('Sim'),
+                                    child: const Text('Sim'),
                                     onPressed: () => Navigator.of(ctx).pop(true),
                                   ),
                                 ],
