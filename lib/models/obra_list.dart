@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
 
-class ObraList with ChangeNotifier {
-  List<Obra> _items = [];
+class ObraList with ChangeNotifier {  
+  final List<Obra> _items = [];
 
   List<Obra> get items => [..._items];
 

@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: constant_identifier_names, unused_field
+
 import 'package:control/components/obra_grid.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';

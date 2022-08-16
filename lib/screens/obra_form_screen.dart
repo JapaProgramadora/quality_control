@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:control/models/obra_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

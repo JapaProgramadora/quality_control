@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -7,8 +9,8 @@ import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
 
-class StageList with ChangeNotifier {
-  List<Stage> _items = [];
+class StageList with ChangeNotifier {  
+  final List<Stage> _items = [];
 
   List<Stage> get items => [..._items];
 

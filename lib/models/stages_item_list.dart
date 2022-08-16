@@ -9,7 +9,7 @@ import '../utils/constants.dart';
 import 'stage_item.dart';
 
 class StagesList with ChangeNotifier {
-  List<Items> _items = [];
+  final List<Items> _items = [];
 
   List<Items> get items {
     return [..._items];

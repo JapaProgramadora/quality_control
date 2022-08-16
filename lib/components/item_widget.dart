@@ -34,7 +34,7 @@ class _ItemWidgetState extends State<ItemWidget> {
               DateFormat('dd/MM/yyyy hh:mm').format(item.date),
             ),
             trailing: IconButton(
-              icon: Icon(Icons.expand_more),
+              icon: const Icon(Icons.expand_more),
               onPressed: () {
                 setState(() {
                   _expanded = !_expanded;

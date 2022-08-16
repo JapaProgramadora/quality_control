@@ -1,4 +1,6 @@
 
+// ignore_for_file: unused_field
+
 import 'package:control/components/stage_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +18,6 @@ class ObraStagesScreen extends StatefulWidget {
 }
 
 class _ObraStagesScreenState extends State<ObraStagesScreen> {
-
   bool _isLoading = true;
 
   @override

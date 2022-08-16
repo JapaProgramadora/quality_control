@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';

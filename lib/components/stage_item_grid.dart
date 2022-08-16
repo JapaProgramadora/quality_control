@@ -6,8 +6,6 @@ import 'package:control/models/stages_item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'stage_item.dart';
-
 class StageItemGrid extends StatelessWidget {
   final String matchmakingId;
   const StageItemGrid({ Key? key, required this.matchmakingId}) : super(key: key);
@@ -23,7 +21,7 @@ class StageItemGrid extends StatelessWidget {
           itemCount: item.length,
           itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
             value: item[i],
-            child: ItemWidget(),
+            child: const ItemWidget(),
           ),
         ),
     );
