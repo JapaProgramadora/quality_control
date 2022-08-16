@@ -91,7 +91,7 @@ class _StageFormScreenState extends State<StageFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Formulário de Item'),
+        title: const Text('Formulário de Estágio'),
         actions: [
           IconButton(
             onPressed: _submitForm,

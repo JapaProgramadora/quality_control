@@ -22,7 +22,6 @@ class StageList with ChangeNotifier {
   }
 
   List<Stage> getSpecificStage(matchId){
-    print(_items.where((p) => p.id == matchId).toList());
     return _items.where((p) => p.id == matchId).toList();
   }
 

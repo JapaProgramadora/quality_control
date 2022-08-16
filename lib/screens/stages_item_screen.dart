@@ -2,7 +2,9 @@
 import 'package:control/components/stage_grid.dart';
 import 'package:control/components/stage_item_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/stages_item_list.dart';
 import '../utils/app_routes.dart';
 
 
@@ -16,6 +18,21 @@ class StagesItemScreen extends StatefulWidget {
 
 class _StagesItemScreenState extends State<StagesItemScreen> {
 
+  bool _isLoading = true;
+
+  @override
+    void initState() {
+      super.initState();
+      Provider.of<StagesList>(
+        context,
+        listen: false,
+      ).loadItems().then((value) {
+        setState(() {
+        _isLoading = false;
+        });
+      });
+  }
+
           
   @override
   Widget build(BuildContext context) {
@@ -24,11 +41,11 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Estágios da Obra'),
+        title: const Text('Controle de Qualidade'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
+              Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: id);
             },
             icon: const Icon(Icons.add),
             ),

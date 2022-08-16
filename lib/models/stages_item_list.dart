@@ -18,8 +18,15 @@ class StagesList with ChangeNotifier {
   int get itemsCount {
     return _items.length;
   }
+  List<Items> testItems(matchId){
+    return _items.where((prod) => prod.matchmakingId == matchId).toList();
+  }
 
-  Future<void> loadItems(String matchmakingId) async {
+  List<Items> getSpecificItem(matchId){
+    return _items.where((prod) => prod.matchmakingId == matchId).toList();
+  }
+
+  Future<void> loadItems() async {
     _items.clear();
 
     final response = await http.get(
@@ -28,18 +35,18 @@ class StagesList with ChangeNotifier {
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
-      if (matchmakingId == productData['matchmakingId']){
         _items.add(
-        Items(
-          id: productId,
-          item: productData['item'],
-          method: productData['method'],
-          tolerance: productData['tolerance'],
-          isGood: productData['isGood'],
-          matchmakingId: productData['matchmakingId'],
-        ),
+          Items(
+            id: productId,
+            date: DateTime.parse(productData['date']),
+            item: productData['item'],
+            method: productData['method'],
+            tolerance: productData['tolerance'],
+            isGood: productData['isGood'],
+            matchmakingId: productData['matchmakingId'],
+            description: productData['description'],
+          ),
       );
-      }
     });
     notifyListeners();
   }
@@ -50,8 +57,10 @@ class StagesList with ChangeNotifier {
     final product = Items(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       item: data['item'] as String,
+      date: data['date'] as DateTime,
       tolerance: data['tolerance'] as double,
       method: data['method'] as String,
+      description: data['description'] as String,
       matchmakingId: data['matchmakingId'] as String,
     );
 
@@ -63,6 +72,7 @@ class StagesList with ChangeNotifier {
   }
 
   Future<void> addItem(Items product) async {
+    final date = product.date;
     final response = await http.post(
       Uri.parse('${Constants.ITEM_BASE_URL}.json'),
       body: jsonEncode(
@@ -71,17 +81,21 @@ class StagesList with ChangeNotifier {
           "tolerance": product.tolerance,
           "method": product.method,
           "isGood": product.isGood,
+          "description": product.description,
+          'date': date.toIso8601String(),
           "matchmakingId": product.matchmakingId,
         },
       ),
     );
 
-    final id = jsonDecode(response.body)['item'];
+    final id = jsonDecode(response.body)['name'];
     _items.add(Items(
       id: id,
+      date: product.date,
       item: product.item,
       tolerance: product.tolerance,
       method: product.method,
+      description: product.description,
       matchmakingId: product.matchmakingId,
     ));
     notifyListeners();
@@ -98,6 +112,7 @@ class StagesList with ChangeNotifier {
           {
             "item": product.item,
             "method": product.method,
+            "description": product.description,
             "tolerance": product.tolerance,
           },
         ),

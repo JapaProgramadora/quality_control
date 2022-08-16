@@ -15,8 +15,6 @@ class StageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final stage = Provider.of<Stage>(context, listen: false);
     String teste = stage.id.toString();
-    print('here we are in stage item');
-    print(teste);
 
     return InkWell(
       onTap: () {
@@ -45,7 +43,7 @@ class StageItem extends StatelessWidget {
                   showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: Text('Excluir Produto?'),
+                      title: Text('Excluir Estágio?'),
                       content: Text('Tem certeza?'),
                       actions: [
                         TextButton(

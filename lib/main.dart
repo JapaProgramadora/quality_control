@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.OBRA_STAGES_SCREEN: (ctx) => const ObraStagesScreen(),
           AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageFormScreen(),
           AppRoutes.STAGES_ITEM_SCREEN: (ctx) => const StagesItemScreen(),
-          AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageItemForm(),
+          AppRoutes.ITEM_FORM_SCREEN: (ctx) => const StageItemForm(),
         },
       ),
     );

@@ -1,8 +1,10 @@
 import 'package:control/models/stage.dart';
 import 'package:control/models/stages_item_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../models/stage_item.dart';
 import '../models/stage_list.dart';
 
 class StageItemForm extends StatefulWidget {
@@ -15,35 +17,53 @@ class StageItemForm extends StatefulWidget {
 class _StageItemFormState extends State<StageItemForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
+  DateTime _selectedDate = DateTime.now(); 
 
   bool _isLoading = false;
 
+  void _showDatePicker(){
+    showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(), 
+      firstDate: DateTime(2019), 
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      setState(() {
+        if (pickedDate == null){
+          return;
+        }
+        _selectedDate = pickedDate;
+        _formData['date'] = _selectedDate;
+      });
+    });
+  }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final arg = ModalRoute.of(context)?.settings.arguments;
 
-  //   if(arg != null){
-  //     final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arg = ModalRoute.of(context)?.settings.arguments;
+
+    if(arg != null){
+      final List<Items> listItems = Provider.of<StagesList>(context).getSpecificItem(arg);      
       
-  //     if (listStages.isEmpty) {
-  //       _formData['matchmakingId'] = arg.toString();
-  //     }
-  //     else{        
-  //       // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-  //       final Stage product = listStages.first;
-        
+      if (listItems.isEmpty) {
+        _formData['matchmakingId'] = arg.toString();
+      }
+      else{        
+        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+        final Items product = listItems.first;
 
-  //       print(product.id);
-  //       print(product.matchmakingId);
-
-  //       _formData['id'] = product.id;
-  //       _formData['stage'] = product.stage;
-  //       _formData['matchmakingId'] = product.matchmakingId;
-  //     }
-  //   }
-  // }
+        _formData['id'] = product.id;
+        _formData['item'] = product.item;
+        _formData['description'] = product.description;
+        _formData['method'] = product.method;
+        _formData['tolerance'] = product.tolerance;
+         _formData['date'] = product.date;
+        _formData['matchmakingId'] = product.matchmakingId;
+      }
+    }
+  }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -90,8 +110,6 @@ class _StageItemFormState extends State<StageItemForm> {
 
   @override
   Widget build(BuildContext context) {
-    final arg = ModalRoute.of(context)?.settings.arguments;
-    _formData['matchmakingId'] = arg.toString();
 
     return Scaffold(
       appBar: AppBar(
@@ -171,6 +189,37 @@ class _StageItemFormState extends State<StageItemForm> {
                         }
                         return null;
                       },
+                    ),
+                    TextFormField(
+                      initialValue: _formData['description']?.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'Anotações (Opcional)',
+                      ),
+                      textInputAction: TextInputAction.next,
+                      maxLines: 5,
+                      onSaved: (description) => _formData['description'] = description ?? '',
+                      validator: (_description) {
+                        final description = _description ?? '';
+                        return null;
+                      },
+                    ),
+                    Container(
+                      height: 70,
+                      child: Row(
+                        children: <Widget> [
+                            Expanded(
+                              child: Text(
+                                _selectedDate == null 
+                                ? 'Nenhuma data selecionada!'
+                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
+                                ),
+                            ),
+                            TextButton(
+                              child: Text('Selecionar Data'),
+                              onPressed: _showDatePicker,
+                            )
+                        ],
+                      ),
                     ),
                   ],
                 ),
