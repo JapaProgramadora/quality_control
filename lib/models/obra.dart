@@ -9,7 +9,6 @@ class Obra with ChangeNotifier {
   final String id;
   final String name;
   final String engineer;
-  final String team;
   final String owner;
   final String address;
   bool isIncomplete;
@@ -18,7 +17,6 @@ class Obra with ChangeNotifier {
     required this.id,
     required this.name,
     required this.engineer,
-    required this.team,
     required this.owner,
     required this.address,
     this.isIncomplete = true,

@@ -33,7 +33,6 @@ class _ObraFormPageState extends State<ObraFormPage> {
         _formData['id'] = product.id;
         _formData['name'] = product.name;
         _formData['engineer'] = product.engineer;
-        _formData['team'] = product.team;
         _formData['owner'] = product.owner;
         _formData['address'] = product.address;
       }
@@ -161,28 +160,6 @@ class _ObraFormPageState extends State<ObraFormPage> {
 
                         if (owner.trim().length < 10) {
                           return 'Proprietário precisa no mínimo de 10 letras.';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _formData['team']?.toString(),
-                      decoration: const InputDecoration(labelText: 'Equipe'),
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 3,
-                      onSaved: (team) =>
-                          _formData['team'] = team ?? '',
-                      validator: (_team) {
-                        final team = _team ?? '';
-
-                        if (team.trim().isEmpty) {
-                          return 'Equipe é obrigatória.';
-                        }
-
-                        if (team.trim().length < 10) {
-                          return 'Equipe precisa no mínimo de 10 letras.';
                         }
 
                         return null;

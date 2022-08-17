@@ -33,7 +33,6 @@ class ObraList with ChangeNotifier {
           id: productId,
           name: productData['name'],
           engineer: productData['engineer'],
-          team: productData['team'],
           address: productData['address'],
           owner: productData['owner'],
         ),
@@ -49,7 +48,6 @@ class ObraList with ChangeNotifier {
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
       engineer: data['engineer'] as String,
-      team: data['team'] as String,
       address: data['address'] as String,
       owner: data['owner'] as String,
     );
@@ -68,7 +66,6 @@ class ObraList with ChangeNotifier {
         {
           "name": product.name,
           "engineer": product.engineer,
-          "team": product.team,
           "owner": product.owner,
           "address": product.address,
           "isIncomplete": product.isIncomplete,
@@ -81,7 +78,6 @@ class ObraList with ChangeNotifier {
       id: id,
       name: product.name,
       engineer: product.engineer,
-      team: product.team,
       owner: product.owner,
       address: product.address,
     ));
@@ -101,7 +97,6 @@ class ObraList with ChangeNotifier {
             "engineer": product.engineer,
             "address": product.address,
             "owner": product.owner,
-            "team": product.team,
           },
         ),
       );

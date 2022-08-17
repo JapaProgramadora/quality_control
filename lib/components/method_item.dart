@@ -1,31 +1,31 @@
 
 
-import 'package:control/models/stage.dart';
+import 'package:control/models/method.dart';
+import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/stage_list.dart';
 import '../utils/app_routes.dart';
 
-class StageItem extends StatelessWidget {
+class MethodItem extends StatelessWidget {
   final String matchmakingId;
   
-  const StageItem(this.matchmakingId);
+  MethodItem(this.matchmakingId);
 
   @override
   Widget build(BuildContext context) {
-    final stage = Provider.of<Stage>(context, listen: false);
-    String teste = stage.id.toString();
+    final method = Provider.of<Method>(context, listen: false);
+    String id = method.id.toString();
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN, arguments: teste);
+        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN, arguments: id);
       },
       child: ListTile(
         leading: const CircleAvatar(
           backgroundColor: Colors.purple,
         ),
-        title: Text(stage.stage),
+        title: Text(method.method),
         trailing: SizedBox(
           width: 100,
           child: Row(
@@ -34,7 +34,7 @@ class StageItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: teste);
+                  Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
                 },
               ),
               IconButton(
@@ -44,8 +44,8 @@ class StageItem extends StatelessWidget {
                   showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Excluir Método?'),
-                      content: const Text('Tem certeza?'),
+                      title: Text('Excluir Estágio?'),
+                      content: Text('Tem certeza?'),
                       actions: [
                         TextButton(
                           child: const Text('Não'),
@@ -59,7 +59,7 @@ class StageItem extends StatelessWidget {
                     ),
                   ).then((value) async {
                     if (value ?? false){
-                      await Provider.of<StageList>(context, listen: false).removeStage(stage);
+                      await Provider.of<MethodList>(context, listen: false).removeMethod(method);
                     }
                   });
                 },

@@ -1,10 +1,12 @@
+import 'package:control/components/method_grid.dart';
+import 'package:control/models/method_list.dart';
 import 'package:control/models/stage_item.dart';
-import 'package:control/models/stages_item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/app_routes.dart';
+
 
 
 class ItemWidget extends StatefulWidget {
@@ -51,128 +53,14 @@ class _ItemWidgetState extends State<ItemWidget> {
               height: (7 * 25) + 10,
               child: ListView(
                 shrinkWrap: true,
-                
                 children: [
-                  const Text(
-                      'Método:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    MethodGrid(matchmakingId: item.id),
+                    IconButton(onPressed: () {
+                        Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: item.id);
+                      }, 
+                      icon: Icon(Icons.add)
                     ),
-                    Text(
-                      item.method,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const Text(
-                      'Tolerância:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      item.tolerance.toString(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const Text(
-                      'Descrição:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      item.description,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 70,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Satisfatório:',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.all(60)),
-                          const Text('Sim:'),
-                          Consumer<Items>(
-                            builder: (ctx, item, _) => IconButton(
-                              onPressed: () {
-                                item.toggleSatisfaction();
-                              }, 
-                              icon: Icon(item.isGood == true? Icons.check_box : Icons.check_box_outline_blank )
-                            ),
-                          ),                    
-                          const Text('Não:'),
-                          Consumer<Items>(
-                            builder: (ctx, item, _) => IconButton(
-                              onPressed: () {
-                                item.toggleSatisfaction();
-                              }, 
-                              icon: Icon(item.isGood == false? Icons.check_box : Icons.check_box_outline_blank )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          color: Theme.of(context).colorScheme.primary,
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: {
-                              'id' : item.id,
-                              'matchmakingId' : item.matchmakingId
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Theme.of(context).errorColor,
-                          onPressed: () {
-                            showDialog<bool>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('Excluir Item?'),
-                                content: const Text('Tem certeza?'),
-                                actions: [
-                                  TextButton(
-                                    child: const Text('Não'),
-                                    onPressed: () => Navigator.of(ctx).pop(false),
-                                  ),
-                                  TextButton(
-                                    child: const Text('Sim'),
-                                    onPressed: () => Navigator.of(ctx).pop(true),
-                                  ),
-                                ],
-                              ),
-                            ).then((value) async {
-                              if (value ?? false){
-                                await Provider.of<StagesList>(context, listen: false).removeItem(item);
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    )
+
                   ] 
                 ),
               ),

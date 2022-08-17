@@ -1,19 +1,19 @@
 
 // ignore_for_file: use_key_in_widget_constructors
 
-import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/obra.dart';
+import '../models/location.dart';
+import '../models/location_list.dart';
 
 //ImagePicker()
-class ObraItem extends StatelessWidget {
+class LocationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final obras = Provider.of<Obra>(context, listen: false);
+    final items = Provider.of<Location>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
@@ -28,8 +28,8 @@ class ObraItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                   gradient: LinearGradient( 
                     colors: [
-                      Colors.purple.shade200.withOpacity(0.5),
-                      Colors.purple.shade400,
+                      Colors.blue.shade200.withOpacity(0.5),
+                      Colors.blue.shade400,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -46,24 +46,24 @@ class ObraItem extends StatelessWidget {
               //     ],
               //   ),
               // )
-              Positioned(
-                top: 5,
-                child: Consumer<Obra>(
-                  builder: (ctx, obras, _) => IconButton(
-                    onPressed: () {
-                      obras.toggleFavorite();
-                    },
-                    icon: Icon(
-                      obras.isIncomplete? Icons.check_box_outline_blank : Icons.check_box,
-                    ),
-                    color: Colors.grey[100],
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 5,
+              //   child: Consumer<Location>(
+              //     builder: (ctx, items, _) => IconButton(
+              //       onPressed: () {
+              //         items.toggleFavorite();
+              //       },
+              //       icon: Icon(
+              //         items.isIncomplete? Icons.check_box_outline_blank : Icons.check_box,
+              //       ),
+              //       color: Colors.grey[100],
+              //     ),
+              //   ),
+              // ),
             ]
           ),
           onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.OBRA_LOCATION_SCREEN, arguments: obras.id);
+            Navigator.of(context).pushNamed(AppRoutes.OBRA_STAGES_SCREEN, arguments: items);
           },
         ),
         footer: GridTileBar(
@@ -71,13 +71,13 @@ class ObraItem extends StatelessWidget {
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.of(context).pushNamed(
-                AppRoutes.OBRA_FORM_SCREEN,
-                arguments: obras, 
+                AppRoutes.LOCATION_FORM_SCREEN,
+                arguments: items, 
               );
             },
           ),
           title: Text(
-            obras.name, 
+            items.location, 
             textAlign: TextAlign.center, 
             style: const TextStyle(
               fontSize: 15
@@ -105,10 +105,10 @@ class ObraItem extends StatelessWidget {
                 ),
               ).then((value) async {
                 if(value ?? false){
-                  await Provider.of<ObraList>(
+                  await Provider.of<LocationList>(
                       context,
                       listen: false,
-                  ).removeProduct(obras);
+                  ).removeLocation(items);
                 }
               });
             },
