@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'method_item.dart';
-import 'stage_item.dart';
 
 class MethodGrid extends StatelessWidget {
   final String matchmakingId;
@@ -15,15 +14,19 @@ class MethodGrid extends StatelessWidget {
     final provider = Provider.of<MethodList>(context);
     final List<Method> phaseItem = provider.getAllItems(matchmakingId);
     
-    return Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: phaseItem.length,
-          itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
-            value: phaseItem[i],
-            child: MethodItem(matchmakingId),
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: phaseItem.length,
+      itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
+        value: phaseItem[i],
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300 , width: 1),
+            borderRadius: BorderRadius.circular(6)
           ),
+          child: MethodItem(matchmakingId)
         ),
+      ),
     );
   }
 }

@@ -198,7 +198,7 @@ class _StageItemFormState extends State<StageItemForm> {
                       textInputAction: TextInputAction.next,
                       maxLines: 5,
                       onSaved: (description) => _formData['description'] = description ?? '',
-                      validator: (_description) {
+                      validator: (_description) {                        
                         final description = _description ?? '';
                         return null;
                       },

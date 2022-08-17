@@ -1,11 +1,9 @@
 import 'package:control/components/method_grid.dart';
-import 'package:control/models/method_list.dart';
 import 'package:control/models/stage_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/app_routes.dart';
 
 
 
@@ -51,18 +49,18 @@ class _ItemWidgetState extends State<ItemWidget> {
                 vertical: 4,
               ),
               height: (7 * 25) + 10,
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                    MethodGrid(matchmakingId: item.id),
-                    IconButton(onPressed: () {
-                        Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: item.id);
-                      }, 
-                      icon: Icon(Icons.add)
-                    ),
+              child: MethodGrid(matchmakingId: item.id),
+                // ListView(
+                // shrinkWrap: true,
+                // children: [
+                //     // IconButton(onPressed: () {
+                //     //     Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: item.id);
+                //     //   }, 
+                //     //   icon: const Icon(Icons.add)
+                //     // ),
 
-                  ] 
-                ),
+                //   ] 
+                // ),
               ),
         ],
       ),

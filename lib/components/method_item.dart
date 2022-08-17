@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:control/models/method.dart';
 import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import '../utils/app_routes.dart';
 class MethodItem extends StatelessWidget {
   final String matchmakingId;
   
-  MethodItem(this.matchmakingId);
+  const MethodItem(this.matchmakingId);
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +46,8 @@ class MethodItem extends StatelessWidget {
                   showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: Text('Excluir Estágio?'),
-                      content: Text('Tem certeza?'),
+                      title: const Text('Excluir Estágio?'),
+                      content: const Text('Tem certeza?'),
                       actions: [
                         TextButton(
                           child: const Text('Não'),
