@@ -16,14 +16,20 @@ class StageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final stage = Provider.of<Stage>(context, listen: false);
     String teste = stage.id.toString();
+    print(teste);
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN, arguments: teste);
+        try{
+          Navigator.of(context).pushNamed(AppRoutes.ITEM_SCREEN, arguments: teste);
+        }catch(error){
+          print('the error was somewhere here');
+          print(error);
+        }
       },
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.purple,
+        leading: CircleAvatar(
+          backgroundColor: Colors.amber.shade900,
         ),
         title: Text(stage.stage),
         trailing: SizedBox(
@@ -32,7 +38,7 @@ class StageItem extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit),
-                color: Theme.of(context).colorScheme.primary,
+                color: Colors.amber.shade900,
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: teste);
                 },

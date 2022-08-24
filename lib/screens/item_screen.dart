@@ -1,27 +1,28 @@
-import 'package:control/components/stage_item_grid.dart';
+import 'package:control/components/item_grid.dart';
+import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/stages_item_list.dart';
+import '../models/item_list.dart';
 import '../utils/app_routes.dart';
 
 
-class StagesItemScreen extends StatefulWidget {
-  const StagesItemScreen({ Key? key, }) : super(key: key);
+class ItemScreen extends StatefulWidget {
+  const ItemScreen({ Key? key, }) : super(key: key);
 
   @override
-  State<StagesItemScreen> createState() => _StagesItemScreenState();
+  State<ItemScreen> createState() => _ItemScreenState();
   
 }
 
-class _StagesItemScreenState extends State<StagesItemScreen> {
+class _ItemScreenState extends State<ItemScreen> {
 
   bool _isLoading = true;
 
   @override
     void initState() {
       super.initState();
-      Provider.of<StagesList>(
+      Provider.of<ItemList>(
         context,
         listen: false,
       ).loadItems().then((value) {
@@ -29,6 +30,10 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
         _isLoading = false;
         });
       });
+      Provider.of<MethodList>(
+        context,
+        listen: false,
+      ).loadMethod();
   }
 
           
@@ -52,7 +57,7 @@ class _StagesItemScreenState extends State<StagesItemScreen> {
           ),
         ],
       ),
-      body: StageItemGrid(matchmakingId: id),
+      body: ItemGrid(matchmakingId: id),
     );
   }
 }

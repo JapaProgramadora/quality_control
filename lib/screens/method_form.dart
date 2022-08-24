@@ -41,6 +41,8 @@ class _MethodFormState extends State<MethodForm> {
 
         _formData['id'] = product.id;
         _formData['method'] = product.method;
+        _formData['team'] = product.team;
+        _formData['tolerance'] = product.tolerance;
         _formData['matchmakingId'] = product.matchmakingId;
       }
     }
@@ -120,6 +122,7 @@ class _MethodFormState extends State<MethodForm> {
                       onSaved: (method) => _formData['method'] = method ?? '',
                       validator: (_method) {
                         final method = _method ?? '';
+                        _formData['errorDescription'] = '';
 
                         if (method.trim().isEmpty) {
                           return 'Método de Verificação é obrigatório';
@@ -147,6 +150,26 @@ class _MethodFormState extends State<MethodForm> {
 
                         if (tolerance.trim().length < 3) {
                           return 'Tolerância precisa de no mínimo de 3 letras.';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: _formData['team']?.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'Equipe',
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onSaved: (team) => _formData['team'] = team ?? '',
+                      validator: (_team) {
+                        final team = _team ?? '';
+
+                        if (team.trim().isEmpty) {
+                          return 'Equipe é obrigatório';
+                        }
+
+                        if (team.trim().length < 3) {
+                          return 'Equipe precisa no mínimo de 3 letras.';
                         }
                         return null;
                       },

@@ -18,14 +18,17 @@ class MethodItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final method = Provider.of<Method>(context, listen: false);
     String id = method.id.toString();
+    print(method.isMethodGood);
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.STAGES_ITEM_SCREEN, arguments: id);
+        Navigator.of(context).pushNamed(AppRoutes.VERIFICATION_DISPLAY_SCREEN, arguments: method);
       },
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.purple,
+        leading: Consumer<Method>(
+          builder: (ctx, method, _) => CircleAvatar(
+            backgroundColor: method.isMethodGood ? Colors.green : Colors.red
+          ),
         ),
         title: Text(method.method),
         trailing: SizedBox(
@@ -36,7 +39,7 @@ class MethodItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
+                  Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: id);
                 },
               ),
               IconButton(
@@ -46,7 +49,7 @@ class MethodItem extends StatelessWidget {
                   showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Excluir Estágio?'),
+                      title: const Text('Excluir Método de Verificação?'),
                       content: const Text('Tem certeza?'),
                       actions: [
                         TextButton(

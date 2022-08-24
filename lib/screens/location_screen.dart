@@ -31,22 +31,23 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final id = ModalRoute.of(context)!.settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.purple.shade900,
         title: const Text('Local'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN); //change this
+              Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: id); //change this
             },
             icon: const Icon(Icons.add),
           ),
         ],
       ),
-      body: LocationGrid(),
+      body: LocationGrid(id.toString()),
     );
   }
 }

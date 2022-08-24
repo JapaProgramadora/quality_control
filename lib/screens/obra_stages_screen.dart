@@ -43,6 +43,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.amber.shade900,
         title: Text('Estágios do Local ${item.location}'),
         actions: [
           IconButton(

@@ -29,6 +29,7 @@ class MethodList with ChangeNotifier {
     return _items.length;
   }
 
+
   Future<void> loadMethod() async {
     _items.clear();
 
@@ -42,7 +43,11 @@ class MethodList with ChangeNotifier {
           Method(
             id: methodId,
             method: methodData['method'],
+            team: methodData['team'],
+            errorDescription: methodData['errorDescription'],
             tolerance: methodData['tolerance'],
+            isMethodGood: methodData['isMethodGood'],
+            isTeamGood: methodData['isTeamGood'],
             matchmakingId: methodData['matchmakingId'],
           ),
         );
@@ -56,7 +61,9 @@ class MethodList with ChangeNotifier {
     final product = Method(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       method: data['method'] as String,
+      team: data['team'] as String,
       tolerance: data['tolerance'] as String,
+      errorDescription: data['errorDescription'] as String,
       matchmakingId: data['matchmakingId'] as String,
     );
 
@@ -74,6 +81,10 @@ class MethodList with ChangeNotifier {
         {
           "matchmakingId": product.matchmakingId,
           "method": product.method,
+          "team": product.team,
+          "isMethodGood": product.isMethodGood,
+          "isTeamGood": product.isTeamGood,
+          "errorDescription": product.errorDescription,
           "tolerance": product.tolerance,
         },
       ),
@@ -83,6 +94,8 @@ class MethodList with ChangeNotifier {
     _items.add(Method(
       id: id,
       method: product.method,
+      team: product.team,
+      errorDescription: product.errorDescription,
       tolerance: product.tolerance,
       matchmakingId: product.matchmakingId,
     ));
@@ -99,7 +112,9 @@ class MethodList with ChangeNotifier {
         body: jsonEncode(
           {
             "method": product.method,
+            "team": product.team,
             "tolerance": product.tolerance,
+            "errorDescription": product.errorDescription,
             "matchmakingId": product.matchmakingId,
           },
         ),

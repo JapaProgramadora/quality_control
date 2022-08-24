@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 
 
 import '../utils/constants.dart';
-import 'stage_item.dart';
+import 'item.dart';
 
-class StagesList with ChangeNotifier {
+class ItemList with ChangeNotifier {
   final List<Items> _items = [];
 
   List<Items> get items {
@@ -18,7 +18,7 @@ class StagesList with ChangeNotifier {
   int get itemsCount {
     return _items.length;
   }
-  List<Items> testItems(matchId){
+  List<Items> loadMatchingItems(matchId){
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
 
@@ -38,11 +38,9 @@ class StagesList with ChangeNotifier {
         _items.add(
           Items(
             id: productId,
-            date: DateTime.parse(productData['date']),
+            beginningDate: DateTime.parse(productData['beginningDate']),
+            endingDate: DateTime.parse(productData['endingDate']),
             item: productData['item'],
-            method: productData['method'],
-            tolerance: productData['tolerance'],
-            isGood: productData['isGood'],
             matchmakingId: productData['matchmakingId'],
             description: productData['description'],
           ),
@@ -57,9 +55,8 @@ class StagesList with ChangeNotifier {
     final product = Items(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       item: data['item'] as String,
-      date: data['date'] == null ? DateTime.now() : data['date'] as DateTime,
-      tolerance: data['tolerance'] as double,
-      method: data['method'] as String,
+      beginningDate: data['beginningDate'] == null ? DateTime.now() : data['beginningDate'] as DateTime,
+      endingDate: data['endingDate'] == null ? DateTime.now() : data['endingDate'] as DateTime,
       description: data['description'] as String,
       matchmakingId: data['matchmakingId'] as String,
     );
@@ -72,17 +69,16 @@ class StagesList with ChangeNotifier {
   }
 
   Future<void> addItem(Items product) async {
-    final date = product.date;
+    final beginningDate = product.beginningDate;
+    final endingDate = product.endingDate;
     final response = await http.post(
       Uri.parse('${Constants.ITEM_BASE_URL}.json'),
       body: jsonEncode(
         {
           "item": product.item,
-          "tolerance": product.tolerance,
-          "method": product.method,
-          "isGood": product.isGood,
           "description": product.description,
-          'date': date.toIso8601String(),
+          "beginningDate": beginningDate.toIso8601String(),
+          "endingDate": endingDate.toIso8601String(),
           "matchmakingId": product.matchmakingId,
         },
       ),
@@ -91,10 +87,9 @@ class StagesList with ChangeNotifier {
     final id = jsonDecode(response.body)['name'];
     _items.add(Items(
       id: id,
-      date: product.date,
+      beginningDate: product.beginningDate,
       item: product.item,
-      tolerance: product.tolerance,
-      method: product.method,
+      endingDate: product.endingDate,
       description: product.description,
       matchmakingId: product.matchmakingId,
     ));
@@ -111,9 +106,9 @@ class StagesList with ChangeNotifier {
         body: jsonEncode(
           {
             "item": product.item,
-            "method": product.method,
+            "beginningDate": product.beginningDate,
             "description": product.description,
-            "tolerance": product.tolerance,
+            "endingDate": product.endingDate,
           },
         ),
       );

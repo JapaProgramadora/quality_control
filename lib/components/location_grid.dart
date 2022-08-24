@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LocationGrid extends StatelessWidget {
+  final String matchmakingId;
   
-  LocationGrid();
+  LocationGrid(this.matchmakingId);
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LocationList>(context);
-    final List<Location> loadedLocations = provider.items;
+    final List<Location> loadedLocations = provider.testItems(matchmakingId);
     
     return Padding(
         padding: const EdgeInsets.all(10),

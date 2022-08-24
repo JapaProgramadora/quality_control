@@ -1,42 +1,26 @@
 // ignore_for_file: use_key_in_widget_constructors, avoid_print
 
-import 'package:control/models/stages_item_list.dart';
+import 'package:control/models/item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../models/stage_item.dart';
+import '../models/item.dart';
 
-class StageItemForm extends StatefulWidget {
-  const StageItemForm();
+class ItemForm extends StatefulWidget {
+  const ItemForm();
 
   @override
-  _StageItemFormState createState() => _StageItemFormState();
+  _ItemFormState createState() => _ItemFormState();
 }
 
-class _StageItemFormState extends State<StageItemForm> {
+class _ItemFormState extends State<ItemForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-  DateTime _selectedDate = DateTime.now(); 
+  DateTime _selectedBeginningDate = DateTime.now();
+  DateTime _selectedEndingDate = DateTime.now();  
 
   bool _isLoading = false;
-
-  void _showDatePicker(){
-    showDatePicker(
-      context: context, 
-      initialDate: DateTime.now(), 
-      firstDate: DateTime(2019), 
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      setState(() {
-        if (pickedDate == null){
-          return;
-        }
-        _selectedDate = pickedDate;
-        _formData['date'] = _selectedDate;
-      });
-    });
-  }
 
 
   @override
@@ -47,14 +31,13 @@ class _StageItemFormState extends State<StageItemForm> {
     if(arg != null){
       
       if((arg as Map)['id'] != null){
-        final Items product = Provider.of<StagesList>(context).getSpecificItem(arg['id']);
+        final Items product = Provider.of<ItemList>(context).getSpecificItem(arg['id']);
 
         _formData['id'] = product.id;
         _formData['item'] = product.item;
         _formData['description'] = product.description;
-        _formData['method'] = product.method;
-        _formData['tolerance'] = product.tolerance;
-        _formData['date'] = product.date;
+        _formData['beginningDate'] = product.beginningDate;
+        _formData['endingDate'] = product.endingDate;
         _formData['matchmakingId'] = product.matchmakingId;
       
       }
@@ -81,7 +64,7 @@ class _StageItemFormState extends State<StageItemForm> {
     setState(() => _isLoading = true);
 
     try {
-      await Provider.of<StagesList>(
+      await Provider.of<ItemList>(
         context,
         listen: false,
       ).saveItem(_formData);
@@ -152,45 +135,6 @@ class _StageItemFormState extends State<StageItemForm> {
                       },
                     ),
                     TextFormField(
-                      initialValue: _formData['method']?.toString(),
-                      decoration: const InputDecoration(
-                        labelText: 'Método',
-                      ),
-                      textInputAction: TextInputAction.next,
-                      onSaved: (method) => _formData['method'] = method ?? '',
-                      validator: (_method) {
-                        final method = _method ?? '';
-
-                        if (method.trim().isEmpty) {
-                          return 'O método é obrigatório';
-                        }
-
-                        if (method.trim().length < 3) {
-                          return 'O método precisa no mínimo de 3 letras.';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _formData['tolerance']?.toString(),
-                      decoration: const InputDecoration(labelText: 'Tolerância'),
-                      textInputAction: TextInputAction.next,
-                      keyboardType: const TextInputType.numberWithOptions(
-                         decimal: true,
-                      ),
-                      onSaved: (tolerance) =>
-                          _formData['tolerance'] = double.parse(tolerance ?? '0'),
-                      validator: (_tolerance) {
-                        final toleranceString = _tolerance ?? '';
-                        final tolerance = double.tryParse(toleranceString) ?? -1;
-
-                        if (tolerance <= 0) {
-                          return 'Informe uma tolerância válida.';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
                       initialValue: _formData['description']?.toString(),
                       decoration: const InputDecoration(
                         labelText: 'Anotações (Opcional)',
@@ -209,14 +153,62 @@ class _StageItemFormState extends State<StageItemForm> {
                         children: <Widget> [
                             Expanded(
                               child: Text(
-                                _selectedDate == null 
+                                _selectedBeginningDate == null 
                                 ? 'Nenhuma data selecionada!'
-                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
+                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedBeginningDate)}',
                                 ),
                             ),
                             TextButton(
-                              child: const Text('Selecionar Data'),
-                              onPressed: _showDatePicker,
+                              child: const Text('Selecionar Data de Início'),
+                              onPressed: () {
+                                showDatePicker(
+                                    context: context, 
+                                    initialDate: DateTime.now(), 
+                                    firstDate: DateTime(2019), 
+                                    lastDate: DateTime.now(),
+                                  ).then((pickedDate) {
+                                    setState(() {
+                                      if (pickedDate == null){
+                                        return;
+                                      }
+                                      _selectedBeginningDate = pickedDate;
+                                      _formData['beginningDate'] = _selectedBeginningDate;
+                                    });
+                                  });
+                              },
+                            )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 70,
+                      child: Row(
+                        children: <Widget> [
+                            Expanded(
+                              child: Text(
+                                _selectedEndingDate == null 
+                                ? 'Nenhuma data selecionada!'
+                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedEndingDate)}',
+                                ),
+                            ),
+                            TextButton(
+                              child: const Text('Selecionar Data de Previsão de Término'),
+                              onPressed: () {
+                                showDatePicker(
+                                    context: context, 
+                                    initialDate: DateTime.now(), 
+                                    firstDate: DateTime(2019), 
+                                    lastDate: DateTime.now(),
+                                  ).then((pickedDate) {
+                                    setState(() {
+                                      if (pickedDate == null){
+                                        return;
+                                      }
+                                      _selectedEndingDate = pickedDate;
+                                      _formData['endingDate'] = _selectedEndingDate;
+                                    });
+                                  });
+                              }
                             )
                         ],
                       ),

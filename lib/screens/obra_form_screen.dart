@@ -187,6 +187,14 @@ class _ObraFormPageState extends State<ObraFormPage> {
                         return null;
                       },
                     ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.purple,
+                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                      onPressed: _submitForm,
+                      child: const Text('Salvar'),
+                    ),
                   ],
                 ),
               ),

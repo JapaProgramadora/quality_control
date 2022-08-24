@@ -70,7 +70,7 @@ class _LocationFormState extends State<LocationForm> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Ocorreu um erro!'),
-          content: const Text('Ocorreu um erro para salvar o item.'),
+          content: const Text('Ocorreu um erro para salvar o local.'),
           actions: [
             TextButton(
               child: const Text('Ok'),
@@ -90,7 +90,7 @@ class _LocationFormState extends State<LocationForm> {
     _formData['matchmakingId'] = arg.toString();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.purple.shade900,
         title: const Text('Formulário de Local'),
         actions: [
           IconButton(
@@ -128,6 +128,14 @@ class _LocationFormState extends State<LocationForm> {
                         }
                         return null;
                       },
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.purple.shade900,
+                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                      onPressed: _submitForm,
+                      child: const Text('Salvar'),
                     ),
                   ],
                 ),
