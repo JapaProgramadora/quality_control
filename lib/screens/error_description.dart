@@ -1,11 +1,9 @@
 
 import 'package:control/models/errorMethod_list.dart';
-import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/errorMethod.dart';
-import '../models/method.dart';
 
 class ErrorMethodForm extends StatefulWidget {
   final String matchmakingId;
@@ -46,16 +44,17 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Avalie a Equipe!'),
+          title: const Text('Avalie a Equipe!'),          
           actions: [
-            Text('Estão produtivos?'),
+            const Text('Estão produtivos?'),
             Consumer <ErrorMethodList>(
               builder: (ctx, error, _) => TextButton(
                 child: const Text('Sim'),
                 onPressed: () {
-                  List<ErrorMethod> listErrors = Provider.of<ErrorMethodList>(context, listen: true).getSpecificErrorMethod(errorId);
+                  List<ErrorMethod> listErrors = Provider.of<ErrorMethodList>(context, listen: false).getSpecificErrorMethod(errorId);
                   ErrorMethod error = listErrors.first;
                   error.changeEPI();
+                  Navigator.of(context).pop();
                 }
               ),
             ),
@@ -126,10 +125,10 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
                         return null;
                       },
                     ),
-                    Divider(),
+                    const Divider(),
                     ElevatedButton(
-                      onPressed: _submitForm, 
-                      child: Text('Salvar'),
+                      onPressed: () async => await _submitForm(), 
+                      child: const Text('Salvar'),
                     )
                   ],
                 ),

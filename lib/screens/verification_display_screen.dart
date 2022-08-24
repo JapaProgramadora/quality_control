@@ -37,7 +37,6 @@ class VerificationDisplayScreen extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(10),
             alignment: Alignment.center,
-            height: 150,
             child: Column(
                 children:[
                   const Text(
@@ -52,7 +51,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                   Text(
                       method.method,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                     ),
@@ -60,12 +59,12 @@ class VerificationDisplayScreen extends StatelessWidget {
                   Text(
                       method.tolerance,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -78,7 +77,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                           primary: Colors.green,
                         )
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
                             method.changeMethodGood();
@@ -117,12 +116,12 @@ class VerificationDisplayScreen extends StatelessWidget {
                   Text(
                       method.method, //change this to show the team
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -133,12 +132,12 @@ class VerificationDisplayScreen extends StatelessWidget {
                           primary: Colors.green,
                         )
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {}, 
                         child: const Text('Não conforme'),
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 206, 176, 174),
+                          primary: const Color.fromARGB(255, 206, 176, 174),
                         )
                       ),
                     ],
