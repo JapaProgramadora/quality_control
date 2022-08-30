@@ -19,7 +19,7 @@ class LocationList with ChangeNotifier {
   //final categoriesMeal = meals.where((meal){
        //return meal.categories.contains(category.id);
    // }).toList();
-  List<Location> testItems(matchId){
+  List<Location> getAllItems(matchId){
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
 

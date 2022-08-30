@@ -57,7 +57,6 @@ class _ObraFormPageState extends State<ObraFormPage> {
       ).saveProduct(_formData);
 
       Navigator.of(context).pop();
-      print(_formData.toString());
     } catch (error) {
       print(error);
       await showDialog<void>(
@@ -133,11 +132,11 @@ class _ObraFormPageState extends State<ObraFormPage> {
                         final engineer = _engineer ?? '';
 
                         if (engineer.trim().isEmpty) {
-                          return 'Nome é obrigatório';
+                          return 'Engenheiro é obrigatório';
                         }
 
                         if (engineer.trim().length < 3) {
-                          return 'Nome precisa no mínimo de 3 letras.';
+                          return 'O nome do engenheiro precisa de no mínimo de 3 letras.';
                         }
 
                         return null;
@@ -155,11 +154,11 @@ class _ObraFormPageState extends State<ObraFormPage> {
                         final owner = _owner ?? '';
 
                         if (owner.trim().isEmpty) {
-                          return 'Proprietário é obrigatória.';
+                          return 'O proprietário é obrigatório.';
                         }
 
-                        if (owner.trim().length < 10) {
-                          return 'Proprietário precisa no mínimo de 10 letras.';
+                        if (owner.trim().length < 3) {
+                          return 'Necessário no mínimo 3 letras.';
                         }
 
                         return null;
@@ -177,11 +176,11 @@ class _ObraFormPageState extends State<ObraFormPage> {
                         final address = _address ?? '';
 
                         if (address.trim().isEmpty) {
-                          return 'Endereço é obrigatória.';
+                          return 'O endereço é obrigatório.';
                         }
 
                         if (address.trim().length < 10) {
-                          return 'Endereço precisa no mínimo de 10 letras.';
+                          return 'Endereço precisa de no mínimo 10 letras.';
                         }
 
                         return null;

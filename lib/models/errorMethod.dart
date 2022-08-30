@@ -24,24 +24,44 @@ class ErrorMethod with ChangeNotifier{
     required this.matchmakingId,
   });
 
-  void toggleEPI() {
-    isEPI = !isEPI;
+  Future<void> changeEPI(bool isOkay) async {
+    if(isOkay == true){
+        isEPI = true;
+    }else{
+        isEPI = false;
+    }
+
+    final response = await http.patch(
+        Uri.parse('${Constants.ERROR_METHOD_URL}/$id.json'),
+        body: jsonEncode({"isEPI": isEPI}),
+    );
+
+    notifyListeners();
   }
 
-  Future<void> changeEPI() async {
-    try {
-      toggleEPI();
-
-      final response = await http.patch(
-        Uri.parse('${Constants.PRODUCT_BASE_URL}/$id.json'),
-        body: jsonEncode({"isEPI": isEPI}),
-      );
-
-      if (response.statusCode >= 400) {
-        toggleEPI();
-      }
-    } catch (_) {
-      toggleEPI();
+  Future<void> changeProductive(bool isOkay) async {
+    if(isOkay == true){
+        isProductive = true;
+    }else{
+        isProductive = false;
     }
+
+    final response = await http.patch(
+        Uri.parse('${Constants.ERROR_METHOD_URL}/$id.json'),
+        body: jsonEncode({"isProductive": isProductive}),
+    );
+  }
+
+  Future<void> changeOrganized(bool isOkay) async {
+    if(isOkay == true){
+        isOrganized = true;
+    }else{
+        isOrganized = false;
+    }
+
+    final response = await http.patch(
+        Uri.parse('${Constants.ERROR_METHOD_URL}/$id.json'),
+        body: jsonEncode({"isOrganized": isOrganized}),
+    );
   }
 }

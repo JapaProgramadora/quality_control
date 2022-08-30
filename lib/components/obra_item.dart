@@ -63,12 +63,13 @@ class ObraItem extends StatelessWidget {
             ]
           ),
           onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.OBRA_LOCATION_SCREEN, arguments: obras.id);
+            Navigator.of(context).pushNamed(AppRoutes.OBRA_STAGES_SCREEN, arguments: obras.id);
           },
         ),
         footer: GridTileBar(
           leading: IconButton(
             icon: const Icon(Icons.edit),
+            iconSize: 20,
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.OBRA_FORM_SCREEN,
@@ -86,6 +87,7 @@ class ObraItem extends StatelessWidget {
           backgroundColor: Colors.black54,
           trailing: IconButton(
             icon: const Icon(Icons.delete),
+            iconSize: 20,
             onPressed: () {
               showDialog<bool>(
                 context: context,

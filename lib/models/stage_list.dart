@@ -19,7 +19,7 @@ class StageList with ChangeNotifier {
   //final categoriesMeal = meals.where((meal){
        //return meal.categories.contains(category.id);
    // }).toList();
-  List<Stage> testItems(matchId){
+  List<Stage> allMatchingStages(matchId){
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
 

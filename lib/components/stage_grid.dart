@@ -12,7 +12,7 @@ class StageGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<StageList>(context);
-    final List<Stage> stages = provider.testItems(matchmakingId);
+    final List<Stage> stages = provider.allMatchingStages(matchmakingId);
     
     return Padding(
         padding: const EdgeInsets.all(8),

@@ -18,8 +18,7 @@ class MethodItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final method = Provider.of<Method>(context, listen: false);
     String id = method.id.toString();
-    print(method.isMethodGood);
-
+ 
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.VERIFICATION_DISPLAY_SCREEN, arguments: method);

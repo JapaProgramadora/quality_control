@@ -8,29 +8,26 @@ import 'package:provider/provider.dart';
 
 class LocationGrid extends StatelessWidget {
   final String matchmakingId;
-  
-  LocationGrid(this.matchmakingId);
+  const LocationGrid({ Key? key, required this.matchmakingId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LocationList>(context);
-    final List<Location> loadedLocations = provider.testItems(matchmakingId);
+    final List<Location> loadedLocations = provider.getAllItems(matchmakingId);
     
-    return Padding(
-        padding: const EdgeInsets.all(10),
-        child: GridView.builder(
-          itemCount: loadedLocations.length,
-          itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
-            value: loadedLocations[i],
-            child: LocationItem(),
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: loadedLocations.length,
+      itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
+        value: loadedLocations[i],
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300 , width: 1),
+            borderRadius: BorderRadius.circular(6)
           ),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 10, //espaçamento
-            mainAxisSpacing: 10, //espaçamento
-            crossAxisCount: 2, //exibe 2 produtos por linha
-          ),
+          child: LocationItem(matchmakingId)
         ),
+      ),
     );
   }
 }

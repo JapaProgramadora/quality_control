@@ -1,8 +1,12 @@
 // ignore_for_file: avoid_print, use_key_in_widget_constructors
 
 import 'package:control/models/location_list.dart';
+import 'package:control/models/stage.dart';
+import 'package:control/models/stage_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../models/location.dart';
 
 class LocationForm extends StatefulWidget {
   const LocationForm();
@@ -18,30 +22,26 @@ class _LocationFormState extends State<LocationForm> {
   bool _isLoading = false;
 
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final arg = ModalRoute.of(context)?.settings.arguments;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arg = ModalRoute.of(context)?.settings.arguments;
 
-  //   if(arg != null){
-  //     final List<Location> listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg);      
-      
-  //     if (listLocation.isEmpty) {
-  //       _formData['matchmakingId'] = arg.toString();
-  //     }
-  //     else{        
-  //       // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-  //       final Location product = listLocation.first;
+    if(arg != null){
+      final List<Location> listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg);      
+             
+        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+      final Location product = listLocation.first;
         
 
-  //       _formData['id'] = product.id;
-  //       _formData['location'] = product.location;
-  //       _formData['matchmakingId'] = product.matchmakingId;
-  //     }
-  //   }
-  // }
+      _formData['id'] = product.id;
+      _formData['location'] = product.location;
+      _formData['matchmakingId'] = product.matchmakingId;
+      
+    }
+  }
 
-  Future<void> _submitForm() async {
+  Future<void> _submitForm(String dropValue) async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -53,6 +53,8 @@ class _LocationFormState extends State<LocationForm> {
     if(_formData.isEmpty){
       return;
     }
+
+    _formData['matchmakingId'] = dropValue.toString();
 
     setState(() => _isLoading = true);
 
@@ -86,18 +88,23 @@ class _LocationFormState extends State<LocationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final arg = ModalRoute.of(context)?.settings.arguments;
-    _formData['matchmakingId'] = arg.toString();
+    final matchId = ModalRoute.of(context)?.settings.arguments;
+    final provider = Provider.of<StageList>(context);
+    final List<Stage> loadedStages = provider.getSpecificStage(matchId);
+    final dropValue = ValueNotifier('');
+    String arg = '';
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple.shade900,
-        title: const Text('Formulário de Local'),
-        actions: [
-          IconButton(
-            onPressed: _submitForm,
-            icon: const Icon(Icons.save),
-          ),
-        ],
+        title: const Text('Formulário de Ambiente'),
+        // actions: [
+        //   IconButton(
+        //     onPressed: _submitForm,
+        //     icon: const Icon(Icons.save),
+        //   ),
+        // ],
       ),
       body: _isLoading
           ? const Center(
@@ -129,12 +136,26 @@ class _LocationFormState extends State<LocationForm> {
                         return null;
                       },
                     ),
+                    ValueListenableBuilder(
+                      valueListenable: dropValue, 
+                      builder: (BuildContext ctx, String value, _){
+                        return DropdownButton<String>(
+                          hint: const Text('Estágio'),
+                          value: (value.isEmpty)? null : value,
+                          onChanged: (escolha) => arg = escolha.toString(),
+                          items: loadedStages.map((stages) => DropdownMenuItem(
+                            value: stages.id,
+                            child: Text(stages.stage))
+                          ).toList(), 
+                        );
+                      }
+                    ),
                     Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: Colors.purple.shade900,
                           padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
-                      onPressed: _submitForm,
+                      onPressed: () => _submitForm(arg),
                       child: const Text('Salvar'),
                     ),
                   ],

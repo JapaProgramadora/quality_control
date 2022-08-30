@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageFormScreen(),
           AppRoutes.ITEM_SCREEN: (ctx) => const ItemScreen(),
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
-          AppRoutes.OBRA_LOCATION_SCREEN: (ctx) => const LocationScreen(),
+          //AppRoutes.OBRA_LOCATION_SCREEN: (ctx) => const LocationScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),
           AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const VerificationDisplayScreen(),

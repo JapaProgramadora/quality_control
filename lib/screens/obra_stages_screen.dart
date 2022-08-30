@@ -3,6 +3,7 @@
 
 import 'package:control/components/stage_grid.dart';
 import 'package:control/models/location.dart';
+import 'package:control/models/location_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,19 +33,25 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         _isLoading = false;
         });
       });
+      Provider.of<LocationList>(
+        context,
+        listen: false,
+      ).loadLocation().then((value) {
+        setState(() {
+        _isLoading = false;
+        });
+      });
   }
   
           
   @override
   Widget build(BuildContext context) {
-    final item = ModalRoute.of(context)!.settings.arguments as Location;
-    final id = item.id;
+    final id = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.amber.shade900,
-        title: Text('Estágios do Local ${item.location}'),
+        title: const Text('Estágios'),
         actions: [
           IconButton(
             onPressed: () {

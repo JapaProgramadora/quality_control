@@ -27,26 +27,19 @@ class Method with ChangeNotifier{
     required this.matchmakingId,
   });
 
-  void toggleMethodGood() {
-    isMethodGood = !isMethodGood;
-    notifyListeners();
-  }
+  Future<void> changeMethodGood(bool isOkay) async {
+    if(isOkay == true){
+      isMethodGood = true;
+    }else{
+      isMethodGood = false;
+    }
 
-  Future<void> changeMethodGood() async {
-    try {
-      toggleMethodGood();
-
-      final response = await http.patch(
+    final response = await http.patch(
         Uri.parse('${Constants.METHOD_BASE_URL}/$id.json'),
         body: jsonEncode({"isMethodGood": isMethodGood}),
-      );
+    );
 
-      if (response.statusCode >= 400) {
-        toggleMethodGood();
-      }
-    } catch (_) {
-      toggleMethodGood();
-    }
+    notifyListeners();
   }
 
 }

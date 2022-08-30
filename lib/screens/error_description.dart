@@ -40,27 +40,83 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
         listen: false,
       ).saveErrorMethod(_formData);
 
+      List<ErrorMethod> listErrors = Provider.of<ErrorMethodList>(context, listen: false).getSpecificErrorMethod(errorId);
 
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Avalie a Equipe!'),          
           actions: [
-            const Text('Estão produtivos?'),
-            Consumer <ErrorMethodList>(
-              builder: (ctx, error, _) => TextButton(
-                child: const Text('Sim'),
-                onPressed: () {
-                  List<ErrorMethod> listErrors = Provider.of<ErrorMethodList>(context, listen: false).getSpecificErrorMethod(errorId);
-                  ErrorMethod error = listErrors.first;
-                  error.changeEPI();
-                  Navigator.of(context).pop();
-                }
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                const Text('Estão usando EPI?'),
+                Consumer <ErrorMethodList>(
+                  builder: (ctx, error, _) => TextButton(
+                    child: const Text('Sim'),
+                    onPressed: () {
+                      ErrorMethod error = listErrors.first;
+                      error.changeEPI(true);
+                    }
+                  ),
+                ),
+                TextButton(
+                  child: const Text('Não'),
+                  onPressed: () {
+                      ErrorMethod error = listErrors.first;
+                      error.changeEPI(false);
+                  }
+                ),
+            ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Estão produtivos?'),
+                Consumer <ErrorMethodList>(
+                  builder: (ctx, error, _) => TextButton(
+                    child: const Text('Sim'),
+                    onPressed: () {
+                      ErrorMethod error = listErrors.first;
+                      error.changeProductive(true);
+                    }
+                  ),
+                ),
+                TextButton(
+                  child: const Text('Não'),
+                  onPressed: () {
+                      ErrorMethod error = listErrors.first;
+                      error.changeProductive(false);
+                    }
+                ),
+            ],),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Estão organizados?'),
+                Consumer <ErrorMethodList>(
+                  builder: (ctx, error, _) => TextButton(
+                    child: const Text('Sim'),
+                    onPressed: () {
+                      ErrorMethod error = listErrors.first;
+                      error.changeOrganized(true);
+                    }
+                  ),
+                ),
+                TextButton(
+                  child: const Text('Não'),
+                  onPressed: ()  {
+                      ErrorMethod error = listErrors.first;
+                      error.changeOrganized(false);
+                  }
+                ),
+              ],
             ),
             TextButton(
-              child: const Text('Não'),
-              onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Salvar'),
+                  onPressed: ()  {
+                      Navigator.of(context).pop();
+                  }
             ),
           ],
         ),
