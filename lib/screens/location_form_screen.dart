@@ -29,14 +29,15 @@ class _LocationFormState extends State<LocationForm> {
 
     if(arg != null){
       final List<Location> listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg);      
-             
-        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-      final Location product = listLocation.first;
-        
+      
+      if(listLocation.isNotEmpty){
+        final Location product = listLocation.first;         
 
-      _formData['id'] = product.id;
-      _formData['location'] = product.location;
-      _formData['matchmakingId'] = product.matchmakingId;
+        _formData['location'] = product.location;
+        _formData['matchmakingId'] = product.matchmakingId;
+      }
+        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+        _formData['id'] = arg;
       
     }
   }
@@ -150,11 +151,11 @@ class _LocationFormState extends State<LocationForm> {
                         );
                       }
                     ),
-                    Padding(padding: EdgeInsets.all(10)),
+                    const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: Colors.purple.shade900,
-                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
                       onPressed: () => _submitForm(arg),
                       child: const Text('Salvar'),
                     ),

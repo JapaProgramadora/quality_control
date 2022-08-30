@@ -57,12 +57,13 @@ class _StageItemState extends State<StageItem> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                                IconButton(onPressed: () {
-                                  try{
-                                    Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: teste);
-                                  }catch(error){
-                                    print(error);
-                                  }
+                            IconButton(
+                              onPressed: () {
+                                try{
+                                  Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: teste);
+                                }catch(error){
+                                  print(error);
+                                }
                               }, 
                               icon: const Icon(Icons.add),
                               color: Theme.of(context).colorScheme.primary,
