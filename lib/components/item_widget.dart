@@ -1,7 +1,5 @@
 import 'package:control/components/method_grid.dart';
 import 'package:control/models/item_list.dart';
-import 'package:control/models/method.dart';
-import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

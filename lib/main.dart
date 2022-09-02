@@ -6,6 +6,7 @@ import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/models/item_list.dart';
+import 'package:control/screens/copy_stage_form.dart';
 import 'package:control/screens/home_screen.dart';
 import 'package:control/screens/location_form_screen.dart';
 import 'package:control/screens/location_screen.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
           //AppRoutes.OBRA_LOCATION_SCREEN: (ctx) => const LocationScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
+          AppRoutes.ALTERNATIVE_STAGE_FORM: (ctx) => const CopyStageForm(),
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),
           AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const VerificationDisplayScreen(),
         },

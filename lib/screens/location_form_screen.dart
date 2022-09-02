@@ -21,25 +21,29 @@ class _LocationFormState extends State<LocationForm> {
 
   bool _isLoading = false;
 
+  List<Location> listLocation = [];
+  List<Stage> loadedStages = [];
+  
+
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final arg = ModalRoute.of(context)?.settings.arguments;
+    final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
     if(arg != null){
-      final List<Location> listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg);      
+      listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
       
       if(listLocation.isNotEmpty){
-        final Location product = listLocation.first;         
-
+        final Location product = listLocation.first;
+        
         _formData['location'] = product.location;
         _formData['matchmakingId'] = product.matchmakingId;
       }
         // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-        _formData['id'] = arg;
-      
     }
+    final provider = Provider.of<StageList>(context);
+    loadedStages = provider.allMatchingStages(arg['obraId']);
   }
 
   Future<void> _submitForm(String dropValue) async {
@@ -89,9 +93,6 @@ class _LocationFormState extends State<LocationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final matchId = ModalRoute.of(context)?.settings.arguments;
-    final provider = Provider.of<StageList>(context);
-    final List<Stage> loadedStages = provider.getSpecificStage(matchId);
     final dropValue = ValueNotifier('');
     String arg = '';
 

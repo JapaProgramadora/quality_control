@@ -39,7 +39,9 @@ class LocationItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: id);
+                  Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: {
+                    "id": id,
+                  });
                 },
               ),
               IconButton(
