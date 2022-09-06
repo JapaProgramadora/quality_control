@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, use_key_in_widget_constructors
 
+import 'package:control/models/location.dart';
+import 'package:control/models/location_list.dart';
 import 'package:control/models/stage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ class CopyStageForm extends StatefulWidget {
 class _CopyStageFormState extends State<CopyStageForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
+  final _formData2 = <String, Object>{};
 
   bool _isLoading = false;
 
@@ -29,25 +32,37 @@ class _CopyStageFormState extends State<CopyStageForm> {
 
     _formKey.currentState?.save();
 
-    if(_formData.isEmpty){
-      return;
-    }
-
     _formData['stage'] = stage.stage;
     _formData['matchmakingId'] = matchmakingId;
+
+    final List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).getAllItems(stage.id);
 
     setState(() => _isLoading = true);
 
     try {
-      await Provider.of<StageList>(
+      String stageId = await Provider.of<StageList>(
         context,
         listen: false,
       ).saveStage(_formData);
+
+      if(loadedLocations.isNotEmpty){
+        loadedLocations.forEach((element) async { 
+            _formData2['location'] = element.location;
+            _formData2['matchmakingId'] = stageId;
+
+            await Provider.of<LocationList>(
+            context,
+            listen: false,
+          ).saveLocation(_formData2);
+        });
+
+      }
 
       Navigator.of(context).pop();
     } catch (error) {
       print(error);
       print(_formData);
+      print(_formData2);
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -78,7 +93,11 @@ class _CopyStageFormState extends State<CopyStageForm> {
         title: const Text('Formulário de Estágio'),
         actions: [
           IconButton(
-            onPressed: () => _submitForm(Provider.of<StageList>(context).getSpecificStage(arg).first, matchId),
+            onPressed: () {
+              Stage stage = Provider.of<StageList>(context, listen: false).getSpecificStage(arg).first;
+              print(stage.stage);
+              _submitForm(stage, matchId);
+            },
             icon: const Icon(Icons.save),
           ),
         ],

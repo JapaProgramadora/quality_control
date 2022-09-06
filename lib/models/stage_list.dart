@@ -53,7 +53,7 @@ class StageList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveStage(Map<String, Object> data) {
+  Future<String> saveStage(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 
     final product = Stage(
@@ -69,7 +69,7 @@ class StageList with ChangeNotifier {
     }
   }
 
-  Future<void> addStage(Stage product) async {
+  Future<String> addStage(Stage product) async {
     final response = await http.post(
       Uri.parse('${Constants.STAGE_BASE_URL}.json'),
       body: jsonEncode(
@@ -87,10 +87,12 @@ class StageList with ChangeNotifier {
       matchmakingId: product.matchmakingId,
     ));
     notifyListeners();
+
+    return id;
   }
 
  
-  Future<void> updateStage(Stage product) async {
+  Future<String> updateStage(Stage product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
@@ -107,6 +109,8 @@ class StageList with ChangeNotifier {
       _items[index] = product;
       notifyListeners();
     }
+    return product.id;
+    
   }
 
   Future<void> removeStage(Stage product) async {

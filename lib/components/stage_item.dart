@@ -47,7 +47,7 @@ class _StageItemState extends State<StageItem> {
                 horizontal: 15,
                 vertical: 4,
               ),
-              height: (7 * 25) + 10,
+              height: 300,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +92,7 @@ class _StageItemState extends State<StageItem> {
                                   }
                                 });
                               },
-                            ),
+                          ),
                         ],
                       )
                     ]
