@@ -3,7 +3,6 @@
 
 import 'package:control/components/stage_grid.dart';
 import 'package:control/models/location_list.dart';
-import 'package:control/screens/copy_stage_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,7 @@ class ObraStagesScreen extends StatefulWidget {
 
 class _ObraStagesScreenState extends State<ObraStagesScreen> {
   bool _isLoading = true;
-  bool _isClicked = false;
+  final bool _isClicked = false;
 
 
   @override
@@ -79,8 +78,8 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
                     textAlign: TextAlign.justify,
                   ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text('Sim')),
-                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text('Não'))
+                    TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Sim')),
+                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Não'))
                   ],
                 ),
               ).then((value) async {
@@ -96,6 +95,6 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         ],
       ),
       body: StageGrid(matchmakingId: id),
-    );
+    ); 
   }
 }

@@ -1,6 +1,5 @@
 
 
-import 'package:control/components/location_item.dart';
 import 'package:control/models/stage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +52,7 @@ class _StageItemState extends State<StageItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget> [
-                      LocationGrid(matchmakingId: stage.id),
+                      SizedBox(height: 250, child: LocationGrid(matchmakingId: stage.id)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                           children: [
