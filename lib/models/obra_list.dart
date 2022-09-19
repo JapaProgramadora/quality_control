@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:control/models/obra.dart';
+import 'package:control/utils/db.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:control/validation/connectivity.dart' as connectivity;
+import 'package:control/validation/obra_validation.dart' as obra_validation;
 
 import '../utils/constants.dart';
 
@@ -60,27 +63,49 @@ class ObraList with ChangeNotifier {
   }
 
   Future<void> addProduct(Obra product) async {
-    final response = await http.post(
-      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
-      body: jsonEncode(
-        {
-          "name": product.name,
-          "engineer": product.engineer,
-          "owner": product.owner,
-          "address": product.address,
-          "isIncomplete": product.isIncomplete,
-        },
-      ),
-    );
+    if(connectivity.hasInternetConnection() == true){
+      final response = await http.post(
+        Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
+        body: jsonEncode(
+          {
+            "name": product.name,
+            "engineer": product.engineer,
+            "owner": product.owner,
+            "address": product.address,
+            "isIncomplete": product.isIncomplete,
+          },
+        ),
+      );
 
-    final id = jsonDecode(response.body)['name'];
-    _items.add(Obra(
-      id: id,
-      name: product.name,
-      engineer: product.engineer,
-      owner: product.owner,
-      address: product.address,
-    ));
+      final id = jsonDecode(response.body)['name'];
+      _items.add(Obra(
+        id: id,
+        name: product.name,
+        engineer: product.engineer,
+        owner: product.owner,
+        address: product.address,
+      ));
+
+      obra_validation.addBetweenDatabases(_items);
+    }else{
+        final id = Random().nextDouble().toString();
+        _items.add(Obra(
+        id: id,
+        name: product.name,
+        engineer: product.engineer,
+        owner: product.owner,
+        address: product.address,
+        ));
+        
+        DB.insert('obras', {
+          'id': id, 
+          'name': product.name,
+          'address': product.address,
+          'owner': product.owner,
+          'engineer': product.engineer
+        });
+        obra_validation.addBetweenDatabases(_items);
+    }
     notifyListeners();
   }
 

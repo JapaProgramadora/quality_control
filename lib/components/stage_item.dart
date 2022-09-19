@@ -61,7 +61,7 @@ class _StageItemState extends State<StageItem> {
                                   Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: {
                                     "obraId": stage.matchmakingId,
                                   });
-                              }, 
+                              },
                               icon: const Icon(Icons.add),
                               color: Theme.of(context).colorScheme.primary,
                             ),
