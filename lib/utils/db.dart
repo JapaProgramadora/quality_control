@@ -2,12 +2,34 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
-import '../models/obra.dart';
 
 
 class DB {
+  
   static Future<sql.Database> database() async {
+    int version = 1;
     final dbPath = await sql.getDatabasesPath();
+
+    if(await sql.databaseExists(dbPath)){
+      var database = await sql.openDatabase(dbPath);
+
+      if(await database.getVersion() < version){
+        await sql.deleteDatabase(dbPath);
+        
+        return sql.openDatabase(
+          path.join(dbPath, 'quality.db'),
+          onCreate:  (db, version) {
+            return db.execute(
+              'CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT,engineer TEXT)'
+            );
+          },
+          version: version,
+        );
+      }
+
+      return database;
+    }
+
     return sql.openDatabase(
       path.join(dbPath, 'quality.db'),
       onCreate:  (db, version) {
@@ -15,7 +37,7 @@ class DB {
           'CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT,engineer TEXT)'
         );
       },
-      version: 1,
+      version: version,
     );
   }
 
