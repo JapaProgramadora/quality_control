@@ -3,14 +3,15 @@ import 'dart:math';
 
 import 'package:control/models/obra.dart';
 import 'package:control/utils/db.dart';
+import 'package:control/validation/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:control/validation/connectivity.dart' as connectivity;
 import 'package:control/validation/obra_validation.dart' as obra_validation;
 
 import '../utils/constants.dart';
 
 class ObraList with ChangeNotifier {  
+  bool hasInternet = false; 
   final List<Obra> _items = [];
 
   List<Obra> get items => [..._items];
@@ -21,6 +22,20 @@ class ObraList with ChangeNotifier {
   int get itemsCount {
     return _items.length;
   }
+
+  // Future<bool> hasInternetConnection() async {
+  //   try{
+  //     bool hasInternet = await InternetConnectionChecker().hasConnection;
+  //     if(hasInternet == true){
+  //       return true;
+  //     }else{
+  //       return false;
+  //     }
+  //   }catch(err){
+  //     print(err);
+  //     return false;
+  //   }
+  // }
 
   Future<void> loadProducts() async {
     _items.clear();
@@ -62,8 +77,13 @@ class ObraList with ChangeNotifier {
     }
   }
 
+  onLoad() async{
+    hasInternet = await hasInternetConnection();
+  }
+
   Future<void> addProduct(Obra product) async {
-    if(connectivity.hasInternetConnection() == true){
+    onLoad();
+    if(hasInternet == true){
       final response = await http.post(
         Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
         body: jsonEncode(

@@ -12,14 +12,7 @@ class DB {
       path.join(dbPath, 'quality.db'),
       onCreate:  (db, version) {
         return db.execute(
-          '''CREATE TABLE obras(
-              id TEXT PRIMARY KEY, 
-              address TEXT, 
-              name TEXT,
-              owner TEXT,
-              engineer TEXT,
-            );
-          '''
+          'CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT,engineer TEXT)'
         );
       },
       version: 1,
@@ -31,12 +24,14 @@ class DB {
     await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
-  static Future<void> loadInfo() async {
+  static readDatabase() async{
     final db = await DB.database();
-    final test = await db.execute('SELECT id FROM obras;');
-    return await db.execute('SELECT id FROM obras;');
-  }
+    print('this is from readDatabase');
+    List data = await db.rawQuery('SELECT * FROM obras');
 
+    print(data);
+    print(data.where((data) => data['id'] == '0.9654619751084338')); 
+  }
   // _onCreate(db, versao) async {
   //   await db.execute(_obras);
     

@@ -27,6 +27,8 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   connectivity_plus: ^2.3.7
+  internet_connection_checker: ^0.0.1+4
+  overlay_support: ^2.0.1
 
 dev_dependencies:
   flutter_test:
