@@ -31,16 +31,13 @@ class _LocationFormState extends State<LocationForm> {
     super.didChangeDependencies();
     final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
-    if(arg != null){
-      listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
+    listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
+    
+    if(listLocation.isNotEmpty){
+      final Location product = listLocation.first;
       
-      if(listLocation.isNotEmpty){
-        final Location product = listLocation.first;
-        
-        _formData['location'] = product.location;
-        _formData['matchmakingId'] = product.matchmakingId;
-      }
-        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+      _formData['location'] = product.location;
+      _formData['matchmakingId'] = product.matchmakingId;
     }
     final provider = Provider.of<StageList>(context);
     loadedStages = provider.allMatchingStages(arg['obraId']);
@@ -155,7 +152,7 @@ class _LocationFormState extends State<LocationForm> {
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.purple.shade900,
+                          backgroundColor: Colors.purple.shade900,
                           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
                       onPressed: () => _submitForm(arg),
                       child: const Text('Salvar'),

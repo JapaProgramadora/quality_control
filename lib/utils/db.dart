@@ -1,6 +1,9 @@
 
-import 'package:sqflite/sqflite.dart' as sql;
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
+import 'package:sqflite/sqflite.dart' as sql;
+
+import '../models/obra.dart';
 
 
 
@@ -41,18 +44,25 @@ class DB {
     );
   }
 
-  static Future<void> insert(String table, Map<String, Object> data) async {
+  static Future<void> insert(String table, Map<String, dynamic> data) async {
     final db = await DB.database();
     await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
-  static readDatabase() async{
-    final db = await DB.database();
-    print('this is from readDatabase');
-    List data = await db.rawQuery('SELECT * FROM obras');
 
-    print(data);
-    print(data.where((data) => data['id'] == '0.9654619751084338')); 
+  static getObrasFromDB() async{
+
+    final db = await DB.database();
+
+    List data = await db.query('obras');
+
+    if(data.isNotEmpty){
+      List<Obra> obras = data.map((e) => Obra.fromSQLMap(e)).toList();
+
+      if (kDebugMode) {
+        print(obras);
+      }
+    }
   }
   // _onCreate(db, versao) async {
   //   await db.execute(_obras);

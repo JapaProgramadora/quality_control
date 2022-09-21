@@ -1,9 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:control/utils/util.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
-import 'package:http/http.dart' as http;
 
 class Obra with ChangeNotifier {
   final String id;
@@ -44,4 +46,25 @@ class Obra with ChangeNotifier {
     }
   }
 
+  factory Obra.fromSQLMap(Map<String, dynamic> map) {
+    return Obra(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      engineer: map['engineer'] as String,
+      owner: map['owner'] as String,
+      address: map['address'] as String,
+      isIncomplete: map['isIncomplete'] != null ? checkBool(map['isIncomplete']) : true,
+    );
+  }
+
+  Map<String, dynamic> toMapSQL() {
+    return {
+      'id': id,
+      'name': name,
+      'engineer': engineer,
+      'owner': owner,
+      'address': address,
+      'isIncomplete': boolToSql(isIncomplete),
+    };
+  }
 }

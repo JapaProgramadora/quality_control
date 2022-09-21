@@ -1,9 +1,9 @@
-import 'package:control/components/item_widget.dart';
-import 'package:control/models/item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/item.dart';
+import '../models/item_list.dart';
+import 'item_widget.dart';
 
 class ItemGrid extends StatelessWidget {
   final String matchmakingId;

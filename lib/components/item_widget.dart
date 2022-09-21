@@ -1,5 +1,7 @@
-import 'package:control/components/method_grid.dart';
-import 'package:control/models/item_list.dart';
+import 'package:flutter/foundation.dart';
+
+import 'method_grid.dart';
+import '../models/item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +29,9 @@ class _ItemWidgetState extends State<ItemWidget> {
   @override
   Widget build(BuildContext context) {
     final item = Provider.of<Items>(context, listen: false);
-    print(item);
+    if (kDebugMode) {
+      print(item);
+    }
 
     return Card(
       child: Column(
