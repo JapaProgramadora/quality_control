@@ -22,6 +22,8 @@ class Obra with ChangeNotifier {
     this.isIncomplete = true,
   });
 
+  Obra.fromDatabase(Map<String, Object?> row) : id = row['id'] as String, name = row['name'] as String, engineer = row['engineer'] as String, owner = row['owner'] as String, address = row['address'] as String, isIncomplete = row['isIncomplete'].toString() as bool;
+
   void toggleDone() {
     isIncomplete = !isIncomplete;
     notifyListeners();

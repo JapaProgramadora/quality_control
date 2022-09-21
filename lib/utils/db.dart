@@ -12,7 +12,7 @@ class DB {
       path.join(dbPath, 'quality.db'),
       onCreate:  (db, version) {
         return db.execute(
-          'CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT,engineer TEXT)'
+          'CREATE TABLE IF NOT EXISTS obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT)'
         );
       },
       version: 1,
@@ -24,13 +24,28 @@ class DB {
     await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
+  static Future<List<Obra>> read() async {
+    final db = await DB.database();
+    if(db == null){
+      return [];
+    }
+    try {
+      final data = await db.rawQuery('SELECT * FROM obras');
+      final obra = data.map((info) => Obra.fromDatabase(info)).toList();
+      return obra;
+    }catch(err){
+      print(err);
+    }
+    return [];
+  }
+
   static readDatabase() async{
     final db = await DB.database();
     print('this is from readDatabase');
     List data = await db.rawQuery('SELECT * FROM obras');
 
     print(data);
-    print(data.where((data) => data['id'] == '0.9654619751084338')); 
+
   }
   // _onCreate(db, versao) async {
   //   await db.execute(_obras);
