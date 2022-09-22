@@ -1,5 +1,7 @@
 
-import 'package:control/screens/error_description.dart';
+// ignore_for_file: unused_local_variable
+
+import 'error_description.dart';
 import 'package:flutter/material.dart';
 
 import '../models/method.dart';
@@ -74,7 +76,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                         },
                         child: const Text('Conforme'),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          backgroundColor: Colors.green,
                         )
                       ),
                       const SizedBox(width: 10),
@@ -85,7 +87,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                           },
                         child: const Text('Não conforme'),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
+                          backgroundColor: Colors.red,
                         )
                       ),
                     ],

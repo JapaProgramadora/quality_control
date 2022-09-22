@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, avoid_print
+// ignore_for_file: use_key_in_widget_constructors, avoid_print, unused_local_variable
 
 import 'package:control/models/item_list.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +143,7 @@ class _ItemFormState extends State<ItemForm> {
                       maxLines: 5,
                       onSaved: (description) => _formData['description'] = description ?? '',
                       validator: (_description) {                        
-                        final description = _description ?? '';
+                        final description = _description;
                         return null;
                       },
                     ),
@@ -152,11 +152,7 @@ class _ItemFormState extends State<ItemForm> {
                       child: Row(
                         children: <Widget> [
                             Expanded(
-                              child: Text(
-                                _selectedBeginningDate == null 
-                                ? 'Nenhuma data selecionada!'
-                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedBeginningDate)}',
-                                ),
+                              child: Text('Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedBeginningDate)}',),
                             ),
                             TextButton(
                               child: const Text('Selecionar Data de Início'),
@@ -185,11 +181,7 @@ class _ItemFormState extends State<ItemForm> {
                       child: Row(
                         children: <Widget> [
                             Expanded(
-                              child: Text(
-                                _selectedEndingDate == null 
-                                ? 'Nenhuma data selecionada!'
-                                : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedEndingDate)}',
-                                ),
+                              child: Text('Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedEndingDate)}',),
                             ),
                             TextButton(
                               child: const Text('Selecionar Data de Previsão de Término'),

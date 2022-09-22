@@ -2,20 +2,19 @@
 // ignore_for_file: equal_keys_in_map
 
 import 'package:control/models/errorMethod_list.dart';
+import 'package:control/models/item_list.dart';
 import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
 import 'package:control/models/obra_list.dart';
-import 'package:control/models/item_list.dart';
 import 'package:control/screens/copy_stage_form.dart';
 import 'package:control/screens/home_screen.dart';
-import 'package:control/screens/location_form_screen.dart';
-import 'package:control/screens/location_screen.dart';
-import 'package:control/screens/obra_form_screen.dart';
-import 'package:control/screens/obra_stages_screen.dart';
-import 'package:control/screens/method_form.dart';
-import 'package:control/screens/stage_form_screen.dart';
 import 'package:control/screens/item_form.dart';
 import 'package:control/screens/item_screen.dart';
+import 'package:control/screens/location_form_screen.dart';
+import 'package:control/screens/method_form.dart';
+import 'package:control/screens/obra_form_screen.dart';
+import 'package:control/screens/obra_stages_screen.dart';
+import 'package:control/screens/stage_form_screen.dart';
 import 'package:control/screens/verification_display_screen.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';

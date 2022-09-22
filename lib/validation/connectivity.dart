@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 
 Future<bool> hasInternetConnection() async {
@@ -18,7 +19,9 @@ Future<bool> hasInternetConnection() async {
           return false;
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
       return false;
     }
 }

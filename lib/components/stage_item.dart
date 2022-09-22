@@ -1,6 +1,8 @@
 
 
-import 'package:control/models/stage.dart';
+// ignore_for_file: unused_local_variable
+
+import '../models/stage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,7 @@ import 'location_grid.dart';
 class StageItem extends StatefulWidget {
   final String matchmakingId;
   
-  const StageItem(this.matchmakingId);
+  const StageItem(this.matchmakingId, {Key? key}) : super(key: key);
 
   @override
   State<StageItem> createState() => _StageItemState();

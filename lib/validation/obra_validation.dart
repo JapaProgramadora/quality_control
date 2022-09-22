@@ -1,6 +1,5 @@
 
-import 'package:control/utils/db.dart';
-import 'package:flutter/material.dart';
+import '../utils/db.dart';
 import '../models/obra.dart';
 
   Future<void> addBetweenDatabases(List<Obra> itens) async {

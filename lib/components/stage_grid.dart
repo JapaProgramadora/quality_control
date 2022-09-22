@@ -1,8 +1,8 @@
-import 'package:control/models/stage.dart';
-import 'package:control/models/stage_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/stage.dart';
+import '../models/stage_list.dart';
 import 'stage_item.dart';
 
 class StageGrid extends StatelessWidget {

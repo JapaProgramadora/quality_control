@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_key_in_widget_constructors
+// ignore_for_file: avoid_print, use_key_in_widget_constructors, avoid_function_literals_in_foreach_calls
 
 import 'package:control/models/location.dart';
 import 'package:control/models/location_list.dart';

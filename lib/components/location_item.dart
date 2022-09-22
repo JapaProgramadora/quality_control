@@ -25,8 +25,8 @@ class LocationItem extends StatelessWidget {
         Navigator.of(context).pushNamed(AppRoutes.ITEM_SCREEN, arguments: id);
       },
       child: ListTile(
-        leading: Consumer<Location>(
-          builder: (ctx, method, _) => CircleAvatar(
+        leading: Consumer<Location>(          
+          builder: (ctx, method, _) => const CircleAvatar(
             backgroundColor: Colors.green, //method.isMethodGood ? Colors.green : Colors.red
           ),
         ),

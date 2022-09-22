@@ -1,5 +1,7 @@
 
-import 'package:control/models/errorMethod_list.dart';
+import 'package:flutter/foundation.dart';
+
+import '../models/errorMethod_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +9,7 @@ import '../models/errorMethod.dart';
 
 class ErrorMethodForm extends StatefulWidget {
   final String matchmakingId;
-  const ErrorMethodForm(this.matchmakingId);
+  const ErrorMethodForm(this.matchmakingId, {Key? key}) : super(key: key);
 
   @override
   _ErrorMethodFormState createState() => _ErrorMethodFormState();
@@ -125,8 +127,10 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
       Navigator.of(context).pop();
 
     } catch (error) {
-      print(error);
-      print(_formData);
+      if (kDebugMode) {
+        print(error);
+        print(_formData);
+      }
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(

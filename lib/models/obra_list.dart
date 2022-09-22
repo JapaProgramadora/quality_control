@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:control/models/obra.dart';
-import 'package:control/utils/db.dart';
-import 'package:control/validation/connectivity.dart';
+import 'obra.dart';
+import '../utils/db.dart';
+import '../validation/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:control/validation/obra_validation.dart' as obra_validation;
+import '../validation/obra_validation.dart' as obra_validation;
 
 import '../utils/constants.dart';
 
@@ -109,21 +109,19 @@ class ObraList with ChangeNotifier {
       obra_validation.addBetweenDatabases(_items);
     }else{
         final id = Random().nextDouble().toString();
-        _items.add(Obra(
-        id: id,
-        name: product.name,
-        engineer: product.engineer,
-        owner: product.owner,
-        address: product.address,
-        ));
+
+        Obra newObra = Obra(
+          id: id,
+          name: product.name,
+          engineer: product.engineer,
+          owner: product.owner,
+          address: product.address,
+        );
+
+        _items.add(newObra);
         
-        DB.insert('obras', {
-          'id': id, 
-          'name': product.name,
-          'address': product.address,
-          'owner': product.owner,
-          'engineer': product.engineer
-        });
+        DB.insert('obras', newObra.toMapSQL());
+        
         obra_validation.addBetweenDatabases(_items);
     }
     notifyListeners();
