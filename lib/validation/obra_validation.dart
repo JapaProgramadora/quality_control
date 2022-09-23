@@ -45,12 +45,13 @@ Future<List<Obra>> missingFirebaseObras() async {
 
     print('estes são os itens');
     print(_items);
+
     if(_items.isEmpty){
       return loadedObra;
     }
 
-    loadedObra.forEach((obra) {
-      _items.forEach((item) {
+    for(var obra in loadedObra) {
+      for(var item in _items) {        
         if(obra.id == item.id){
           if(!matchingItems.contains(obra)){
             matchingItems.add(obra);
@@ -60,8 +61,8 @@ Future<List<Obra>> missingFirebaseObras() async {
             notMatchingItems.add(obra);
           }
         }
-      });
-    });
+      }
+    }
   
   
     print('estas são as obras');

@@ -1,5 +1,4 @@
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
 
@@ -8,9 +7,8 @@ import '../models/obra.dart';
 
 
 class DB {
-  
   static Future<sql.Database> database() async {
-    int version = 1;
+    int version = 2;
     final dbPath = await sql.getDatabasesPath();
 
     if(await sql.databaseExists(dbPath)){
@@ -51,7 +49,6 @@ class DB {
 
 
   static getObrasFromDB() async{
-
     final db = await DB.database();
 
     List data = await db.query('obras');
@@ -59,16 +56,11 @@ class DB {
     if(data.isNotEmpty){
       List<Obra> obras = data.map((e) => Obra.fromSQLMap(e)).toList();
 
-      if (kDebugMode) {
-        obras;
-        print(obras.first);
-      }
-      if(obras.isEmpty){
-        return [];
-      }
       return obras;
     }
-
+    else{
+      return [];
+    }
   }
   // _onCreate(db, versao) async {
   //   await db.execute(_obras);

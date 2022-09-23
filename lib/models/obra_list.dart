@@ -38,13 +38,15 @@ class ObraList with ChangeNotifier {
   //   }
   // }
 
-  onLoad() async{
+  onLoad() async {
     try{
       newObras = await obra_validation.missingFirebaseObras();
     }catch(err){
       print(err);
     }
     hasInternet = await hasInternetConnection();
+
+    print(hasInternet);
   }
 
   Future<void> loadProducts() async {
@@ -69,8 +71,9 @@ class ObraList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveProduct(Map<String, Object> data) {
-    onLoad();
+  Future<void> saveProduct(Map<String, Object> data) async {
+    await onLoad();
+
     bool hasId = data['id'] != null;
 
     final product = Obra(
@@ -85,11 +88,11 @@ class ObraList with ChangeNotifier {
       return updateProduct(product);
     } else {
       if(newObras.isNotEmpty && hasInternet == true){
-        newObras.forEach((element) {
-          addProduct(element);
-        });
+        for (var element in newObras) {
+         await  addProduct(element);
+        }
       }
-      return addProduct(product);
+      return await addProduct(product);
     }
   }
 
@@ -110,13 +113,6 @@ class ObraList with ChangeNotifier {
       );
 
       final id = jsonDecode(response.body)['name'];
-      _items.add(Obra(
-        id: id,
-        name: product.name,
-        engineer: product.engineer,
-        owner: product.owner,
-        address: product.address,
-      ));
 
       Obra newObra = Obra(
           id: id,
@@ -125,6 +121,10 @@ class ObraList with ChangeNotifier {
           owner: product.owner,
           address: product.address,
       );
+      
+      _items.add(newObra);
+
+      DB.insert('obras', newObra.toMapSQL());
 
     }else{
         final id = Random().nextDouble().toString();
@@ -141,6 +141,7 @@ class ObraList with ChangeNotifier {
         
         DB.insert('obras', newObra.toMapSQL());
     }
+
     notifyListeners();
   }
 
