@@ -13,6 +13,7 @@ import '../utils/constants.dart';
 class ObraList with ChangeNotifier {  
   bool hasInternet = false; 
   final List<Obra> _items = [];
+  List<Obra> newObras = [];
 
   List<Obra> get items => [..._items];
 
@@ -37,6 +38,15 @@ class ObraList with ChangeNotifier {
   //   }
   // }
 
+  onLoad() async{
+    try{
+      newObras = await obra_validation.missingFirebaseObras();
+    }catch(err){
+      print(err);
+    }
+    hasInternet = await hasInternetConnection();
+  }
+
   Future<void> loadProducts() async {
     _items.clear();
 
@@ -60,6 +70,7 @@ class ObraList with ChangeNotifier {
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
+    onLoad();
     bool hasId = data['id'] != null;
 
     final product = Obra(
@@ -73,16 +84,17 @@ class ObraList with ChangeNotifier {
     if (hasId) {
       return updateProduct(product);
     } else {
+      if(newObras.isNotEmpty && hasInternet == true){
+        newObras.forEach((element) {
+          addProduct(element);
+        });
+      }
       return addProduct(product);
     }
   }
 
-  onLoad() async{
-    hasInternet = await hasInternetConnection();
-  }
 
   Future<void> addProduct(Obra product) async {
-    onLoad();
     if(hasInternet == true){
       final response = await http.post(
         Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
@@ -106,7 +118,14 @@ class ObraList with ChangeNotifier {
         address: product.address,
       ));
 
-      obra_validation.addBetweenDatabases(_items);
+      Obra newObra = Obra(
+          id: id,
+          name: product.name,
+          engineer: product.engineer,
+          owner: product.owner,
+          address: product.address,
+      );
+
     }else{
         final id = Random().nextDouble().toString();
 
@@ -121,8 +140,6 @@ class ObraList with ChangeNotifier {
         _items.add(newObra);
         
         DB.insert('obras', newObra.toMapSQL());
-        
-        obra_validation.addBetweenDatabases(_items);
     }
     notifyListeners();
   }

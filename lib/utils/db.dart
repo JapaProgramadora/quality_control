@@ -23,7 +23,7 @@ class DB {
           path.join(dbPath, 'quality.db'),
           onCreate:  (db, version) {
             return db.execute(
-              'CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT,engineer TEXT)'
+              'CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT)'
             );
           },
           version: version,
@@ -37,7 +37,7 @@ class DB {
       path.join(dbPath, 'quality.db'),
       onCreate:  (db, version) {
         return db.execute(
-          'CREATE TABLE IF NOT EXISTS obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT)'
+          'CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT)'
         );
       },
       version: version,
@@ -60,9 +60,15 @@ class DB {
       List<Obra> obras = data.map((e) => Obra.fromSQLMap(e)).toList();
 
       if (kDebugMode) {
-        print(obras);
+        obras;
+        print(obras.first);
       }
+      if(obras.isEmpty){
+        return [];
+      }
+      return obras;
     }
+
   }
   // _onCreate(db, versao) async {
   //   await db.execute(_obras);
