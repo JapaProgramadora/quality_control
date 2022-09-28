@@ -20,31 +20,31 @@ class _StageFormScreenState extends State<StageFormScreen> {
   bool _isLoading = false;
 
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final arg = ModalRoute.of(context)?.settings.arguments;
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final arg = ModalRoute.of(context)?.settings.arguments;
 
-    if(arg != null){
-      final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
+  //   if(arg != null){
+  //     final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
       
-      if (listStages.isEmpty) {
-        _formData['matchmakingId'] = arg.toString();
-      }
-      else{        
-        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-        final Stage product = listStages.first;
+  //     if (listStages.isEmpty) {
+  //       _formData['matchmakingId'] = arg.toString();
+  //     }
+  //     else{        
+  //       // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+  //       final Stage product = listStages.first;
         
 
-        print(product.id);
-        print(product.matchmakingId);
+  //       print(product.id);
+  //       print(product.matchmakingId);
 
-        _formData['id'] = product.id;
-        _formData['stage'] = product.stage;
-        _formData['matchmakingId'] = product.matchmakingId;
-      }
-    }
-  }
+  //       _formData['id'] = product.id;
+  //       _formData['stage'] = product.stage;
+  //       _formData['matchmakingId'] = product.matchmakingId;
+  //     }
+  //   }
+  // }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -91,6 +91,9 @@ class _StageFormScreenState extends State<StageFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    _formData['matchmakingId'] = arg.toString();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Estágio'),

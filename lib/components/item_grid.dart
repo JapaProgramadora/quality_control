@@ -19,7 +19,13 @@ class ItemGrid extends StatelessWidget {
           itemCount: item.length,
           itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
             value: item[i],
-            child: ItemWidget(matchmakingId: matchmakingId),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300 , width: 1),
+                borderRadius: BorderRadius.circular(6)
+              ),
+              child: ItemWidget(matchmakingId: matchmakingId),
+            ),
           ),
         ),
     );

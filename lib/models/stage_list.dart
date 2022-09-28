@@ -5,20 +5,23 @@ import 'dart:math';
 
 import 'package:control/models/stage.dart';
 import 'package:flutter/material.dart';
+import '../utils/db.dart';
+import '../utils/util.dart';
+import '../validation/obra_validation.dart' as obra_validation;
 import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
+import '../validation/connectivity.dart';
 
 class StageList with ChangeNotifier {  
   final List<Stage> _items = [];
+  bool hasInternet = false; 
+  List<Stage> newStages = [];
+  List<Stage> needUpdate = [];
+  int countStages = 1;
 
   List<Stage> get items => [..._items];
 
-  //List<Obra> get testItems => _items.where((prod) => prod.matchmakingId.contains(other)).toList();
-
-  //final categoriesMeal = meals.where((meal){
-       //return meal.categories.contains(category.id);
-   // }).toList();
   List<Stage> allMatchingStages(matchId){
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
@@ -31,29 +34,57 @@ class StageList with ChangeNotifier {
     return _items.length;
   }
 
+  onLoad() async {
+    hasInternet = await hasInternetConnection();
+    
+    if(hasInternet == true){
+       newStages = await obra_validation.missingFirebaseStages();
+       needUpdate = await obra_validation.stagesNeedingUpdate();
+    }
+  }
+
 
   Future<void> loadStage() async {
+    List<Stage> toRemove = [];
+    await onLoad();
     _items.clear();
-
-    final response = await http.get(
-      Uri.parse('${Constants.STAGE_BASE_URL}.json'),
-    );
-    if (response.body == 'null') return;
-    Map<String, dynamic> data = jsonDecode(response.body);
-    data.forEach((stageId, stageData) {
-        _items.add(
-          Stage(
-            id: stageId,
-            stage: stageData['stage'],
-            matchmakingId: stageData['matchmakingId'],
-          ),
+    
+    if(hasInternet == true){
+      final response = await http.get(
+        Uri.parse('${Constants.STAGE_BASE_URL}.json'),
+      );
+      if (response.body == 'null') return;
+      Map<String, dynamic> data = jsonDecode(response.body);
+      data.forEach((stageId, stageData) {
+          _items.add(
+            Stage(
+              id: stageId,
+              stage: stageData['stage'],
+              matchmakingId: stageData['matchmakingId'],
+              isDeleted: checkBool(stageData['isDeleted']),
+            ),
         );
-    });
-    print(_items);
+      });
+
+      for(var item in _items){
+        if(item.isDeleted == true){
+          toRemove.add(item);
+        }
+      }
+
+      _items.removeWhere((element) => toRemove.contains(element));
+
+    }else{
+      final List<Stage> loadedStage = await DB.getStagesFromDb('stages');
+      for(var item in loadedStage){
+        _items.add(item);
+      }
+    }
     notifyListeners();
   }
 
-  Future<String> saveStage(Map<String, Object> data) {
+  Future<String> saveStage(Map<String, Object> data) async {
+    onLoad();
     bool hasId = data['id'] != null;
 
     final product = Stage(
@@ -65,29 +96,51 @@ class StageList with ChangeNotifier {
     if (hasId) {
       return updateStage(product);
     } else {
+      countStages = 1;
+      if(newStages.isNotEmpty && hasInternet == true){
+        for(var element in newStages){
+          await addStage(element);
+        }
+      }
+      countStages = 0;
+      newStages.clear();
       return addStage(product);
     }
   }
 
   Future<String> addStage(Stage product) async {
-    final response = await http.post(
+    String id;
+    Stage novoStage;
+    if(hasInternet == true){
+      final response = await http.post(
       Uri.parse('${Constants.STAGE_BASE_URL}.json'),
-      body: jsonEncode(
-        {
-          "matchmakingId": product.matchmakingId,
-          "stage": product.stage,
-        },
-      ),
+        body: jsonEncode(
+          {
+            "matchmakingId": product.matchmakingId,
+            "stage": product.stage,
+            "isDeleted": product.isDeleted,
+            "isUpdated": product.isUpdated,
+          },
+        ),
+      );
+
+      id = jsonDecode(response.body)['name'];
+    }else{
+      id = Random().nextDouble().toString();
+    }
+
+    novoStage = Stage(
+        id: id,
+        stage: product.stage,
+        matchmakingId: product.matchmakingId,
     );
 
-    final id = jsonDecode(response.body)['name'];
-    _items.add(Stage(
-      id: id,
-      stage: product.stage,
-      matchmakingId: product.matchmakingId,
-    ));
-    notifyListeners();
+    if(countStages == 0){
+      await DB.insert('stages', novoStage.toMapSQL());
+    } 
 
+    await loadStage();
+    notifyListeners();
     return id;
   }
 
@@ -116,20 +169,14 @@ class StageList with ChangeNotifier {
   Future<void> removeStage(Stage product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
-      notifyListeners();
-
-      final response = await http.delete(
-        Uri.parse('${Constants.STAGE_BASE_URL}/${product.id}.json'),
-      );
-
-      if (response.statusCode >= 400) {
-        _items.insert(index, product);
-        notifyListeners();
-      }
+    if(hasInternet == true){
+      product.toggleDeletion();
     }
+
+    await DB.deleteStage(product);
+    loadStage();
+    notifyListeners();
+
   }
 
 }

@@ -25,6 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = true;
   bool _showDoneOnly = false;
 
+  Future<void> _refreshObras(BuildContext context) async{
+    Provider.of<ObraList>(context, listen: false).loadProducts();
+  }
+
 
   @override
   void initState() {
@@ -76,7 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
         ],
       ),
-      body: ObraGrid(_showDoneOnly,)
+      body: RefreshIndicator(
+        onRefresh: () => _refreshObras(context),
+        child: ObraGrid(_showDoneOnly,)
+        ),
     );
   }
 }

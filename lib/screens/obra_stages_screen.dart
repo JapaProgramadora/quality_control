@@ -2,6 +2,7 @@
 // ignore_for_file: unused_field
 
 import 'package:control/components/stage_grid.dart';
+import 'package:control/models/item_list.dart';
 import 'package:control/models/location_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,10 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
   bool _isLoading = true;
   final bool _isClicked = false;
 
+  Future<void> _onRefresh(BuildContext context) async{
+    Provider.of<StageList>(context, listen: false).loadStage();
+  }
+
 
   @override
     void initState() {
@@ -34,10 +39,10 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         _isLoading = false;
         });
       });
-      Provider.of<LocationList>(
+      Provider.of<ItemList>(
         context,
         listen: false,
-      ).loadLocation().then((value) {
+      ).loadItems().then((value) {
         setState(() {
         _isLoading = false;
         });
@@ -94,7 +99,10 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
           ),
         ],
       ),
-      body: StageGrid(matchmakingId: id),
+      body: RefreshIndicator(
+        onRefresh: () => _onRefresh(context),
+        child: StageGrid(matchmakingId: id),
+      ),
     ); 
   }
 }

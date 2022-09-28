@@ -1,14 +1,23 @@
 import 'dart:convert';
 import 'dart:math';
 
+import '../utils/db.dart';
+import '../validation/obra_validation.dart' as obra_validation;
+
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
+import '../validation/connectivity.dart';
 import 'item.dart';
 
 class ItemList with ChangeNotifier {
+  bool hasInternet = false;
+  int countItems = 1;
   final List<Items> _items = [];
+  List<Items> newItems = [];
+  List<Items> needUpdate = [];
 
   List<Items> get items {
     return [..._items];
@@ -25,30 +34,42 @@ class ItemList with ChangeNotifier {
     return _items.where((prod) => prod.id == matchId).toList().first;
   }
 
-  Future<void> loadItems() async {
-    _items.clear();
+  onLoad() async {
+    hasInternet = await hasInternetConnection();
 
-    final response = await http.get(
-      Uri.parse('${Constants.ITEM_BASE_URL}.json'),
-    );
-    if (response.body == 'null') return;
-    Map<String, dynamic> data = jsonDecode(response.body);
-    data.forEach((productId, productData) {
-        _items.add(
-          Items(
-            id: productId,
-            beginningDate: DateTime.parse(productData['beginningDate']),
-            endingDate: DateTime.parse(productData['endingDate']),
-            item: productData['item'],
-            matchmakingId: productData['matchmakingId'],
-            description: productData['description'],
-          ),
-      );
-    });
-    notifyListeners();
+    if(hasInternet == true){
+      newItems = await obra_validation.missingFirebaseItems();
+      //needUpdate = await obra_validation.stagesNeedingUpdate();
+    }
   }
 
-  Future<void> saveItem(Map<String, Object> data) {
+  Future<void> loadItems() async {
+    _items.clear();
+    if(hasInternet == true){
+      final response = await http.get(
+        Uri.parse('${Constants.ITEM_BASE_URL}.json'),
+      );
+      if (response.body == 'null') return;
+      Map<String, dynamic> data = jsonDecode(response.body);
+      data.forEach((productId, productData) {
+          _items.add(
+            Items(
+              id: productId,
+              beginningDate: DateTime.parse(productData['beginningDate']),
+              endingDate: DateTime.parse(productData['endingDate']),
+              item: productData['item'],
+              matchmakingId: productData['matchmakingId'],
+              isGood: productData['isGood'],
+              description: productData['description'],
+            ),
+          );
+      });
+    }
+
+  }
+
+  Future<void> saveItem(Map<String, Object> data) async {
+    await onLoad();
     bool hasId = data['id'] != null;
 
     final product = Items(
@@ -63,35 +84,56 @@ class ItemList with ChangeNotifier {
     if (hasId) {
       return updateItem(product);
     } else {
-      return addItem(product);
+      countItems = 1;
+      if(newItems.isNotEmpty && hasInternet == true){
+        for(var element in newItems){
+          await addItem(element);
+        }
+      }
+      countItems = 0;
+      newItems.clear();
+      return await addItem(product);
     }
   }
 
   Future<void> addItem(Items product) async {
     final beginningDate = product.beginningDate;
     final endingDate = product.endingDate;
-    final response = await http.post(
-      Uri.parse('${Constants.ITEM_BASE_URL}.json'),
-      body: jsonEncode(
-        {
-          "item": product.item,
-          "description": product.description,
-          "beginningDate": beginningDate.toIso8601String(),
-          "endingDate": endingDate.toIso8601String(),
-          "matchmakingId": product.matchmakingId,
-        },
-      ),
-    );
+    Items novoItems;
+    String id;
+    if(hasInternet == true){
+        final response = await http.post(
+          Uri.parse('${Constants.ITEM_BASE_URL}.json'),
+          body: jsonEncode(
+            {
+              "item": product.item,
+              "description": product.description,
+              "beginningDate": beginningDate.toIso8601String(),
+              "endingDate": endingDate.toIso8601String(), 
+              "isGood": product.isGood,
+              "matchmakingId": product.matchmakingId,
+            },
+          ),
+        );
+        id = jsonDecode(response.body)['name'];
+      }else{
+        id = Random().nextDouble().toString();
+      }
 
-    final id = jsonDecode(response.body)['name'];
-    _items.add(Items(
-      id: id,
-      beginningDate: product.beginningDate,
-      item: product.item,
-      endingDate: product.endingDate,
-      description: product.description,
-      matchmakingId: product.matchmakingId,
-    ));
+      novoItems = Items(
+          id: id,
+          item: product.item,
+          description: product.description,
+          matchmakingId: product.matchmakingId,
+          beginningDate: beginningDate,
+          endingDate: endingDate,
+      );
+
+      if(countItems == 0){
+        await DB.insert('items', novoItems.toMapSQL());
+      } 
+
+    await loadItems(); 
     notifyListeners();
   }
 

@@ -12,6 +12,7 @@ import 'package:control/screens/item_form.dart';
 import 'package:control/screens/item_screen.dart';
 import 'package:control/screens/location_form_screen.dart';
 import 'package:control/screens/method_form.dart';
+import 'package:control/screens/method_screen.dart';
 import 'package:control/screens/obra_form_screen.dart';
 import 'package:control/screens/obra_stages_screen.dart';
 import 'package:control/screens/stage_form_screen.dart';
@@ -19,8 +20,6 @@ import 'package:control/screens/verification_display_screen.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
 
 import 'models/stage_list.dart';
 
@@ -56,7 +55,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageFormScreen(),
           AppRoutes.ITEM_SCREEN: (ctx) => const ItemScreen(),
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
-          //AppRoutes.OBRA_LOCATION_SCREEN: (ctx) => const LocationScreen(),
+          AppRoutes.METHOD_SCREEN: (ctx) => const MethodScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
           AppRoutes.ALTERNATIVE_STAGE_FORM: (ctx) => const CopyStageForm(),
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),

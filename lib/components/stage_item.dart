@@ -2,6 +2,8 @@
 
 // ignore_for_file: unused_local_variable
 
+import 'package:control/components/item_grid.dart';
+
 import '../models/stage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,14 +56,14 @@ class _StageItemState extends State<StageItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget> [
-                      SizedBox(height: 250, child: LocationGrid(matchmakingId: stage.id)),
+                      SizedBox(height: 250, child: ItemGrid(matchmakingId: stage.id)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
                               onPressed: () {
-                                  Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: {
-                                    "obraId": stage.matchmakingId,
+                                  Navigator.of(context).pushNamed(AppRoutes.ITEM_FORM_SCREEN, arguments: {
+                                    'matchmakingId': stage.id,
                                   });
                               },
                               icon: const Icon(Icons.add),

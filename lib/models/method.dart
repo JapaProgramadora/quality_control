@@ -13,9 +13,7 @@ class Method with ChangeNotifier{
   String method;
   String tolerance;
   String team;
-  bool isTeamGood;
   bool isMethodGood;
-  String errorDescription;
   String matchmakingId;
 
   Method({
@@ -23,9 +21,7 @@ class Method with ChangeNotifier{
     required this.tolerance,
     required this.method,
     required this.team,
-    this.errorDescription = '',
     this.isMethodGood = true,
-    this.isTeamGood = true,
     required this.matchmakingId,
   });
 

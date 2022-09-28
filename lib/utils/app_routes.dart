@@ -12,5 +12,5 @@ class AppRoutes {
   static const METHOD_FORM_SCREEN = '/method-form-screen';
   static const VERIFICATION_DISPLAY_SCREEN = '/verification-display-screen';
   static const ALTERNATIVE_STAGE_FORM = '/alternative-stage-form';
-  
+  static const METHOD_SCREEN = '/method-screen';
 }

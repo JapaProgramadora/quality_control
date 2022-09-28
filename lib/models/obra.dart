@@ -13,7 +13,9 @@ class Obra with ChangeNotifier {
   final String engineer;
   final String owner;
   final String address;
+  bool isDeleted;
   bool isIncomplete;
+  bool isUpdated;
 
   Obra({
     required this.id,
@@ -22,9 +24,9 @@ class Obra with ChangeNotifier {
     required this.owner,
     required this.address,
     this.isIncomplete = true,
+    this.isDeleted = false,
+    this.isUpdated = false,
   });
-
-  Obra.fromDatabase(Map<String, Object?> row) : id = row['id'] as String, name = row['name'] as String, engineer = row['engineer'] as String, owner = row['owner'] as String, address = row['address'] as String, isIncomplete = row['isIncomplete'].toString() as bool;
 
   void toggleDone() {
     isIncomplete = !isIncomplete;
@@ -48,6 +50,30 @@ class Obra with ChangeNotifier {
     }
   }
 
+  void toggleDeleted(){
+    isDeleted = !isDeleted;
+    notifyListeners();
+  }
+
+  Future<void> toggleDeletion() async {
+    try {
+      toggleDeleted();
+
+      final response = await http.patch(
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/$id.json'),
+        body: jsonEncode({"isDeleted": isDeleted}),
+      );
+
+      if (response.statusCode >= 400) {
+        toggleDeleted();
+      }
+    } catch (_) {
+      toggleDeleted();
+    }
+
+    notifyListeners();
+  }
+
   factory Obra.fromSQLMap(Map<String, dynamic> map) {
     return Obra(
       id: map['id'] as String,
@@ -56,6 +82,7 @@ class Obra with ChangeNotifier {
       owner: map['owner'] as String,
       address: map['address'] as String,
       isIncomplete: map['isIncomplete'] != null ? checkBool(map['isIncomplete']) : true,
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
     );
   }
 
@@ -67,6 +94,7 @@ class Obra with ChangeNotifier {
       'owner': owner,
       'address': address,
       'isIncomplete': boolToSql(isIncomplete),
+      'isUpdated': boolToSql(isUpdated),
     };
   }
 }

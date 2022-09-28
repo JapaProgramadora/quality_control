@@ -44,10 +44,7 @@ class MethodList with ChangeNotifier {
             id: methodId,
             method: methodData['method'],
             team: methodData['team'],
-            errorDescription: methodData['errorDescription'],
             tolerance: methodData['tolerance'],
-            isMethodGood: methodData['isMethodGood'],
-            isTeamGood: methodData['isTeamGood'],
             matchmakingId: methodData['matchmakingId'],
           ),
         );
@@ -63,7 +60,6 @@ class MethodList with ChangeNotifier {
       method: data['method'] as String,
       team: data['team'] as String,
       tolerance: data['tolerance'] as String,
-      errorDescription: data['errorDescription'] as String,
       matchmakingId: data['matchmakingId'] as String,
     );
 
@@ -83,8 +79,6 @@ class MethodList with ChangeNotifier {
           "method": product.method,
           "team": product.team,
           "isMethodGood": product.isMethodGood,
-          "isTeamGood": product.isTeamGood,
-          "errorDescription": product.errorDescription,
           "tolerance": product.tolerance,
         },
       ),
@@ -95,8 +89,8 @@ class MethodList with ChangeNotifier {
       id: id,
       method: product.method,
       team: product.team,
-      errorDescription: product.errorDescription,
       tolerance: product.tolerance,
+      isMethodGood: product.isMethodGood,
       matchmakingId: product.matchmakingId,
     ));
     notifyListeners();
@@ -114,7 +108,7 @@ class MethodList with ChangeNotifier {
             "method": product.method,
             "team": product.team,
             "tolerance": product.tolerance,
-            "errorDescription": product.errorDescription,
+            "isMethodGood": product.isMethodGood,
             "matchmakingId": product.matchmakingId,
           },
         ),

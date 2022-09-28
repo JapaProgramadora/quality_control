@@ -122,7 +122,7 @@ class _MethodFormState extends State<MethodForm> {
                       onSaved: (method) => _formData['method'] = method ?? '',
                       validator: (_method) {
                         final method = _method ?? '';
-                        _formData['errorDescription'] = '';
+                        _formData['method'] = '';
 
                         if (method.trim().isEmpty) {
                           return 'Método de Verificação é obrigatório';

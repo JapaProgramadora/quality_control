@@ -24,7 +24,7 @@ class VerificationDisplayScreen extends StatelessWidget {
     );
   }
 
-    return Scaffold(
+  return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Avaliação'),
