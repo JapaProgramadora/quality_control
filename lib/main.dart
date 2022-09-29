@@ -1,7 +1,7 @@
 
 // ignore_for_file: equal_keys_in_map
 
-import 'package:control/models/errorMethod_list.dart';
+import 'package:control/models/evaluation_list.dart';
 import 'package:control/models/item_list.dart';
 import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
@@ -16,7 +16,7 @@ import 'package:control/screens/method_screen.dart';
 import 'package:control/screens/obra_form_screen.dart';
 import 'package:control/screens/obra_stages_screen.dart';
 import 'package:control/screens/stage_form_screen.dart';
-import 'package:control/screens/verification_display_screen.dart';
+import 'package:control/screens/evaluation_screen.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ObraList()),
         ChangeNotifierProvider(create: (_) => ItemList()),
         ChangeNotifierProvider(create: (_) => StageList()),
-        ChangeNotifierProvider(create: (_) => ErrorMethodList()),
+        ChangeNotifierProvider(create: (_) => EvaluationList()),
         ChangeNotifierProvider(create: (_) => LocationList()),
         ChangeNotifierProvider(create: (_) => MethodList()),
       ],

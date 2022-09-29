@@ -1,21 +1,21 @@
 
 import 'package:flutter/foundation.dart';
 
-import '../models/errorMethod_list.dart';
+import '../models/evaluation.dart';
+import '../models/evaluation_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/errorMethod.dart';
 
-class ErrorMethodForm extends StatefulWidget {
+class EvaluationForm extends StatefulWidget {
   final String matchmakingId;
-  const ErrorMethodForm(this.matchmakingId, {Key? key}) : super(key: key);
+  const EvaluationForm(this.matchmakingId, {Key? key}) : super(key: key);
 
   @override
-  _ErrorMethodFormState createState() => _ErrorMethodFormState();
+  _EvaluationFormState createState() => _EvaluationFormState();
 }
 
-class _ErrorMethodFormState extends State<ErrorMethodForm> {
+class _EvaluationFormState extends State<EvaluationForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
@@ -37,12 +37,12 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
     setState(() => _isLoading = true);
 
     try {
-      final errorId = await Provider.of<ErrorMethodList>(
+      final errorId = await Provider.of<EvaluationList>(
         context,
         listen: false,
-      ).saveErrorMethod(_formData);
+      ).saveEvaluation(_formData);
 
-      List<ErrorMethod> listErrors = Provider.of<ErrorMethodList>(context, listen: false).getSpecificErrorMethod(errorId);
+      List<Evaluation> listErrors = Provider.of<EvaluationList>(context, listen: false).getSpecificEvaluation(errorId);
 
       await showDialog<void>(
         context: context,
@@ -53,72 +53,16 @@ class _ErrorMethodFormState extends State<ErrorMethodForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 const Text('Estão usando EPI?'),
-                Consumer <ErrorMethodList>(
-                  builder: (ctx, error, _) => TextButton(
+                Consumer<Evaluation>(
+                  builder:(ctx, error, _) => TextButton(
                     child: const Text('Sim'),
                     onPressed: () {
-                      ErrorMethod error = listErrors.first;
-                      error.changeEPI(true);
-                    }
-                  ),
-                ),
-                TextButton(
-                  child: const Text('Não'),
-                  onPressed: () {
-                      ErrorMethod error = listErrors.first;
-                      error.changeEPI(false);
-                  }
-                ),
-            ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Estão produtivos?'),
-                Consumer <ErrorMethodList>(
-                  builder: (ctx, error, _) => TextButton(
-                    child: const Text('Sim'),
-                    onPressed: () {
-                      ErrorMethod error = listErrors.first;
-                      error.changeProductive(true);
-                    }
-                  ),
-                ),
-                TextButton(
-                  child: const Text('Não'),
-                  onPressed: () {
-                      ErrorMethod error = listErrors.first;
-                      error.changeProductive(false);
-                    }
-                ),
-            ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Estão organizados?'),
-                Consumer <ErrorMethodList>(
-                  builder: (ctx, error, _) => TextButton(
-                    child: const Text('Sim'),
-                    onPressed: () {
-                      ErrorMethod error = listErrors.first;
-                      error.changeOrganized(true);
-                    }
-                  ),
-                ),
-                TextButton(
-                  child: const Text('Não'),
-                  onPressed: ()  {
-                      ErrorMethod error = listErrors.first;
-                      error.changeOrganized(false);
-                  }
+                      Evaluation error = listErrors.first;
+                      error.changeEPI(true, error);
+                    },
+                  )
                 ),
               ],
-            ),
-            TextButton(
-                child: const Text('Salvar'),
-                  onPressed: ()  {
-                      Navigator.of(context).pop();
-                  }
             ),
           ],
         ),

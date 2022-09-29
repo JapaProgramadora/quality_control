@@ -84,7 +84,7 @@ class StageList with ChangeNotifier {
   }
 
   Future<String> saveStage(Map<String, Object> data) async {
-    onLoad();
+    await onLoad();
     bool hasId = data['id'] != null;
 
     final product = Stage(
@@ -110,7 +110,6 @@ class StageList with ChangeNotifier {
 
   Future<String> addStage(Stage product) async {
     String id;
-    Stage novoStage;
     if(hasInternet == true){
       final response = await http.post(
       Uri.parse('${Constants.STAGE_BASE_URL}.json'),
@@ -129,7 +128,7 @@ class StageList with ChangeNotifier {
       id = Random().nextDouble().toString();
     }
 
-    novoStage = Stage(
+    Stage novoStage = Stage(
         id: id,
         stage: product.stage,
         matchmakingId: product.matchmakingId,
@@ -167,13 +166,11 @@ class StageList with ChangeNotifier {
   }
 
   Future<void> removeStage(Stage product) async {
-    int index = _items.indexWhere((p) => p.id == product.id);
-
     if(hasInternet == true){
       product.toggleDeletion();
     }
 
-    await DB.deleteStage(product);
+    await DB.deleteInfo("stages", product.id);
     loadStage();
     notifyListeners();
 

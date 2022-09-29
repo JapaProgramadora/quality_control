@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import '../utils/constants.dart';
 import '../utils/util.dart';
 
 class Items with ChangeNotifier{
@@ -44,13 +46,39 @@ class Items with ChangeNotifier{
       id: map['id'] as String,
       item: map['item'] as String,
       matchmakingId: map['matchmakingId'] as String,
-      description: map['description'] as String,
-      beginningDate: map['beginningDate'] as DateTime,
-      endingDate: map['endingDate'] as DateTime,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
-      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
+      description: map['description'] != null? map['description'] as String: '',
+      beginningDate: DateTime.parse(map['beginningDate']),
+      endingDate: DateTime.parse(map['endingDate']),
+      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
+      isGood: map['isGood'] != null? checkBool(map['isGood']) : false,
     );
   }
+
+  void toggleDeleted(){
+    isDeleted = !isDeleted;
+    notifyListeners();
+  }
+
+  Future<void> toggleDeletion() async {
+    try {
+      toggleDeleted();
+
+      final response = await http.patch(
+        Uri.parse('${Constants.ITEM_BASE_URL}/$id.json'),
+        body: jsonEncode({"isDeleted": isDeleted}),
+      );
+
+      if (response.statusCode >= 400) {
+        toggleDeleted();
+      }
+    } catch (_) {
+      toggleDeleted();
+    }
+
+    notifyListeners();
+  }
+
 
   
 } 

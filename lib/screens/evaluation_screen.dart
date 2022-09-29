@@ -1,6 +1,8 @@
 
 // ignore_for_file: unused_local_variable
 
+import 'package:control/validation/connectivity.dart';
+
 import 'error_description.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class VerificationDisplayScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-          return ErrorMethodForm(method.id);
+          return EvaluationForm(method.id);
       },
     );
   }
@@ -71,8 +73,8 @@ class VerificationDisplayScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          method.changeMethodGood(true);
+                        onPressed: () async {
+                          method.changeMethodGood(true, method);
                         },
                         child: const Text('Conforme'),
                         style: ElevatedButton.styleFrom(
@@ -82,7 +84,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
-                            method.changeMethodGood(false);
+                            method.changeMethodGood(false, method);
                             _openErrorDescriptionForm(context);
                           },
                         child: const Text('Não conforme'),

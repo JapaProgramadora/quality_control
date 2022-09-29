@@ -1,7 +1,9 @@
 
 import 'dart:convert';
 
+import 'package:control/models/evaluation.dart';
 import 'package:control/models/item.dart';
+import 'package:control/models/method.dart';
 import 'package:control/models/stage.dart';
 
 import '../utils/constants.dart';
@@ -13,6 +15,8 @@ import 'package:http/http.dart' as http;
 List<Obra> _items = [];
 List<Stage> _itemsStage = [];
 List<Items> _itemsItens = [];
+List<Method> _itemsMethod = [];
+List<Evaluation> _itemsEvaluation = [];
 
 Future<void> loadObras(List something) async {
     final response = await http.get(
@@ -65,14 +69,34 @@ Future<void> loadItems() async {
           id: productId,
           item: productData['item'],
           description: productData['description'],
-          beginningDate: productData['beginningDate'],
-          endingDate: productData['endingDate'],
+          beginningDate: DateTime.parse(productData['beginningDate']),
+          endingDate: DateTime.parse(productData['endingDate']),
           matchmakingId: productData['matchmakingId'],
         ),
       );
     });
 }
 
+Future<void> loadEvaluation(List something) async {
+    final response = await http.get(
+      Uri.parse('${Constants.ERROR_METHOD_URL}.json'),
+    );
+
+    if (response.body == 'null') return;
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productData) {
+      something.add(
+        Evaluation(
+          id: productId,
+          error: productData['error'],
+          matchmakingId: productData['matchmakingId'],
+          isEPI: productData['isEPI'],
+          isOrganized: productData['isOrganized'],
+          isProductive: productData['isProductive'],
+        ),
+      );
+    });
+}
 
 Future<List<Obra>> missingFirebaseObras() async {
     final List<Obra> loadedObra = await DB.getObrasFromDB('obras');
@@ -113,7 +137,6 @@ Future<List<Obra>> missingFirebaseObras() async {
     }
 
     notMatchingItems.removeWhere((element) => matchingItems.contains(element));
-    print(notMatchingItems);
 
     return notMatchingItems;
 }
@@ -236,4 +259,107 @@ Future<List<Items>> missingFirebaseItems() async {
     notMatchingItems.removeWhere((element) => matchingItems.contains(element));
 
     return notMatchingItems;
+}
+
+Future<List<Method>> missingFirebaseMethods() async {
+    List<Method> loadedMethods = await DB.getMethodsFromDB();
+    List<Method> matchingMethods = [];
+    List<Method> notMatchingMethods = [];
+    List<Method> toRemove = [];
+
+    if(loadedMethods.isEmpty){
+      return [];
+    }
+
+    await loadItems();
+
+    if(_itemsMethod.isEmpty){
+      return loadedMethods;
+    }
+
+    for(var item in _itemsMethod){
+      if(item.isDeleted == true){
+        toRemove.add(item);
+      }
+    }
+
+    _items.removeWhere((element) => toRemove.contains(element));
+
+    for(var itens in loadedMethods) {
+      for(var item in _items) {        
+        if(itens.id == item.id){
+          if(!matchingMethods.contains(itens)){
+            matchingMethods.add(itens);
+          }
+        }else{
+          if(!notMatchingMethods.contains(itens)){
+            notMatchingMethods.add(itens);
+          }
+        }
+      }
+    }
+
+    notMatchingMethods.removeWhere((element) => matchingMethods.contains(element));
+
+    return notMatchingMethods;
+}
+
+Future<List<Evaluation>> missingFirebaseEvaluations() async {
+    final List<Evaluation> loadedEvaluations = await DB.getEvaluationsFromDB();
+    final List<Evaluation> matchingItems = [];
+    final List<Evaluation> notMatchingItems = [];
+    final List<Evaluation> toRemove = [];
+
+    if(loadedEvaluations.isEmpty){
+      return [];
+    }
+
+    await loadEvaluation(_itemsEvaluation);
+
+    if(_itemsEvaluation.isEmpty){
+      return loadedEvaluations;
+    }
+
+    for(var item in _itemsEvaluation){
+      if(item.isDeleted == true){
+        toRemove.add(item);
+      }
+    }
+
+    _items.removeWhere((element) => toRemove.contains(element));
+
+    for(var stage in loadedEvaluations) {
+      for(var item in _items) {        
+        if(stage.id == item.id){
+          if(!matchingItems.contains(stage)){
+            matchingItems.add(stage);
+          }
+        }else{
+          if(!notMatchingItems.contains(stage)){
+            notMatchingItems.add(stage);
+          }
+        }
+      }
+    }
+
+    notMatchingItems.removeWhere((element) => matchingItems.contains(element));
+
+    return notMatchingItems;
+}
+
+Future<List<Items>> itemsNeedingUpdate() async {
+    final List<Items> loadedItems = await DB.getItemsFromDB('items');
+    final List<Items> needUpdateItems = [];
+
+    if(loadedItems.isEmpty){
+      return [];
+    }
+
+    for(var item in loadedItems){
+      if(item.isUpdated == true){
+        needUpdateItems.add(item);
+      }
+    }
+  
+    return needUpdateItems;
 }

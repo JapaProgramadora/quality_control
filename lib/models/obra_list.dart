@@ -114,7 +114,6 @@ class ObraList with ChangeNotifier {
 
   Future<void> addProduct(Obra product) async {
     String id;
-    Obra novaObra;
     List<Obra> toRemove = [];
     if(hasInternet == true){
       final response = await http.post(
@@ -133,17 +132,18 @@ class ObraList with ChangeNotifier {
       id = jsonDecode(response.body)['name'];
 
     }else{
-        id = Random().nextDouble().toString();
+      id = Random().nextDouble().toString();
     }
-    novaObra = Obra(
-          id: id,
-          name: product.name,
-          engineer: product.engineer,
-          owner: product.owner,
-          address: product.address,
-      );
-    _items.add(novaObra);
 
+    Obra novaObra = Obra(
+        id: id,
+        name: product.name,
+        engineer: product.engineer,
+        owner: product.owner,
+        address: product.address,
+    );
+
+    _items.add(novaObra);
 
     if(countObras == 0){
       await DB.insert('obras', novaObra.toMapSQL());
@@ -157,9 +157,7 @@ class ObraList with ChangeNotifier {
 
     _items.removeWhere((element) => toRemove.contains(element));
 
-
     _items = _items.toSet().toList();
-
 
     await loadProducts();
     notifyListeners();
@@ -184,21 +182,18 @@ class ObraList with ChangeNotifier {
         );
         _items[index] = product;
       }
-      DB.updateObra(product);
-    }else{
-      DB.updateObra(product);
     }
+    await DB.updateInfo('obras', product.id, product.toMapSQL());
+    await loadProducts();
     notifyListeners();
   }
 
   Future<void> removeProduct(Obra product) async {
     if(hasInternet == true){
-      int index = _items.indexWhere((p) => p.id == product.id);
-
       product.toggleDeletion();
     }
 
-    await DB.deleteObra(product);
+    await DB.deleteInfo("obras", product.id);
     await loadProducts();
     notifyListeners();
   }

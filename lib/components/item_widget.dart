@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
-
-import 'method_grid.dart';
 import '../models/item_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/item.dart';

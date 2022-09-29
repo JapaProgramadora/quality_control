@@ -3,7 +3,6 @@
 
 import 'package:control/components/stage_grid.dart';
 import 'package:control/models/item_list.dart';
-import 'package:control/models/location_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

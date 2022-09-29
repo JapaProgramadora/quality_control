@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import '../utils/db.dart';
+import '../utils/util.dart';
 import '../validation/obra_validation.dart' as obra_validation;
 
 
@@ -39,12 +40,14 @@ class ItemList with ChangeNotifier {
 
     if(hasInternet == true){
       newItems = await obra_validation.missingFirebaseItems();
-      //needUpdate = await obra_validation.stagesNeedingUpdate();
+      needUpdate = await obra_validation.itemsNeedingUpdate();
     }
   }
 
   Future<void> loadItems() async {
+    await onLoad();
     _items.clear();
+    List<Items> toRemove = [];
     if(hasInternet == true){
       final response = await http.get(
         Uri.parse('${Constants.ITEM_BASE_URL}.json'),
@@ -59,13 +62,25 @@ class ItemList with ChangeNotifier {
               endingDate: DateTime.parse(productData['endingDate']),
               item: productData['item'],
               matchmakingId: productData['matchmakingId'],
-              isGood: productData['isGood'],
+              isGood: checkBool(productData['isGood']),
               description: productData['description'],
             ),
           );
       });
-    }
 
+      for(var item in _items){
+        if(item.isDeleted == true){
+          toRemove.add(item);
+        }
+      }
+
+      _items.removeWhere((element) => toRemove.contains(element));
+    }else{
+    final List<Items> loadedItems = await DB.getItemsFromDB('items');
+      for(var item in loadedItems){
+        _items.add(item);
+      }
+    }
   }
 
   Future<void> saveItem(Map<String, Object> data) async {
@@ -82,6 +97,11 @@ class ItemList with ChangeNotifier {
     );
 
     if (hasId) {
+      if(hasInternet == true && needUpdate.isNotEmpty){
+        for(var element in needUpdate){
+          await updateItem(element);
+        }
+      }
       return updateItem(product);
     } else {
       countItems = 1;
@@ -125,6 +145,7 @@ class ItemList with ChangeNotifier {
           item: product.item,
           description: product.description,
           matchmakingId: product.matchmakingId,
+          isGood: product.isGood,
           beginningDate: beginningDate,
           endingDate: endingDate,
       );
@@ -141,7 +162,8 @@ class ItemList with ChangeNotifier {
   Future<void> updateItem(Items product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    if (index >= 0) {
+    if(hasInternet == true){
+      if (index >= 0) {
       await http.patch(
         Uri.parse('${Constants.ITEM_BASE_URL}/${product.id}.json'),
         body: jsonEncode(
@@ -153,29 +175,24 @@ class ItemList with ChangeNotifier {
           },
         ),
       );
-
       _items[index] = product;
-      notifyListeners();
+      }
     }
+    await DB.updateInfo('items', product.id, product.toMapSQL());
+    await loadItems();
+    notifyListeners();
   }
 
   Future<void> removeItem(Items product) async {
-    int index = _items.indexWhere((p) => p.id == product.id);
 
-    if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
-      notifyListeners();
-
-      final response = await http.delete(
-        Uri.parse('${Constants.ITEM_BASE_URL}/${product.id}.json'),
-      );
-
-      if (response.statusCode >= 400) {
-        _items.insert(index, product);
-        notifyListeners();
-      }
+    if(hasInternet == true){
+      product.toggleDeletion();
     }
+
+    await DB.deleteInfo("items", product.id);
+    await loadItems();
+    notifyListeners();
+
   }
 
 }

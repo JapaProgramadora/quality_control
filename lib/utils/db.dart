@@ -1,4 +1,6 @@
 
+import 'package:control/models/evaluation.dart';
+import 'package:control/models/method.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
 
@@ -21,12 +23,13 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'teste16.db'),
+          path.join(dbPath, 'test21.db'),
           onCreate:  (db, version) async {
-            await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS stages(id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
-            await db.execute('CREATE TABLE IF NOT EXISTS method(id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isTeamGood INT, isUpdated INT, isDeleted INT)');
-            await db.execute('CREATE TABLE items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, isUpdated INT, isDeleted INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS method(id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, isUpdated INT, isDeleted INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, isUpdated INT, isDeleted INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS evaluation (id TEXT PRIMARY KEY, error TEXT, isEPI INT, isOrganized INT, isProductive INT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
           },
           version: version,
         );
@@ -35,12 +38,13 @@ class DB {
     }
 
     database = sql.openDatabase(
-      path.join(dbPath, 'teste16.db'),
+      path.join(dbPath, 'test21.db'),
       onCreate:  (db, version) async {
-        await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT)');
+        await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
-        await db.execute('CREATE TABLE method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isTeamGood INT, isUpdated INT, isDeleted INT)');
+        await db.execute('CREATE TABLE method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, isUpdated INT, isDeleted INT)');
+        await db.execute('CREATE TABLE evaluation (id TEXT PRIMARY KEY, error TEXT, isEPI INT, isOrganized INT, isProductive INT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
       },
       version: version,
     );
@@ -85,6 +89,22 @@ class DB {
     }
   }
 
+  static getEvaluationsFromDB() async{
+    final db = await DB.database();
+
+    List<Evaluation> evaluations = [];
+
+    List data = await db.query('evaluation');
+
+    if(data.isNotEmpty){
+      evaluations = data.map((e) => Evaluation.fromSQLMap(e)).toList();
+      return evaluations;
+    }
+    else{
+      return evaluations;
+    }
+  }
+
   static getItemsFromDB(String table) async{
     final db = await DB.database();
 
@@ -101,28 +121,38 @@ class DB {
     }
   }
 
+  static getMethodsFromDB() async{
+    final db = await DB.database();
+
+    List<Method> methods = [];
+
+    List data = await db.query('method');
+
+    if(data.isNotEmpty){
+      methods = data.map((e) => Method.fromSQLMap(e)).toList();
+      return methods;
+    }
+    else{
+      return methods;
+    }
+  }
+
   static deleteDatabase() async {
     final dbPath = await sql.getDatabasesPath();
     await sql.deleteDatabase(dbPath);
 
   }
 
-  static deleteObra(Obra obra) async {
+  static deleteInfo(String table, String id) async {
     final db = await DB.database();
-    await db.delete("obras", where: "id = ?", whereArgs: [obra.id]);
+    await db.delete(table, where: "id = ?", whereArgs: [id]);
   }
 
-  static deleteStage(Stage stage) async {
-    final db = await DB.database();
-    await db.delete("stages", where: "id = ?", whereArgs: [stage.id]);
-  }
-
-  static updateObra(Obra obra) async{
+  static updateInfo(String table, String id, Map<String, dynamic> result) async{
     final db = await DB.database();
 
-    var result = obra.toMapSQL();
-    await db.update('obras', result, where: 'id = ?', whereArgs: [obra.id]);
+    await db.update(table, result, where: 'id = ?', whereArgs: [id]);
   }
-  
+
 
 }

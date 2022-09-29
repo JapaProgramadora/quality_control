@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 import '../models/stage_list.dart';
 import '../utils/app_routes.dart';
-import 'location_grid.dart';
 
 class StageItem extends StatefulWidget {
   final String matchmakingId;
