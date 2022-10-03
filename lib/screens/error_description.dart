@@ -53,23 +53,72 @@ class _EvaluationFormState extends State<EvaluationForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 const Text('Estão usando EPI?'),
-                Consumer<Evaluation>(
-                  builder:(ctx, error, _) => TextButton(
-                    child: const Text('Sim'),
-                    onPressed: () {
-                      Evaluation error = listErrors.first;
-                      error.changeEPI(true, error);
-                    },
-                  )
+                TextButton(
+                      child: const Text('Sim'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeEPI(true, error);
+                      },
+                  ),
+                  TextButton(
+                      child: const Text('Não'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeEPI(false, error);
+                      },
+                  ),
+                 ],
                 ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                const Text('Estão organizados?'),
+                TextButton(
+                      child: const Text('Sim'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeOrganized(true, error);
+                      },
+                  ),
+                  TextButton(
+                      child: const Text('Não'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeOrganized(false, error);
+                      },
+                  ),
+                 ],
+                ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                const Text('Estão produtivos?'),
+                TextButton(
+                      child: const Text('Sim'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeProductive(true, error);
+                      },
+                  ),
+                  TextButton(
+                      child: const Text('Não'),
+                      onPressed: () async {
+                        Evaluation error = listErrors.first;
+                        await error.changeProductive(false, error);
+                      },
+                  ),
+                 ],
+                ),
+                TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }
+                  ),
               ],
             ),
-          ],
-        ),
-      );
-
+        );
       Navigator.of(context).pop();
-
     } catch (error) {
       if (kDebugMode) {
         print(error);

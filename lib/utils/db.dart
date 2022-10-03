@@ -23,7 +23,7 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'test21.db'),
+          path.join(dbPath, 'TESTE22.db'),
           onCreate:  (db, version) async {
             await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS stages(id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
@@ -38,7 +38,7 @@ class DB {
     }
 
     database = sql.openDatabase(
-      path.join(dbPath, 'test21.db'),
+      path.join(dbPath, 'TESTE22.db'),
       onCreate:  (db, version) async {
         await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
