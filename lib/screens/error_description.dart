@@ -6,10 +6,13 @@ import '../models/evaluation_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/inherited_widget.dart';
+
 
 class EvaluationForm extends StatefulWidget {
   final String matchmakingId;
-  const EvaluationForm(this.matchmakingId, {Key? key}) : super(key: key);
+  final String locationId;
+  const EvaluationForm(this.matchmakingId, this.locationId, {Key? key}) : super(key: key);
 
   @override
   _EvaluationFormState createState() => _EvaluationFormState();
@@ -33,6 +36,8 @@ class _EvaluationFormState extends State<EvaluationForm> {
     if(_formData.isEmpty){
       return;
     }
+
+    _formData['locationId'] = widget.locationId;
 
     setState(() => _isLoading = true);
 

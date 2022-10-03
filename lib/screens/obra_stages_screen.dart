@@ -96,6 +96,26 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
             },
             icon: const Icon(Icons.add),
           ),
+          
+          PopupMenuButton(
+            child: Icon(Icons.more_vert),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: const Text('Adicionar Ambiente'),
+                value: 0
+              ),
+            ],
+            onSelected: (result){
+              if(result == 0){
+                Navigator.of(context).pushNamed(
+                  AppRoutes.LOCATION_FORM_SCREEN,
+                  arguments: {
+                    "mat": id.toString()
+                  }
+                );
+              }
+            },
+          )
         ],
       ),
       body: RefreshIndicator(

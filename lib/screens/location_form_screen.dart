@@ -3,6 +3,7 @@
 import 'package:control/models/location_list.dart';
 import 'package:control/models/stage.dart';
 import 'package:control/models/stage_list.dart';
+import 'package:control/utils/inherited_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +94,6 @@ class _LocationFormState extends State<LocationForm> {
     final dropValue = ValueNotifier('');
     String arg = '';
 
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple.shade900,
@@ -135,20 +135,20 @@ class _LocationFormState extends State<LocationForm> {
                         return null;
                       },
                     ),
-                    ValueListenableBuilder(
-                      valueListenable: dropValue, 
-                      builder: (BuildContext ctx, String value, _){
-                        return DropdownButton<String>(
-                          hint: const Text('Estágio'),
-                          value: (value.isEmpty)? null : value,
-                          onChanged: (escolha) => arg = escolha.toString(),
-                          items: loadedStages.map((stages) => DropdownMenuItem(
-                            value: stages.id,
-                            child: Text(stages.stage))
-                          ).toList(), 
-                        );
-                      }
-                    ),
+                    // ValueListenableBuilder(
+                    //   valueListenable: dropValue, 
+                    //   builder: (BuildContext ctx, String value, _){
+                    //     return DropdownButton<String>(
+                    //       hint: const Text('Estágio'),
+                    //       value: (value.isEmpty)? null : value,
+                    //       onChanged: (escolha) => arg = escolha.toString(),
+                    //       items: loadedStages.map((stages) => DropdownMenuItem(
+                    //         value: stages.id,
+                    //         child: Text(stages.stage))
+                    //       ).toList(), 
+                    //     );
+                    //   }
+                    // ),
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(

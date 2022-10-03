@@ -15,6 +15,7 @@ class Evaluation with ChangeNotifier{
   String id;
   String error;
   String matchmakingId;
+  String locationId;
   bool isEPI;
   bool isOrganized;
   bool isProductive;
@@ -25,6 +26,7 @@ class Evaluation with ChangeNotifier{
     required this.id,
     required this.error,
     required this.matchmakingId,
+    required this.locationId,
     this.isEPI = false,
     this.isOrganized = false,
     this.isProductive = false,
@@ -121,6 +123,7 @@ class Evaluation with ChangeNotifier{
       id: map['id'] as String,
       error: map['error'] as String,
       matchmakingId: map['matchmakingId'] as String,
+      locationId: map['locationId'] as String,
       isOrganized: map['isOrganized'] != null ? checkBool(map['isOrganized']) : false,
       isEPI: map['isEPI'] != null ? checkBool(map['isEPI']) : false,
       isProductive: map['isProductive'] != null ? checkBool(map['isProductive']) : false,

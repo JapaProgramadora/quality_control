@@ -1,8 +1,11 @@
 
 // ignore_for_file: unused_local_variable
 
-import 'package:control/validation/connectivity.dart';
+import 'package:control/models/location.dart';
+import 'package:control/models/location_list.dart';
+import 'package:provider/provider.dart';
 
+import '../utils/inherited_widget.dart';
 import 'error_description.dart';
 import 'package:flutter/material.dart';
 
@@ -11,17 +14,32 @@ import '../models/method.dart';
 class VerificationDisplayScreen extends StatelessWidget {
 
   const VerificationDisplayScreen({ Key? key }) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     final method = ModalRoute.of(context)!.settings.arguments as Method;
     final name = method.method.toString;
+    List<Location> toRemove = [];
+    List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).items;
+    final dropValue = ValueNotifier('');
+    String arg = '';
+
+    final String obraId = StateInheritedWidget.of(context);
+
+    for(var location in loadedLocations){
+      if(location.matchmakingId != obraId){
+        toRemove.add(location);
+      }
+    }
+
+    loadedLocations.removeWhere((element) => toRemove.contains(element));
 
     _openErrorDescriptionForm(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-          return EvaluationForm(method.id);
+          return EvaluationForm(method.id, arg);
       },
     );
   }
@@ -67,6 +85,20 @@ class VerificationDisplayScreen extends StatelessWidget {
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                     ),
+                  ),
+                  ValueListenableBuilder(
+                      valueListenable: dropValue, 
+                      builder: (BuildContext ctx, String value, _){
+                        return DropdownButton<String>(
+                          hint: const Text('Ambiente'),
+                          value: (value.isEmpty)? null : value,
+                          onChanged: (escolha) => arg = escolha.toString(),
+                          items: loadedLocations.map((locale) => DropdownMenuItem(
+                            value: locale.id,
+                            child: Text(locale.location))
+                        ).toList(), 
+                      );
+                    }
                   ),
                   const SizedBox(height: 10),
                   Row(

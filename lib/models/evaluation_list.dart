@@ -59,6 +59,7 @@ class EvaluationList with ChangeNotifier {
           _items.add(
             Evaluation(
               id: stageId,
+              locationId: stageData['locationId'],
               error: stageData['error'],
               matchmakingId: stageData['matchmakingId'],
             ),
@@ -80,6 +81,7 @@ class EvaluationList with ChangeNotifier {
     final product = Evaluation(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       error: data['error'] as String,
+      locationId: data['locationId'] as String,
       matchmakingId: data['matchmakingId'] as String,
     );
     
@@ -109,6 +111,7 @@ class EvaluationList with ChangeNotifier {
             "isProductive": product.isProductive,
             "error": product.error,
             "isDeleted": product.isDeleted,
+            "locationId": product.locationId,
           },
         ),
      );
@@ -121,6 +124,7 @@ class EvaluationList with ChangeNotifier {
     Evaluation evaluation = Evaluation(
       id: id,
       error: product.error,
+      locationId: product.locationId,
       isEPI: product.isEPI,
       isOrganized: product.isOrganized,
       isProductive: product.isProductive,

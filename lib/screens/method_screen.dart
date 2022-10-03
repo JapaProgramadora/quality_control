@@ -3,6 +3,7 @@
 // ignore_for_file: constant_identifier_names, unused_field
 
 import 'package:control/components/method_grid.dart';
+import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,13 @@ class _MethodScreenState extends State<MethodScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MethodList>(
-      context,
-      listen: false,
-    ).loadMethod().then((value) {
+    Provider.of<MethodList>(context,listen: false,).loadMethod().then((value) {
+      setState(() {
+       _isLoading = false;
+      });
+    });
+
+    Provider.of<LocationList>(context,listen: false,).loadLocation().then((value) {
       setState(() {
        _isLoading = false;
       });

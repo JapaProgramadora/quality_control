@@ -89,6 +89,7 @@ Future<void> loadEvaluation(List something) async {
         Evaluation(
           id: productId,
           error: productData['error'],
+          locationId: productData['locationId'],
           matchmakingId: productData['matchmakingId'],
           isEPI: productData['isEPI'],
           isOrganized: productData['isOrganized'],

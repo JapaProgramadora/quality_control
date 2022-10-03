@@ -61,8 +61,6 @@ class _CopyStageFormState extends State<CopyStageForm> {
       Navigator.of(context).pop();
     } catch (error) {
       print(error);
-      print(_formData);
-      print(_formData2);
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -95,7 +93,6 @@ class _CopyStageFormState extends State<CopyStageForm> {
           IconButton(
             onPressed: () {
               Stage stage = Provider.of<StageList>(context, listen: false).getSpecificStage(arg).first;
-              print(stage.stage);
               _submitForm(stage, matchId);
             },
             icon: const Icon(Icons.save),
