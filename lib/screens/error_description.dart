@@ -6,7 +6,7 @@ import '../models/evaluation_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/inherited_widget.dart';
+import '../utils/obraId_helper.dart';
 
 
 class EvaluationForm extends StatefulWidget {

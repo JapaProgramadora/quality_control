@@ -1,5 +1,6 @@
 
 import 'package:control/models/evaluation.dart';
+import 'package:control/models/location.dart';
 import 'package:control/models/method.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
@@ -23,13 +24,14 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'teste23.db'),
+          path.join(dbPath, 'teste24.db'),
           onCreate:  (db, version) async {
             await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS stages(id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS method(id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, isUpdated INT, isDeleted INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, isUpdated INT, isDeleted INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS evaluation (id TEXT PRIMARY KEY, error TEXT, isEPI INT, isOrganized INT, isProductive INT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS location (id TEXT PRIMARY KEY, location TEXT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
           },
           version: version,
         );
@@ -38,13 +40,14 @@ class DB {
     }
 
     database = sql.openDatabase(
-      path.join(dbPath, 'teste23.db'),
+      path.join(dbPath, 'teste24.db'),
       onCreate:  (db, version) async {
         await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT)');
         await db.execute('CREATE TABLE method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, isUpdated INT, isDeleted INT)');
         await db.execute('CREATE TABLE evaluation (id TEXT PRIMARY KEY, error TEXT, isEPI INT, isOrganized INT, isProductive INT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
+        await db.execute('CREATE TABLE location (id TEXT PRIMARY KEY, location TEXT, matchmakingId TEXT, isUpdated INT, isDeleted INT)');
       },
       version: version,
     );
@@ -134,6 +137,22 @@ class DB {
     }
     else{
       return methods;
+    }
+  }
+
+  static getLocationFromDB() async{
+    final db = await DB.database();
+
+    List<Location> location = [];
+
+    List data = await db.query('location');
+
+    if(data.isNotEmpty){
+      location = data.map((e) => Location.fromSQLMap(e)).toList();
+      return location;
+    }
+    else{
+      return location;
     }
   }
 

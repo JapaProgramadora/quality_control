@@ -5,7 +5,7 @@ import 'package:control/models/location.dart';
 import 'package:control/models/location_list.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/inherited_widget.dart';
+import '../utils/obraId_helper.dart';
 import 'error_description.dart';
 import 'package:flutter/material.dart';
 
@@ -25,13 +25,13 @@ class VerificationDisplayScreen extends StatelessWidget {
     final dropValue = ValueNotifier('');
     String arg = '';
 
-    final String obraId = StateInheritedWidget.of(context);
+    //ObraIdHelper.of(context)!.state.getValue();
 
-    for(var location in loadedLocations){
-      if(location.matchmakingId != obraId){
-        toRemove.add(location);
-      }
-    }
+    // for(var location in loadedLocations){
+    //   if(location.matchmakingId != obraId){
+    //     toRemove.add(location);
+    //   }
+    // }
 
     loadedLocations.removeWhere((element) => toRemove.contains(element));
 

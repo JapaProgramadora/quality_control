@@ -3,22 +3,29 @@
 
 import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';
+import 'package:control/utils/obraId_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/obra.dart';
-import '../utils/inherited_widget.dart';
 
 //ImagePicker()
-class ObraItem extends StatelessWidget {
+class ObraItem extends StatefulWidget {
 
+  @override
+  State<ObraItem> createState() => _ObraItemState();
+}
+
+class _ObraItemState extends State<ObraItem> {
   @override
   Widget build(BuildContext context) {
     final obras = Provider.of<Obra>(context, listen: false);
+    
+    setState(() {
+      ObraIdHelper.of(context)?.state.changeObraId(obras.id);
+    });
 
-    return StateInheritedWidget(
-      obraId: obras.id,
-      child: ClipRRect(
+    return ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: GridTile(
           child: GestureDetector(
@@ -120,7 +127,6 @@ class ObraItem extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

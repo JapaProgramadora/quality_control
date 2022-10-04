@@ -171,7 +171,7 @@ class StageList with ChangeNotifier {
     }
 
     await DB.deleteInfo("stages", product.id);
-    loadStage();
+    await loadStage();
     notifyListeners();
 
   }

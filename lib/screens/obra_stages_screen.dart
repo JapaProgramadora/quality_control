@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../models/stage_list.dart';
 import '../utils/app_routes.dart';
+import '../utils/obraId_helper.dart';
 
 
 class ObraStagesScreen extends StatefulWidget {
@@ -110,7 +111,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
                 Navigator.of(context).pushNamed(
                   AppRoutes.LOCATION_FORM_SCREEN,
                   arguments: {
-                    "mat": id.toString()
+                    "matchmakingId": id.toString()
                   }
                 );
               }

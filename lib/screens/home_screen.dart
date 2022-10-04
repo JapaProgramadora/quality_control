@@ -5,6 +5,7 @@
 import 'package:control/components/obra_grid.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';
+import 'package:control/utils/obraId_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,44 +47,46 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Obras'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.OBRA_FORM_SCREEN);
-            },
-            icon: const Icon(Icons.add),
-          ),
-          PopupMenuButton(
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                child: Text('Em andamento'),
-                value: FilterOptions.Andamento,
-              ),
-              const PopupMenuItem(
-                child: Text('Todas'),
-                value: FilterOptions.All,
-              ),
-            ],
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Andamento) {
-                  _showDoneOnly = false;
-                } else {
-                  _showDoneOnly = true;
-                }
-            });
-          }),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshObras(context),
-        child: ObraGrid(_showDoneOnly,)
+    return ObraIdHelper(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Obras'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.OBRA_FORM_SCREEN);
+              },
+              icon: const Icon(Icons.add),
+            ),
+            PopupMenuButton(
+              icon: const Icon(Icons.more_vert),
+              itemBuilder: (_) => [
+                const PopupMenuItem(
+                  child: Text('Em andamento'),
+                  value: FilterOptions.Andamento,
+                ),
+                const PopupMenuItem(
+                  child: Text('Todas'),
+                  value: FilterOptions.All,
+                ),
+              ],
+              onSelected: (FilterOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FilterOptions.Andamento) {
+                    _showDoneOnly = false;
+                  } else {
+                    _showDoneOnly = true;
+                  }
+              });
+            }),
+          ],
         ),
+        body: RefreshIndicator(
+          onRefresh: () => _refreshObras(context),
+          child: ObraGrid(_showDoneOnly,)
+          ),
+      ),
     );
   }
 }

@@ -8,9 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
+import '../utils/db.dart';
+import '../validation/connectivity.dart';
 
 class LocationList with ChangeNotifier {  
   final List<Location> _items = [];
+  bool hasInternet = false;
+  int countStages = 0;
 
   List<Location> get items => [..._items];
 
@@ -31,9 +35,19 @@ class LocationList with ChangeNotifier {
     return _items.length;
   }
 
+  onLoad() async {
+    hasInternet = await hasInternetConnection();
+    
+    if(hasInternet == true){
+       //newStages = await obra_validation.missingFirebaseStages();
+       //needUpdate = await obra_validation.stagesNeedingUpdate();
+    }
+  }
+
   Future<void> loadLocation() async {
     _items.clear();
 
+  if(hasInternet == true){
     final response = await http.get(
       Uri.parse('${Constants.LOCATION_BASE_URL}.json'),
     );
@@ -44,11 +58,19 @@ class LocationList with ChangeNotifier {
           Location(
             id: locationId,
             location: locationData['location'],
+            isDeleted: locationData['isDeleted'],
+            isUpdated: locationData['isUpdated'],
             matchmakingId: locationData['matchmakingId'],
           ),
         );
     });
     print(_items);
+  }else{
+    final List<Location> loadedLocation = await DB.getLocationFromDB();
+      for(var item in loadedLocation){
+        _items.add(item);
+    }
+  }
     notifyListeners();
   }
 
@@ -69,22 +91,37 @@ class LocationList with ChangeNotifier {
   }
 
   Future<void> addLocation(Location product) async {
-    final response = await http.post(
+    String id;
+    if(hasInternet == true){
+      final response = await http.post(
       Uri.parse('${Constants.LOCATION_BASE_URL}.json'),
       body: jsonEncode(
-        {
-          "matchmakingId": product.matchmakingId,
-          "location": product.location,
-        },
-      ),
+          {
+            "matchmakingId": product.matchmakingId,
+            "location": product.location,
+          },
+        ),
+      );
+
+      id = jsonDecode(response.body)['name'];
+    }else{
+      id = Random().nextDouble().toString();
+    }
+
+    Location newLocation = Location(
+        id: id,
+        location: product.location,
+        isDeleted: product.isDeleted,
+        matchmakingId: product.matchmakingId,
     );
 
-    final id = jsonDecode(response.body)['name'];
-    _items.add(Location(
-      id: id,
-      location: product.location,
-      matchmakingId: product.matchmakingId,
-    ));
+    if(countStages == 0){
+      await DB.insert('location', newLocation.toMapSQL());
+    } 
+
+    await loadLocation();
+    notifyListeners();
+
     notifyListeners();
   }
 
@@ -109,22 +146,13 @@ class LocationList with ChangeNotifier {
   }
 
   Future<void> removeLocation(Location product) async {
-    int index = _items.indexWhere((p) => p.id == product.id);
-
-    if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
-      notifyListeners();
-
-      final response = await http.delete(
-        Uri.parse('${Constants.LOCATION_BASE_URL}/${product.id}.json'),
-      );
-
-      if (response.statusCode >= 400) {
-        _items.insert(index, product);
-        notifyListeners();
-      }
+     if(hasInternet == true){
+      product.toggleDeletion();
     }
+
+    await DB.deleteInfo("stages", product.id);
+    await loadLocation();
+    notifyListeners();
   }
 
 }
