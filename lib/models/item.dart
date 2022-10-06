@@ -14,6 +14,7 @@ class Items with ChangeNotifier{
   bool isUpdated;
   bool isGood;
   bool isDeleted;
+  bool needFirebase;
 
   Items({
     required this.beginningDate,
@@ -25,6 +26,7 @@ class Items with ChangeNotifier{
     this.isGood = false,
     this.isUpdated = false,
     this.isDeleted = false,
+    this.needFirebase = false,
   });
 
   Map<String, dynamic> toMapSQL() {
@@ -38,6 +40,7 @@ class Items with ChangeNotifier{
       'description': description,
       'beginningDate': beginningDate.toIso8601String(),
       'endingDate': endingDate.toIso8601String(),
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 
@@ -52,6 +55,7 @@ class Items with ChangeNotifier{
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       isGood: map['isGood'] != null? checkBool(map['isGood']) : false,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
 

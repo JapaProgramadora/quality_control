@@ -11,6 +11,7 @@ class Location with ChangeNotifier{
   String matchmakingId;
   bool isUpdated;
   bool isDeleted;
+  bool needFirebase;
 
   Location({
     required this.id,
@@ -18,6 +19,7 @@ class Location with ChangeNotifier{
     required this.matchmakingId,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.needFirebase = false,
   });
 
   factory Location.fromSQLMap(Map<String, dynamic> map) {
@@ -26,7 +28,8 @@ class Location with ChangeNotifier{
       location: map['location'] as String,
       matchmakingId: map['matchmakingId'] as String,
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
-      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
   
@@ -63,6 +66,7 @@ class Location with ChangeNotifier{
       'matchmakingId': matchmakingId,
       'isUpdated': boolToSql(isUpdated),
       'isDeleted': boolToSql(isDeleted),
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 

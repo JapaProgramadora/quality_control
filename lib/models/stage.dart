@@ -12,6 +12,7 @@ class Stage with ChangeNotifier{
   String matchmakingId;
   bool isDeleted;
   bool isUpdated;
+  bool needFirebase;
 
   Stage({
     required this.id,
@@ -19,6 +20,7 @@ class Stage with ChangeNotifier{
     required this.matchmakingId,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.needFirebase = false,
   });
 
   void toggleDeleted(){
@@ -51,7 +53,8 @@ class Stage with ChangeNotifier{
       stage: map['stage'] as String,
       matchmakingId: map['matchmakingId'] as String,
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
-      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
 
@@ -61,6 +64,8 @@ class Stage with ChangeNotifier{
       'stage': stage,
       'matchmakingId': matchmakingId,
       'isUpdated': boolToSql(isUpdated),
+      'isDeleted': boolToSql(isDeleted),
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 }

@@ -15,7 +15,8 @@ import 'item.dart';
 
 class ItemList with ChangeNotifier {
   bool hasInternet = false;
-  int countItems = 1;
+  int countItems = 0;
+  int checkFirebase = 1;
   final List<Items> _items = [];
   List<Items> newItems = [];
   List<Items> needUpdate = [];
@@ -35,6 +36,20 @@ class ItemList with ChangeNotifier {
     return _items.where((prod) => prod.id == matchId).toList().first;
   }
 
+  addToFirebase() async {
+    final List<Items> loadedObra = await DB.getItemsFromDB('items');
+      checkFirebase = 1;
+      countItems = 1;
+      for(var item in loadedObra){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('items', item.id, item.toMapSQL());
+          await addItem(item);
+        }
+      }
+    countItems = 0;
+  }
+
   onLoad() async {
     hasInternet = await hasInternetConnection();
 
@@ -45,9 +60,9 @@ class ItemList with ChangeNotifier {
   }
 
   Future<void> loadItems() async {
+    List<Items> toRemove = [];
     await onLoad();
     _items.clear();
-    List<Items> toRemove = [];
     if(hasInternet == true){
       final response = await http.get(
         Uri.parse('${Constants.ITEM_BASE_URL}.json'),
@@ -64,6 +79,7 @@ class ItemList with ChangeNotifier {
               matchmakingId: productData['matchmakingId'],
               isGood: checkBool(productData['isGood']),
               description: productData['description'],
+              needFirebase: checkBool(productData['needFirebase']),
             ),
           );
       });
@@ -73,8 +89,11 @@ class ItemList with ChangeNotifier {
           toRemove.add(item);
         }
       }
-
       _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
     }else{
     final List<Items> loadedItems = await DB.getItemsFromDB('items');
       for(var item in loadedItems){
@@ -121,7 +140,9 @@ class ItemList with ChangeNotifier {
     final endingDate = product.endingDate;
     Items novoItems;
     String id;
+    bool needFirebase;
     if(hasInternet == true){
+      needFirebase = false;
         final response = await http.post(
           Uri.parse('${Constants.ITEM_BASE_URL}.json'),
           body: jsonEncode(
@@ -132,12 +153,15 @@ class ItemList with ChangeNotifier {
               "endingDate": endingDate.toIso8601String(), 
               "isGood": product.isGood,
               "matchmakingId": product.matchmakingId,
+              "needFirebase": needFirebase,
             },
           ),
         );
         id = jsonDecode(response.body)['name'];
       }else{
         id = Random().nextDouble().toString();
+        needFirebase = true;
+        checkFirebase = 0;
       }
 
       novoItems = Items(
@@ -146,6 +170,7 @@ class ItemList with ChangeNotifier {
           description: product.description,
           matchmakingId: product.matchmakingId,
           isGood: product.isGood,
+          needFirebase: needFirebase,
           beginningDate: beginningDate,
           endingDate: endingDate,
       );

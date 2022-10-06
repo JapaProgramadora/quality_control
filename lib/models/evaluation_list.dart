@@ -2,9 +2,11 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:control/models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/db.dart';
+import '../utils/util.dart';
 import '../validation/obra_validation.dart' as obra_validation;
 
 import '../utils/constants.dart';
@@ -14,7 +16,8 @@ import 'evaluation.dart';
 class EvaluationList with ChangeNotifier {  
   final List<Evaluation> _items = [];
   List<Evaluation> newEvaluations = [];
-  int countStages = 1;
+  int countEvaluations = 0;
+  int checkFirebase = 1;
   List<Evaluation> get items => [..._items];
 
   bool hasInternet = false;
@@ -36,17 +39,29 @@ class EvaluationList with ChangeNotifier {
     return _items.length;
   }
 
+   addToFirebase() async {
+    final List<Evaluation> loadedEvaluation = await DB.getEvaluationsFromDB();
+      checkFirebase = 1;
+      countEvaluations = 1;
+      for(var item in loadedEvaluation){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('evaluation', item.id, item.toMapSQL());
+          await addEvaluation(item);
+        }
+      }
+    countEvaluations = 0;
+  }
+
   onLoad() async {
     hasInternet = await hasInternetConnection();
     
-    if(hasInternet == true){
-      newEvaluations = await obra_validation.missingFirebaseEvaluations();
-      // needUpdate = await obra_validation.stagesNeedingUpdate();
-    }
   }
 
 
   Future<void> loadEvaluation() async {
+    List<Evaluation> toRemove = [];
+    await onLoad();
     _items.clear();
 
     if(hasInternet == true){
@@ -62,9 +77,22 @@ class EvaluationList with ChangeNotifier {
               locationId: stageData['locationId'],
               error: stageData['error'],
               matchmakingId: stageData['matchmakingId'],
+              isDeleted: checkBool(stageData['isDeleted']),
+              needFirebase: checkBool(stageData['needFirebase']),
             ),
           );
       });
+      for(var item in _items){
+        if(item.isDeleted == true){
+          toRemove.add(item);
+        }
+      }
+      _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
+
     }else{
       final List<Evaluation> loadedEvaluations = await DB.getEvaluationsFromDB();
       for(var method in loadedEvaluations){
@@ -85,22 +113,14 @@ class EvaluationList with ChangeNotifier {
       matchmakingId: data['matchmakingId'] as String,
     );
     
-    countStages = 1;
-      if(newEvaluations.isNotEmpty && hasInternet == true){
-        for(var element in newEvaluations){
-          await addEvaluation(element);
-        }
-      }
-    countStages = 0;
-    newEvaluations.clear();
     return addEvaluation(product);
-  
   }
 
   Future<String> addEvaluation(Evaluation product) async {
     String id;
-
+    bool needFirebase;
     if(hasInternet == true){
+      needFirebase = false;
       final response = await http.post(
       Uri.parse('${Constants.ERROR_METHOD_URL}.json'),
       body: jsonEncode(
@@ -112,6 +132,7 @@ class EvaluationList with ChangeNotifier {
             "error": product.error,
             "isDeleted": product.isDeleted,
             "locationId": product.locationId,
+            "needFirebase": needFirebase,
           },
         ),
      );
@@ -119,6 +140,8 @@ class EvaluationList with ChangeNotifier {
       id = jsonDecode(response.body)['name'];
     }else{
       id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
     }
 
     Evaluation evaluation = Evaluation(
@@ -129,9 +152,10 @@ class EvaluationList with ChangeNotifier {
       isOrganized: product.isOrganized,
       isProductive: product.isProductive,
       matchmakingId: product.matchmakingId,
+      needFirebase: needFirebase,
     );
 
-    if(countStages == 0){
+    if(countEvaluations == 0){
       await DB.insert('evaluation', evaluation.toMapSQL());
     } 
     

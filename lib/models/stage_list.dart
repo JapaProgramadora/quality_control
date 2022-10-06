@@ -14,11 +14,12 @@ import '../utils/constants.dart';
 import '../validation/connectivity.dart';
 
 class StageList with ChangeNotifier {  
-  final List<Stage> _items = [];
+  List<Stage> _items = [];
   bool hasInternet = false; 
   List<Stage> newStages = [];
   List<Stage> needUpdate = [];
-  int countStages = 1;
+  int countStages = 0;
+  int checkFirebase = 1;
 
   List<Stage> get items => [..._items];
 
@@ -32,6 +33,20 @@ class StageList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  addToFirebase() async {
+    final List<Stage> loadedStages = await DB.getStagesFromDb('stages');
+      checkFirebase = 1;
+      countStages = 1;
+      for(var item in loadedStages){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('stages', item.id, item.toMapSQL());
+          await addStage(item);
+        }
+      }
+    countStages = 0;
   }
 
   onLoad() async {
@@ -62,6 +77,7 @@ class StageList with ChangeNotifier {
               stage: stageData['stage'],
               matchmakingId: stageData['matchmakingId'],
               isDeleted: checkBool(stageData['isDeleted']),
+              needFirebase: checkBool(stageData['needFirebase']),
             ),
         );
       });
@@ -73,6 +89,10 @@ class StageList with ChangeNotifier {
       }
 
       _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
 
     }else{
       final List<Stage> loadedStage = await DB.getStagesFromDb('stages');
@@ -96,42 +116,38 @@ class StageList with ChangeNotifier {
     if (hasId) {
       return updateStage(product);
     } else {
-      countStages = 1;
-      if(newStages.isNotEmpty && hasInternet == true){
-        for(var element in newStages){
-          await addStage(element);
-        }
-      }
-      countStages = 0;
-      newStages.clear();
       return addStage(product);
     }
   }
 
   Future<String> addStage(Stage product) async {
     String id;
+    List<Stage> toRemove = [];
+    bool needFirebase;
     if(hasInternet == true){
+      needFirebase = false;
       final response = await http.post(
       Uri.parse('${Constants.STAGE_BASE_URL}.json'),
         body: jsonEncode(
           {
             "matchmakingId": product.matchmakingId,
             "stage": product.stage,
-            "isDeleted": product.isDeleted,
-            "isUpdated": product.isUpdated,
+            "needFirebase": needFirebase
           },
         ),
       );
-
       id = jsonDecode(response.body)['name'];
     }else{
       id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
     }
 
     Stage novoStage = Stage(
         id: id,
         stage: product.stage,
         matchmakingId: product.matchmakingId,
+        needFirebase: needFirebase,
     );
 
     if(countStages == 0){
@@ -166,11 +182,12 @@ class StageList with ChangeNotifier {
   }
 
   Future<void> removeStage(Stage product) async {
+    await DB.deleteInfo("stages", product.id);
+
     if(hasInternet == true){
       product.toggleDeletion();
     }
 
-    await DB.deleteInfo("stages", product.id);
     await loadStage();
     notifyListeners();
 

@@ -7,7 +7,10 @@ import 'package:control/models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/location.dart';
+import '../models/location_list.dart';
 import '../utils/app_routes.dart';
+import '../utils/cache.dart';
 
 class MethodItem extends StatelessWidget {
   final String matchmakingId;
@@ -18,10 +21,32 @@ class MethodItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final method = Provider.of<Method>(context, listen: false);
     String id = method.id.toString();
+
+    List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).items;
+
+    Future<List<Location>> getLoadedLocations(List<Location> loaded) async{
+      List<Location> toRemove = [];
+      List<Location> matchingItems = [];
+      List<Location> notMatchingItems = [];
+      String obraId = await Cache().getObraId();
+      for(var location in loaded){
+      if(location.matchmakingId != obraId){
+        toRemove.add(location);
+      }
+    }
+    loaded.removeWhere((element) => toRemove.contains(element)); 
+    
+    return loaded;
+  }
  
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.VERIFICATION_DISPLAY_SCREEN, arguments: method);
+      onTap: () async {
+        loadedLocations = await getLoadedLocations(loadedLocations);
+        Navigator.of(context).pushNamed(AppRoutes.VERIFICATION_DISPLAY_SCREEN, arguments: {
+            "method": method,
+            "locations": loadedLocations,
+          }  
+        );
       },
       child: ListTile(
         leading: Consumer<Method>(

@@ -14,7 +14,8 @@ class MethodList with ChangeNotifier {
   final List<Method> _items = [];
   bool hasInternet = false;
   List<Method> newMethods = [];
-  int countItems = 1;
+  int countItems = 0;
+  int checkFirebase = 1;
   
   List<Method> get items => [..._items];
 
@@ -35,6 +36,20 @@ class MethodList with ChangeNotifier {
     return _items.length;
   }
 
+  addToFirebase() async {
+    final List<Method> loadedObra = await DB.getObrasFromDB('method');
+      checkFirebase = 1;
+      countItems = 1;
+      for(var item in loadedObra){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('method', item.id, item.toMapSQL());
+          await addMethod(item);
+        }
+      }
+    countItems = 0;
+  }
+
   onLoad() async {
     hasInternet = await hasInternetConnection();
 
@@ -46,6 +61,7 @@ class MethodList with ChangeNotifier {
 
 
   Future<void> loadMethod() async {
+    List<Method> toRemove = [];
     await onLoad();
     _items.clear();
 
@@ -66,6 +82,17 @@ class MethodList with ChangeNotifier {
             ),
           );
       });
+      for(var item in _items){
+        if(item.isDeleted == true){
+          toRemove.add(item);
+        }
+      }
+      _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
+
     }else{
     final List<Method> loadedMethods = await DB.getMethodsFromDB();
       for(var method in loadedMethods){
@@ -104,8 +131,9 @@ class MethodList with ChangeNotifier {
 
   Future<void> addMethod(Method product) async {
     String id; 
-
+    bool needFirebase;
     if(hasInternet == true){
+      needFirebase = false;
       final response = await http.post(
       Uri.parse('${Constants.METHOD_BASE_URL}.json'),
       body: jsonEncode(
@@ -114,7 +142,9 @@ class MethodList with ChangeNotifier {
             "method": product.method,
             "team": product.team,
             "isMethodGood": product.isMethodGood,
+            "isDeleted": product.isDeleted,
             "tolerance": product.tolerance,
+            "needFirebase": needFirebase,
           },
         ),
       );
@@ -122,6 +152,8 @@ class MethodList with ChangeNotifier {
 
     }else{
       id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
     }
 
     Method newMethod = Method(
@@ -130,7 +162,9 @@ class MethodList with ChangeNotifier {
       team: product.team,
       isMethodGood: product.isMethodGood,
       tolerance: product.tolerance,
+      isDeleted: product.isDeleted,
       matchmakingId: product.matchmakingId,
+      needFirebase: needFirebase,
     );
 
     if(countItems == 0){

@@ -22,6 +22,7 @@ class Method with ChangeNotifier{
   bool isDeleted;
   bool isUpdated;
   bool hasInternet = false;
+  bool needFirebase;
 
   Method({
     required this.id,
@@ -32,6 +33,7 @@ class Method with ChangeNotifier{
     this.isMethodGood = true,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.needFirebase = false,
   });
 
   onLoad() async {
@@ -67,6 +69,7 @@ class Method with ChangeNotifier{
       'isMethodGood': boolToSql(isMethodGood),
       'tolerance': tolerance,
       'team': team,
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 
@@ -80,6 +83,7 @@ class Method with ChangeNotifier{
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       isMethodGood: map['isMethodGood'] != null? checkBool(map['isMethodGood']) : false,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
 

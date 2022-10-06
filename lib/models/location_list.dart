@@ -9,12 +9,14 @@ import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
 import '../utils/db.dart';
+import '../utils/util.dart';
 import '../validation/connectivity.dart';
 
 class LocationList with ChangeNotifier {  
   final List<Location> _items = [];
   bool hasInternet = false;
-  int countStages = 0;
+  int countLocations = 0;
+  int checkFirebase = 1;
 
   List<Location> get items => [..._items];
 
@@ -35,46 +37,67 @@ class LocationList with ChangeNotifier {
     return _items.length;
   }
 
+  addToFirebase() async {
+    final List<Location> loadedObra = await DB.getObrasFromDB('obras');
+      checkFirebase = 1;
+      countLocations = 1;
+      for(var item in loadedObra){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('location', item.id, item.toMapSQL());
+          await addLocation(item);
+        }
+      }
+    countLocations = 0;
+  }
+
   onLoad() async {
     hasInternet = await hasInternetConnection();
-    
-    if(hasInternet == true){
-       //newStages = await obra_validation.missingFirebaseStages();
-       //needUpdate = await obra_validation.stagesNeedingUpdate();
-    }
   }
 
   Future<void> loadLocation() async {
+    List<Location> toRemove = [];
     _items.clear();
 
-  if(hasInternet == true){
-    final response = await http.get(
-      Uri.parse('${Constants.LOCATION_BASE_URL}.json'),
-    );
-    if (response.body == 'null') return;
-    Map<String, dynamic> data = jsonDecode(response.body);
-    data.forEach((locationId, locationData) {
-        _items.add(
-          Location(
-            id: locationId,
-            location: locationData['location'],
-            isDeleted: locationData['isDeleted'],
-            isUpdated: locationData['isUpdated'],
-            matchmakingId: locationData['matchmakingId'],
-          ),
-        );
-    });
-    print(_items);
-  }else{
-    final List<Location> loadedLocation = await DB.getLocationFromDB();
-      for(var item in loadedLocation){
-        _items.add(item);
+    if(hasInternet == true){
+      final response = await http.get(
+        Uri.parse('${Constants.LOCATION_BASE_URL}.json'),
+      );
+      if (response.body == 'null') return;
+      Map<String, dynamic> data = jsonDecode(response.body);
+      data.forEach((locationId, locationData) {
+          _items.add(
+            Location(
+              id: locationId,
+              location: locationData['location'],
+              matchmakingId: locationData['matchmakingId'],
+              needFirebase: checkBool(locationData['needFirebase']),
+            ),
+          );
+      });
+
+      for(var item in _items){
+        if(item.isDeleted == true){
+          toRemove.add(item);
+        }
+      }
+      _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
+      
+    }else{
+      final List<Location> loadedLocation = await DB.getLocationFromDB();
+        for(var item in loadedLocation){
+          _items.add(item);
+      }
     }
-  }
     notifyListeners();
   }
 
-  Future<void> saveLocation(Map<String, Object> data) {
+  Future<void> saveLocation(Map<String, Object> data) async {
+    await onLoad();
     bool hasId = data['id'] != null;
 
     final product = Location(
@@ -92,13 +115,16 @@ class LocationList with ChangeNotifier {
 
   Future<void> addLocation(Location product) async {
     String id;
+    bool needFirebase;
     if(hasInternet == true){
+      needFirebase = false;
       final response = await http.post(
       Uri.parse('${Constants.LOCATION_BASE_URL}.json'),
       body: jsonEncode(
           {
             "matchmakingId": product.matchmakingId,
             "location": product.location,
+            "needFirebase": needFirebase,
           },
         ),
       );
@@ -106,6 +132,8 @@ class LocationList with ChangeNotifier {
       id = jsonDecode(response.body)['name'];
     }else{
       id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
     }
 
     Location newLocation = Location(
@@ -113,15 +141,14 @@ class LocationList with ChangeNotifier {
         location: product.location,
         isDeleted: product.isDeleted,
         matchmakingId: product.matchmakingId,
+        needFirebase: needFirebase,
     );
 
-    if(countStages == 0){
+    if(countLocations == 0){
       await DB.insert('location', newLocation.toMapSQL());
     } 
 
-    await loadLocation();
-    notifyListeners();
-
+    _items.clear();
     notifyListeners();
   }
 

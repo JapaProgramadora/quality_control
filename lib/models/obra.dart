@@ -16,6 +16,7 @@ class Obra with ChangeNotifier {
   bool isDeleted;
   bool isIncomplete;
   bool isUpdated;
+  bool needFirebase;
 
   Obra({
     required this.id,
@@ -26,6 +27,7 @@ class Obra with ChangeNotifier {
     this.isIncomplete = true,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.needFirebase = false,
   });
 
   void toggleDone() {
@@ -81,8 +83,9 @@ class Obra with ChangeNotifier {
       engineer: map['engineer'] as String,
       owner: map['owner'] as String,
       address: map['address'] as String,
-      isIncomplete: map['isIncomplete'] != null ? checkBool(map['isIncomplete']) : true,
-      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
+      isIncomplete: map['isIncomplete'] != null ? checkBool(map['isIncomplete']) : false,
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
 
@@ -95,6 +98,7 @@ class Obra with ChangeNotifier {
       'address': address,
       'isIncomplete': boolToSql(isIncomplete),
       'isUpdated': boolToSql(isUpdated),
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 }

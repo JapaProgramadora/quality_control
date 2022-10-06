@@ -3,7 +3,6 @@
 import 'package:control/models/location_list.dart';
 import 'package:control/models/stage.dart';
 import 'package:control/models/stage_list.dart';
-import 'package:control/utils/obraId_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,26 +24,24 @@ class _LocationFormState extends State<LocationForm> {
   List<Location> listLocation = [];
   List<Stage> loadedStages = [];
   
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-
-    listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
+  //   listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
     
-    if(listLocation.isNotEmpty){
-      final Location product = listLocation.first;
+  //   if(listLocation.isNotEmpty){
+  //     final Location product = listLocation.first;
       
-      _formData['location'] = product.location;
-      _formData['matchmakingId'] = product.matchmakingId;
-    }
-    final provider = Provider.of<StageList>(context);
-    loadedStages = provider.allMatchingStages(arg['obraId']);
-  }
+  //     _formData['location'] = product.location;
+  //     _formData['matchmakingId'] = product.matchmakingId;
+  //   }
+  //   final provider = Provider.of<StageList>(context);
+  //   loadedStages = provider.allMatchingStages(arg['obraId']);
+  // }
 
-  Future<void> _submitForm(String dropValue) async {
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -56,8 +53,6 @@ class _LocationFormState extends State<LocationForm> {
     if(_formData.isEmpty){
       return;
     }
-
-    _formData['matchmakingId'] = dropValue.toString();
 
     setState(() => _isLoading = true);
 
@@ -91,8 +86,8 @@ class _LocationFormState extends State<LocationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final dropValue = ValueNotifier('');
-    String arg = '';
+    final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    _formData['matchmakingId'] = arg['matchmakingId'].toString();
 
     return Scaffold(
       appBar: AppBar(
@@ -135,26 +130,12 @@ class _LocationFormState extends State<LocationForm> {
                         return null;
                       },
                     ),
-                    // ValueListenableBuilder(
-                    //   valueListenable: dropValue, 
-                    //   builder: (BuildContext ctx, String value, _){
-                    //     return DropdownButton<String>(
-                    //       hint: const Text('Estágio'),
-                    //       value: (value.isEmpty)? null : value,
-                    //       onChanged: (escolha) => arg = escolha.toString(),
-                    //       items: loadedStages.map((stages) => DropdownMenuItem(
-                    //         value: stages.id,
-                    //         child: Text(stages.stage))
-                    //       ).toList(), 
-                    //     );
-                    //   }
-                    // ),
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple.shade900,
                           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
-                      onPressed: () => _submitForm(arg),
+                      onPressed: () => _submitForm(),
                       child: const Text('Salvar'),
                     ),
                   ],

@@ -3,37 +3,35 @@
 
 import 'package:control/models/location.dart';
 import 'package:control/models/location_list.dart';
+import 'package:control/utils/cache.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/obraId_helper.dart';
 import 'error_description.dart';
 import 'package:flutter/material.dart';
 
 import '../models/method.dart';
 
-class VerificationDisplayScreen extends StatelessWidget {
+class VerificationDisplayScreen extends StatefulWidget {
 
   const VerificationDisplayScreen({ Key? key }) : super(key: key);
-  
 
   @override
-  Widget build(BuildContext context) {
-    final method = ModalRoute.of(context)!.settings.arguments as Method;
-    final name = method.method.toString;
-    List<Location> toRemove = [];
-    List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).items;
+  State<VerificationDisplayScreen> createState() => _VerificationDisplayScreenState();
+}
+
+class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
+  String obraId = '';
+
+
+  @override
+  Widget build(BuildContext context)  {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    final method = arguments['method'] as Method;
+    List<Location> finalList = arguments['locations'] as List<Location>;
+    final name = method.method.toString();
     final dropValue = ValueNotifier('');
-    String arg = '';
+    String arg = '';  
 
-    //ObraIdHelper.of(context)!.state.getValue();
-
-    // for(var location in loadedLocations){
-    //   if(location.matchmakingId != obraId){
-    //     toRemove.add(location);
-    //   }
-    // }
-
-    loadedLocations.removeWhere((element) => toRemove.contains(element));
 
     _openErrorDescriptionForm(BuildContext context) {
     showModalBottomSheet(
@@ -93,7 +91,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                           hint: const Text('Ambiente'),
                           value: (value.isEmpty)? null : value,
                           onChanged: (escolha) => arg = escolha.toString(),
-                          items: loadedLocations.map((locale) => DropdownMenuItem(
+                          items: finalList.toSet().toList().map((locale) => DropdownMenuItem(
                             value: locale.id,
                             child: Text(locale.location))
                         ).toList(), 
@@ -107,6 +105,7 @@ class VerificationDisplayScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () async {
                           method.changeMethodGood(true, method);
+                          _openErrorDescriptionForm(context);
                         },
                         child: const Text('Conforme'),
                         style: ElevatedButton.styleFrom(

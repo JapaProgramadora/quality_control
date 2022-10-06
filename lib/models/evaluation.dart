@@ -21,6 +21,7 @@ class Evaluation with ChangeNotifier{
   bool isProductive;
   bool isUpdated;
   bool isDeleted;
+  bool needFirebase;
 
   Evaluation({
     required this.id,
@@ -32,6 +33,7 @@ class Evaluation with ChangeNotifier{
     this.isProductive = false,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.needFirebase = false,
   });
 
   onLoad() async {
@@ -128,7 +130,8 @@ class Evaluation with ChangeNotifier{
       isEPI: map['isEPI'] != null ? checkBool(map['isEPI']) : false,
       isProductive: map['isProductive'] != null ? checkBool(map['isProductive']) : false,
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
-      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true
+      isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
   }
 
@@ -139,9 +142,11 @@ class Evaluation with ChangeNotifier{
       'matchmakingId': matchmakingId,
       'isUpdated': boolToSql(isUpdated),
       'isOrganized': boolToSql(isOrganized),
+      'locationId': locationId,
       'isEPI': boolToSql(isEPI),
       'isDeleted': boolToSql(isDeleted),
       'isProductive': boolToSql(isProductive),
+      'needFirebase': boolToSql(needFirebase),
     };
   }
 }
