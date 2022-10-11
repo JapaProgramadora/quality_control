@@ -27,17 +27,23 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
   Widget build(BuildContext context)  {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     final method = arguments['method'] as Method;
+    List<String> allMethods = method.method;
+    List<String> allTolerances = method.tolerance;
     List<Location> finalList = arguments['locations'] as List<Location>;
     final name = method.method.toString();
     final dropValue = ValueNotifier('');
-    String arg = '';  
+    final dropValue1 = ValueNotifier('');
+    var dropValue2 = ValueNotifier('');
+    String locationId = ''; 
+    String methodName = ''; 
+    String toleranceName = ''; 
 
 
     _openErrorDescriptionForm(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-          return EvaluationForm(method.id, arg);
+          return EvaluationForm(method.id, locationId, methodName, toleranceName);
       },
     );
   }
@@ -50,7 +56,7 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
       body: Column(
         children: [ 
           Container(
-            margin: const EdgeInsets.all(30) ,
+            margin: const EdgeInsets.all(10) ,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               border: Border.all(color: Colors.grey)
@@ -68,29 +74,52 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
                     ),
                   ),
                   const Divider(),
-                  Text(
-                      method.method,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                  Container(
+                    width: 200,
+                    child: SingleChildScrollView(
+                      child: ValueListenableBuilder(
+                          valueListenable: dropValue1, 
+                          builder: (BuildContext ctx, String value, _){
+                            return DropdownButton<String>(
+                              hint: const Text('Método'),
+                              isExpanded: true,
+                              value: (value.isEmpty)? null : value,
+                              onChanged: (escolha) => methodName = escolha.toString(),
+                              items: allMethods.toSet().toList().map((method) => DropdownMenuItem(
+                                value: method,
+                                child: Text(method))
+                            ).toList(), 
+                          );
+                        }
+                      ),
                     ),
                   ),
-                  Text(
-                      method.tolerance,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                  Container(
+                    width: 200,
+                    child: ValueListenableBuilder(
+                        valueListenable: dropValue2, 
+                        builder: (BuildContext ctx, String value, _){
+                          return DropdownButton<String>(
+                            hint:  const Text('Tolerância'),
+                            value: (value.isEmpty)? null : value,
+                            isExpanded: true,
+                            onChanged: (escolha) => toleranceName = escolha.toString(),
+                            items: allTolerances.toSet().toList().map((tolerance) => DropdownMenuItem(
+                              value: tolerance,
+                              child: Text(tolerance))
+                          ).toList(), 
+                        );
+                      }
                     ),
                   ),
+              
                   ValueListenableBuilder(
                       valueListenable: dropValue, 
                       builder: (BuildContext ctx, String value, _){
                         return DropdownButton<String>(
                           hint: const Text('Ambiente'),
                           value: (value.isEmpty)? null : value,
-                          onChanged: (escolha) => arg = escolha.toString(),
+                          onChanged: (escolha) => locationId = escolha.toString(),
                           items: finalList.toSet().toList().map((locale) => DropdownMenuItem(
                             value: locale.id,
                             child: Text(locale.location))

@@ -52,11 +52,6 @@ class MethodList with ChangeNotifier {
 
   onLoad() async {
     hasInternet = await hasInternetConnection();
-
-    if(hasInternet == true){
-      newMethods = await obra_validation.missingFirebaseMethods();
-      //needUpdate = await obra_validation.stagesNeedingUpdate();
-    }
   }
 
 
@@ -75,9 +70,11 @@ class MethodList with ChangeNotifier {
           _items.add(
             Method(
               id: methodId,
-              method: methodData['method'],
+              item: methodData['item'],
+              method: methodData['method'].cast<String>() as List<String>,
               team: methodData['team'],
-              tolerance: methodData['tolerance'],
+              isDeleted: methodData['isDeleted'],
+              tolerance: methodData['tolerance'].cast<String>() as List<String>,
               matchmakingId: methodData['matchmakingId'],
             ),
           );
@@ -108,23 +105,16 @@ class MethodList with ChangeNotifier {
 
     final product = Method(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
-      method: data['method'] as String,
+      method: data['method'] as List<String>,
       team: data['team'] as String,
-      tolerance: data['tolerance'] as String,
+      item: data['item'] as String,
+      tolerance: data['tolerance'] as List<String>,
       matchmakingId: data['matchmakingId'] as String,
     );
 
     if (hasId) {
       return updateMethod(product);
     } else {
-      countItems = 1;
-      if(newMethods.isNotEmpty && hasInternet == true){
-        for(var element in newMethods){
-          await addMethod(element);
-        }
-      }
-      countItems = 0;
-      newMethods.clear();
       return await addMethod(product);
     }
   }
@@ -141,6 +131,7 @@ class MethodList with ChangeNotifier {
             "matchmakingId": product.matchmakingId,
             "method": product.method,
             "team": product.team,
+            "item": product.item,
             "isMethodGood": product.isMethodGood,
             "isDeleted": product.isDeleted,
             "tolerance": product.tolerance,
@@ -156,8 +147,10 @@ class MethodList with ChangeNotifier {
       checkFirebase = 0;
     }
 
+
     Method newMethod = Method(
       id: id, 
+      item: product.item,
       method: product.method,
       team: product.team,
       isMethodGood: product.isMethodGood,

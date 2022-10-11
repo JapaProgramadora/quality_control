@@ -17,7 +17,20 @@ class _MethodFormState extends State<MethodForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
+  List<String> methods = [];
+  List<String> tolerances = [];
+
   bool _isLoading = false;
+
+  @override 
+  void initState(){
+    super.initState();
+    methods = List<String>.empty(growable: true);
+    methods.add('');
+    tolerances = List<String>.empty(growable: true);
+    tolerances.add('');
+  }
+
 
 
   @override
@@ -41,6 +54,7 @@ class _MethodFormState extends State<MethodForm> {
 
         _formData['id'] = product.id;
         _formData['method'] = product.method;
+        _formData['item'] = product.item;
         _formData['team'] = product.team;
         _formData['tolerance'] = product.tolerance;
         _formData['matchmakingId'] = product.matchmakingId;
@@ -62,6 +76,9 @@ class _MethodFormState extends State<MethodForm> {
     }
 
     setState(() => _isLoading = true);
+
+    _formData['tolerance'] = tolerances;
+    _formData['method'] = methods;
 
     try {
       await Provider.of<MethodList>(
@@ -114,42 +131,22 @@ class _MethodFormState extends State<MethodForm> {
                 child: ListView(
                   children: [
                     TextFormField(
-                      initialValue: _formData['method']?.toString(),
+                      initialValue: _formData['item']?.toString(),
                       decoration: const InputDecoration(
-                        labelText: 'Método de Verificação',
+                        labelText: 'Item',
                       ),
                       textInputAction: TextInputAction.next,
-                      onSaved: (method) => _formData['method'] = method ?? '',
-                      validator: (_method) {
-                        final method = _method ?? '';
-                        _formData['method'] = '';
+                      onSaved: (item) => _formData['item'] = item ?? '',
+                      validator: (_item) {
+                        final item = _item ?? '';
+                        _formData['item'] = '';
 
-                        if (method.trim().isEmpty) {
-                          return 'Método de Verificação é obrigatório';
+                        if (item.trim().isEmpty) {
+                          return 'Item é obrigatório';
                         }
 
-                        if (method.trim().length < 3) {
-                          return 'Método de Verificação precisa no mínimo de 3 letras.';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _formData['tolerance']?.toString(),
-                      decoration: const InputDecoration(
-                        labelText: 'Tolerância de Verificação',
-                      ),
-                      textInputAction: TextInputAction.next,
-                      onSaved: (tolerance) => _formData['tolerance'] = tolerance ?? '',
-                      validator: (_tolerance) {
-                        final tolerance = _tolerance ?? '';
-
-                        if (tolerance.trim().isEmpty) {
-                          return 'Tolerância é obrigatório';
-                        }
-
-                        if (tolerance.trim().length < 3) {
-                          return 'Tolerância precisa de no mínimo de 3 letras.';
+                        if (item.trim().length < 3) {
+                          return 'Item precisa no mínimo de 3 letras.';
                         }
                         return null;
                       },
@@ -174,10 +171,119 @@ class _MethodFormState extends State<MethodForm> {
                         return null;
                       },
                     ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Column(children: [emailUi(index)],);
+                      },
+                      itemCount: methods.length,
+                    ),
                   ],
                 ),
               ),
             ),
     );
+  }
+
+  Widget emailUi(index){
+    return Column(
+      children: [
+        Row(
+          children: [
+            Flexible(
+              child: TextFormField(
+                  initialValue: methods[index],
+                  decoration: const InputDecoration(
+                  labelText: 'Método',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  onSaved: (method) => methods[index] = method ?? '',
+                  validator: (_method) {
+                  final method = _method ?? '';
+
+                  if (method.trim().isEmpty) {
+                    return 'Método é obrigatório';
+                  }
+
+                  if (method.trim().length < 3) {
+                    return 'Método precisa no mínimo de 3 letras.';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Visibility(
+              child: SizedBox(
+                  width: 35,
+                  child: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      addEmailControl('method');
+                    },
+                  )
+              ),
+              visible: index == methods.length - 1,
+            ),
+            Visibility(
+              child: SizedBox(
+                  width: 35,
+                  child: IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      removeEmailControl(index, 'method');
+                    },
+                )
+              ),
+              visible: index > 0,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Flexible(
+              child: TextFormField(
+                  initialValue: tolerances[index],
+                  decoration: const InputDecoration(
+                  labelText: 'Tolerância',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  onSaved: (tolerance) => tolerances[index] = tolerance ?? '',
+                  validator: (_tolerance) {
+                  final tolerance = _tolerance ?? '';
+
+                  if (tolerance.trim().isEmpty) {
+                    return 'Tolerância é obrigatório';
+                  }
+
+                  if (tolerance.trim().length < 3) {
+                    return 'Tolerância precisa no mínimo de 3 letras.';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void addEmailControl(String item){
+    setState(() {
+      if(methods.isNotEmpty){
+        methods.add("");
+        tolerances.add("");
+      }
+    });
+  }
+
+  void removeEmailControl(index, String item){
+    setState(() {
+        if(methods.length > 1){
+          methods.removeAt(index);
+          tolerances.removeAt(index);
+        }
+    });
   }
 }

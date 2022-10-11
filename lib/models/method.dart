@@ -14,8 +14,9 @@ import '../utils/util.dart';
 
 class Method with ChangeNotifier{
   String id;
-  String method;
-  String tolerance;
+  List<String> method;
+  String item;
+  List<String> tolerance;
   String team;
   bool isMethodGood;
   String matchmakingId;
@@ -27,6 +28,7 @@ class Method with ChangeNotifier{
   Method({
     required this.id,
     required this.tolerance,
+    required this.item,
     required this.method,
     required this.team,
     required this.matchmakingId,
@@ -62,12 +64,13 @@ class Method with ChangeNotifier{
   Map<String, dynamic> toMapSQL() {
     return {
       'id': id,
-      'method': method,
+      'method': method.join(','),
+      'item': item,
       'matchmakingId': matchmakingId,
       'isUpdated': boolToSql(isUpdated),
       'isDeleted': boolToSql(isDeleted),
       'isMethodGood': boolToSql(isMethodGood),
-      'tolerance': tolerance,
+      'tolerance': tolerance.join(','),
       'team': team,
       'needFirebase': boolToSql(needFirebase),
     };
@@ -76,10 +79,11 @@ class Method with ChangeNotifier{
   factory Method.fromSQLMap(Map<String, dynamic> map) {
     return Method(
       id: map['id'] as String,
-      method: map['method'] as String,
+      method: map['method'] as List<String>,
+      item: map['item'] as String,
       matchmakingId: map['matchmakingId'] as String,
       team: map['team'] as String,
-      tolerance: map['tolerance'] != null? map['tolerance'] as String: '',
+      tolerance: map['tolerance'] != null? map['tolerance'] as List<String> : [],
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       isMethodGood: map['isMethodGood'] != null? checkBool(map['isMethodGood']) : false,

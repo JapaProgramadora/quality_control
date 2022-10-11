@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/db.dart';
 import '../utils/util.dart';
-import '../validation/obra_validation.dart' as obra_validation;
 
 import '../utils/constants.dart';
 import '../validation/connectivity.dart';
@@ -75,7 +74,10 @@ class EvaluationList with ChangeNotifier {
             Evaluation(
               id: stageId,
               locationId: stageData['locationId'],
+              toleranceName: stageData['toleranceName'],
+              methodName: stageData['methodName'],
               error: stageData['error'],
+              evaluationDate: DateTime.parse(stageData['evaluationDate']),
               matchmakingId: stageData['matchmakingId'],
               isDeleted: checkBool(stageData['isDeleted']),
               needFirebase: checkBool(stageData['needFirebase']),
@@ -110,10 +112,13 @@ class EvaluationList with ChangeNotifier {
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       error: data['error'] as String,
       locationId: data['locationId'] as String,
+      toleranceName: data['toleranceName'] as String,
+      methodName: data['methodName'] as String,
+      evaluationDate: data['evaluationDate'] == null ? DateTime.now() : data['evaluationDate'] as DateTime,
       matchmakingId: data['matchmakingId'] as String,
     );
     
-    return addEvaluation(product);
+    return await addEvaluation(product);
   }
 
   Future<String> addEvaluation(Evaluation product) async {
@@ -129,6 +134,9 @@ class EvaluationList with ChangeNotifier {
             "isEPI": product.isEPI,
             "isOrganized": product.isOrganized,
             "isProductive": product.isProductive,
+            "methodName": product.methodName,
+            "toleranceName": product.toleranceName,
+            "evaluationDate": product.evaluationDate.toIso8601String(),
             "error": product.error,
             "isDeleted": product.isDeleted,
             "locationId": product.locationId,
@@ -148,6 +156,9 @@ class EvaluationList with ChangeNotifier {
       id: id,
       error: product.error,
       locationId: product.locationId,
+      methodName: product.methodName,
+      toleranceName: product.toleranceName,
+      evaluationDate: product.evaluationDate,
       isEPI: product.isEPI,
       isOrganized: product.isOrganized,
       isProductive: product.isProductive,

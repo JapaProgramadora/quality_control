@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 class EvaluationForm extends StatefulWidget {
   final String matchmakingId;
   final String locationId;
-  const EvaluationForm(this.matchmakingId, this.locationId, {Key? key}) : super(key: key);
+  final String methodName;
+  final String toleranceName;
+  const EvaluationForm(this.matchmakingId, this.locationId, this.methodName, this.toleranceName,  {Key? key}) : super(key: key);
 
   @override
   _EvaluationFormState createState() => _EvaluationFormState();
@@ -36,6 +38,8 @@ class _EvaluationFormState extends State<EvaluationForm> {
     }
 
     _formData['locationId'] = widget.locationId;
+    _formData['methodName'] = widget.methodName;
+    _formData['toleranceName'] = widget.toleranceName;
 
     setState(() => _isLoading = true);
 

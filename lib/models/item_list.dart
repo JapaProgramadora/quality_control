@@ -53,10 +53,6 @@ class ItemList with ChangeNotifier {
   onLoad() async {
     hasInternet = await hasInternetConnection();
 
-    if(hasInternet == true){
-      newItems = await obra_validation.missingFirebaseItems();
-      needUpdate = await obra_validation.itemsNeedingUpdate();
-    }
   }
 
   Future<void> loadItems() async {
@@ -76,6 +72,7 @@ class ItemList with ChangeNotifier {
               beginningDate: DateTime.parse(productData['beginningDate']),
               endingDate: DateTime.parse(productData['endingDate']),
               item: productData['item'],
+              isDeleted: checkBool(productData['isDeleted']),
               matchmakingId: productData['matchmakingId'],
               isGood: checkBool(productData['isGood']),
               description: productData['description'],
@@ -116,21 +113,8 @@ class ItemList with ChangeNotifier {
     );
 
     if (hasId) {
-      if(hasInternet == true && needUpdate.isNotEmpty){
-        for(var element in needUpdate){
-          await updateItem(element);
-        }
-      }
       return updateItem(product);
     } else {
-      countItems = 1;
-      if(newItems.isNotEmpty && hasInternet == true){
-        for(var element in newItems){
-          await addItem(element);
-        }
-      }
-      countItems = 0;
-      newItems.clear();
       return await addItem(product);
     }
   }
@@ -153,10 +137,12 @@ class ItemList with ChangeNotifier {
               "endingDate": endingDate.toIso8601String(), 
               "isGood": product.isGood,
               "matchmakingId": product.matchmakingId,
+              "isDeleted": product.isDeleted,
               "needFirebase": needFirebase,
             },
           ),
         );
+
         id = jsonDecode(response.body)['name'];
       }else{
         id = Random().nextDouble().toString();
@@ -209,15 +195,13 @@ class ItemList with ChangeNotifier {
   }
 
   Future<void> removeItem(Items product) async {
-
+    await DB.deleteInfo("items", product.id);
     if(hasInternet == true){
       product.toggleDeletion();
     }
 
-    await DB.deleteInfo("items", product.id);
     await loadItems();
     notifyListeners();
-
   }
 
 }

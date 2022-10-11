@@ -12,22 +12,28 @@ import '../validation/connectivity.dart';
 
 class Evaluation with ChangeNotifier{
   bool hasInternet = false;
-  String id;
-  String error;
-  String matchmakingId;
-  String locationId;
+  final String id;
+  final String error;
+  final String matchmakingId;
+  final String locationId;
+  final String methodName;
+  final String toleranceName;
   bool isEPI;
   bool isOrganized;
   bool isProductive;
   bool isUpdated;
   bool isDeleted;
   bool needFirebase;
+  final DateTime evaluationDate;
 
   Evaluation({
     required this.id,
     required this.error,
+    required this.methodName,
+    required this.toleranceName,
     required this.matchmakingId,
     required this.locationId,
+    required this.evaluationDate,
     this.isEPI = false,
     this.isOrganized = false,
     this.isProductive = false,
@@ -126,6 +132,9 @@ class Evaluation with ChangeNotifier{
       error: map['error'] as String,
       matchmakingId: map['matchmakingId'] as String,
       locationId: map['locationId'] as String,
+      toleranceName: map['toleranceName'] as String,
+      methodName: map['methodName'] as String,
+      evaluationDate: DateTime.parse(map['evaluationDate']),
       isOrganized: map['isOrganized'] != null ? checkBool(map['isOrganized']) : false,
       isEPI: map['isEPI'] != null ? checkBool(map['isEPI']) : false,
       isProductive: map['isProductive'] != null ? checkBool(map['isProductive']) : false,
@@ -139,10 +148,13 @@ class Evaluation with ChangeNotifier{
     return {
       'id': id,
       'error': error,
+      'evaluationDate': evaluationDate.toIso8601String(),
       'matchmakingId': matchmakingId,
       'isUpdated': boolToSql(isUpdated),
       'isOrganized': boolToSql(isOrganized),
       'locationId': locationId,
+      'toleranceName': toleranceName,
+      'methodName': methodName,
       'isEPI': boolToSql(isEPI),
       'isDeleted': boolToSql(isDeleted),
       'isProductive': boolToSql(isProductive),

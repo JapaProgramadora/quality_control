@@ -190,7 +190,7 @@ class _ItemFormState extends State<ItemForm> {
                                     context: context, 
                                     initialDate: DateTime.now(), 
                                     firstDate: DateTime(2019), 
-                                    lastDate: DateTime.now(),
+                                    lastDate: DateTime(2025),
                                   ).then((pickedDate) {
                                     setState(() {
                                       if (pickedDate == null){

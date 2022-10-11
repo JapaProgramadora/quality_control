@@ -54,7 +54,7 @@ class MethodItem extends StatelessWidget {
             backgroundColor: method.isMethodGood ? Colors.green : Colors.red
           ),
         ),
-        title: Text(method.method),
+        title: Text(method.item),
         trailing: SizedBox(
           width: 100,
           child: Row(

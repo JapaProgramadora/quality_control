@@ -52,10 +52,6 @@ class StageList with ChangeNotifier {
   onLoad() async {
     hasInternet = await hasInternetConnection();
     
-    if(hasInternet == true){
-       newStages = await obra_validation.missingFirebaseStages();
-       needUpdate = await obra_validation.stagesNeedingUpdate();
-    }
   }
 
 
