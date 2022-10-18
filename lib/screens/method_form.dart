@@ -44,7 +44,7 @@ class _MethodFormState extends State<MethodForm> {
 
     if(arg != null){
       if((arg as Map)['id'] != null){
-        final List<Method> listMethods = Provider.of<MethodList>(context).getSpecificMethod(arg);      
+        final List<Method> listMethods = Provider.of<MethodList>(context).getSpecificMethod(arg['id']);      
       
         if (listMethods.isEmpty) {
           _formData['matchmakingId'] = arg['id'].toString();
