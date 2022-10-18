@@ -17,6 +17,7 @@ class Obra with ChangeNotifier {
   bool isIncomplete;
   bool isUpdated;
   bool needFirebase;
+  
 
   Obra({
     required this.id,

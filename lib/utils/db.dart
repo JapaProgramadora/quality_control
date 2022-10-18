@@ -23,7 +23,7 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'teste48.db'),
+          path.join(dbPath, 'teste51.db'),
           onCreate:  (db, version) async {
             await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT, needFirebase INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT, needFirebase INT )');
@@ -37,9 +37,9 @@ class DB {
       }
       return database;
     }
-
+    //teste51 eh a versao atual da griselda
     database = sql.openDatabase(
-      path.join(dbPath, 'teste48.db'),
+      path.join(dbPath, 'teste52.db'),
       onCreate:  (db, version) async {
         await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isIncomplete INT, isUpdated INT, isDeleted INT, needFirebase INT)');
         await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT, needFirebase INT )');

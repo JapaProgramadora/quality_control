@@ -2,9 +2,6 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:control/models/location.dart';
-import 'package:control/models/location_list.dart';
-import 'package:control/utils/cache.dart';
-import 'package:provider/provider.dart';
 
 import 'error_description.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +18,9 @@ class VerificationDisplayScreen extends StatefulWidget {
 
 class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
   String obraId = '';
-
+  String? methodValue;
+  String? placeValue;
+  int index = 0;
 
   @override
   Widget build(BuildContext context)  {
@@ -30,7 +29,6 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
     List<String> allMethods = method.method;
     List<String> allTolerances = method.tolerance;
     List<Location> finalList = arguments['locations'] as List<Location>;
-    final name = method.method.toString();
     final dropValue = ValueNotifier('');
     final dropValue1 = ValueNotifier('');
     var dropValue2 = ValueNotifier('');
@@ -48,7 +46,9 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
     );
   }
 
+
   return Scaffold(
+    
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Avaliação'),
@@ -77,55 +77,52 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
                   Container(
                     width: 200,
                     child: SingleChildScrollView(
-                      child: ValueListenableBuilder(
-                          valueListenable: dropValue1, 
-                          builder: (BuildContext ctx, String value, _){
-                            return DropdownButton<String>(
-                              hint: const Text('Método'),
-                              isExpanded: true,
-                              value: (value.isEmpty)? null : value,
-                              onChanged: (escolha) => methodName = escolha.toString(),
-                              items: allMethods.toSet().toList().map((method) => DropdownMenuItem(
-                                value: method,
-                                child: Text(method))
-                            ).toList(), 
-                          );
-                        }
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 200,
-                    child: ValueListenableBuilder(
-                        valueListenable: dropValue2, 
-                        builder: (BuildContext ctx, String value, _){
-                          return DropdownButton<String>(
-                            hint:  const Text('Tolerância'),
-                            value: (value.isEmpty)? null : value,
-                            isExpanded: true,
-                            onChanged: (escolha) => toleranceName = escolha.toString(),
-                            items: allTolerances.toSet().toList().map((tolerance) => DropdownMenuItem(
-                              value: tolerance,
-                              child: Text(tolerance))
-                          ).toList(), 
-                        );
-                      }
-                    ),
-                  ),
-              
-                  ValueListenableBuilder(
-                      valueListenable: dropValue, 
-                      builder: (BuildContext ctx, String value, _){
-                        return DropdownButton<String>(
-                          hint: const Text('Ambiente'),
-                          value: (value.isEmpty)? null : value,
-                          onChanged: (escolha) => locationId = escolha.toString(),
-                          items: finalList.toSet().toList().map((locale) => DropdownMenuItem(
-                            value: locale.id,
-                            child: Text(locale.location))
+                      child: DropdownButton<String>(
+                        hint: Text('Método'),
+                        isExpanded: true,
+                        isDense: true,
+                        value: methodValue,
+                        onChanged: (escolha) {
+                          setState(() {
+                            methodValue = escolha;
+                            methodName = escolha.toString();
+                            for(int i = 0; i < allMethods.length; i++){
+                                if(method.method[i] == escolha){
+                                  index = i;
+                                }
+                            }
+                          });
+                        },
+                        items: allMethods.map((method) => DropdownMenuItem(
+                          value: method,
+                          child: Text(method)
+                          ),
                         ).toList(), 
-                      );
-                    }
+                    //(escolha) => methodName = escolha.toString(),
+                        )
+                    ),
+                  ),
+                  const Divider(),
+                  Container(
+                   width: 200,
+                    child: Text(
+                      allTolerances[index],
+                    )
+                  ),
+                  const Divider(),
+                  DropdownButton<String>(
+                    hint: const Text('Ambiente'),
+                    value: placeValue,
+                    onChanged: (escolha) {
+                      setState(() {
+                        placeValue = escolha;
+                        locationId = escolha.toString();
+                      });
+                    },
+                    items: finalList.map((locale) => DropdownMenuItem(
+                        value: locale.id,
+                        child: Text(locale.location))
+                    ).toList(), 
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -161,4 +158,5 @@ class _VerificationDisplayScreenState extends State<VerificationDisplayScreen> {
       )
     );
   }
+
 }

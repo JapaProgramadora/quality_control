@@ -13,4 +13,6 @@ class Constants {
     'https://quality-control-c49d8-default-rtdb.firebaseio.com/method';   
   static const ERROR_METHOD_URL =
     'https://quality-control-c49d8-default-rtdb.firebaseio.com/error-method';
+  static const TEAM_URL =
+    'https://quality-control-c49d8-default-rtdb.firebaseio.com/team';
 }

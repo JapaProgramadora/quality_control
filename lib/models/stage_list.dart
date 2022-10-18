@@ -159,20 +159,23 @@ class StageList with ChangeNotifier {
   Future<String> updateStage(Stage product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    if (index >= 0) {
-      await http.patch(
-        Uri.parse('${Constants.STAGE_BASE_URL}/${product.id}.json'),
-        body: jsonEncode(
-          {
-            "stage": product.stage,
-            "matchmakingId": product.matchmakingId,
-          },
-        ),
-      );
-
+    if(hasInternet == true){
+        if (index >= 0) {
+        await http.patch(
+          Uri.parse('${Constants.STAGE_BASE_URL}/${product.id}.json'),
+          body: jsonEncode(
+            {
+              "stage": product.stage,
+              "matchmakingId": product.matchmakingId,
+            },
+          ),
+        );
       _items[index] = product;
-      notifyListeners();
+      }
     }
+    await DB.updateInfo('obras', product.id, product.toMapSQL());
+    await loadStage();
+    notifyListeners();
     return product.id;
     
   }

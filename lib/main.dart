@@ -6,6 +6,7 @@ import 'package:control/models/item_list.dart';
 import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
 import 'package:control/models/obra_list.dart';
+import 'package:control/models/team_list.dart';
 import 'package:control/screens/copy_stage_form.dart';
 import 'package:control/screens/home_screen.dart';
 import 'package:control/screens/item_form.dart';
@@ -17,6 +18,7 @@ import 'package:control/screens/obra_form_screen.dart';
 import 'package:control/screens/obra_stages_screen.dart';
 import 'package:control/screens/stage_form_screen.dart';
 import 'package:control/screens/evaluation_screen.dart';
+import 'package:control/screens/team_form.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => EvaluationList()),
         ChangeNotifierProvider(create: (_) => LocationList()),
         ChangeNotifierProvider(create: (_) => MethodList()),
+        ChangeNotifierProvider(create: (_) => TeamList()),
       ],
       child: MaterialApp(
         title: 'Controle de Qualidade',
@@ -57,6 +60,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
           AppRoutes.METHOD_SCREEN: (ctx) => const MethodScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
+          AppRoutes.TEAM_FORM: (ctx) => const TeamForm(),
           AppRoutes.ALTERNATIVE_STAGE_FORM: (ctx) => const CopyStageForm(),
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),
           AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const VerificationDisplayScreen(),

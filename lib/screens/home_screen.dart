@@ -2,6 +2,7 @@
 
 // ignore_for_file: constant_identifier_names, unused_field
 
+import 'package:control/components/app_drawer.dart';
 import 'package:control/components/obra_grid.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/utils/app_routes.dart';
@@ -80,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
         ],
       ),
+      drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () => _refreshObras(context),
         child: ObraGrid(_showDoneOnly,)

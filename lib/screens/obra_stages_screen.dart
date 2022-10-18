@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/stage_list.dart';
+import '../models/team_list.dart';
 import '../utils/app_routes.dart';
 
 class ObraStagesScreen extends StatefulWidget {
@@ -45,6 +46,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         _isLoading = false;
         });
       });
+      Provider.of<TeamList>(context,listen: false,).loadTeams();
   }
 
   // bool _copyStage(BuildContext context) {

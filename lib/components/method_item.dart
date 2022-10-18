@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 
 import '../models/location.dart';
 import '../models/location_list.dart';
+import '../models/team.dart';
+import '../models/team_list.dart';
 import '../utils/app_routes.dart';
 import '../utils/cache.dart';
 
@@ -23,6 +25,7 @@ class MethodItem extends StatelessWidget {
     String id = method.id.toString();
 
     List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).items;
+    List<Team> loadedTeams = Provider.of<TeamList>(context, listen: false).items;
 
     Future<List<Location>> getLoadedLocations(List<Location> loaded) async{
       List<Location> toRemove = [];
@@ -30,14 +33,14 @@ class MethodItem extends StatelessWidget {
       List<Location> notMatchingItems = [];
       String obraId = await Cache().getObraId();
       for(var location in loaded){
-      if(location.matchmakingId != obraId){
-        toRemove.add(location);
+        if(location.matchmakingId != obraId){
+            toRemove.add(location);
+        }
       }
-    }
-    loaded.removeWhere((element) => toRemove.contains(element)); 
+      loaded.removeWhere((element) => toRemove.contains(element)); 
     
-    return loaded;
-  }
+      return loaded;
+    }
  
     return InkWell(
       onTap: () async {
@@ -63,7 +66,11 @@ class MethodItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: id);
+                  Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: {
+                      "id": id,
+                      "teams": loadedTeams,
+                    }                   
+                  );
                 },
               ),
               IconButton(

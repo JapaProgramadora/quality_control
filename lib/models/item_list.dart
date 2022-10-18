@@ -180,9 +180,9 @@ class ItemList with ChangeNotifier {
         body: jsonEncode(
           {
             "item": product.item,
-            "beginningDate": product.beginningDate,
+            "beginningDate": product.beginningDate.toIso8601String(),
             "description": product.description,
-            "endingDate": product.endingDate,
+            "endingDate": product.endingDate.toIso8601String(),
           },
         ),
       );

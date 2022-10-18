@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/method_list.dart';
+import '../models/team.dart';
+import '../models/team_list.dart';
 
 class MethodForm extends StatefulWidget {
   const MethodForm();
@@ -16,9 +18,10 @@ class MethodForm extends StatefulWidget {
 class _MethodFormState extends State<MethodForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-
+  String? teamValue = '';
   List<String> methods = [];
   List<String> tolerances = [];
+  List<Team> teams = [];
 
   bool _isLoading = false;
 
@@ -29,6 +32,7 @@ class _MethodFormState extends State<MethodForm> {
     methods.add('');
     tolerances = List<String>.empty(growable: true);
     tolerances.add('');
+
   }
 
 
@@ -39,25 +43,32 @@ class _MethodFormState extends State<MethodForm> {
     final arg = ModalRoute.of(context)?.settings.arguments;
 
     if(arg != null){
-      final List<Method> listMethods = Provider.of<MethodList>(context).getSpecificMethod(arg);      
+      if((arg as Map)['id'] != null){
+        final List<Method> listMethods = Provider.of<MethodList>(context).getSpecificMethod(arg);      
       
-      if (listMethods.isEmpty) {
-        _formData['matchmakingId'] = arg.toString();
+        if (listMethods.isEmpty) {
+          _formData['matchmakingId'] = arg['id'].toString();
+        }
+        else{        
+          // final List<Method> provider = Provider.of<MethodList>(context).getSpecificMethod(arg);
+          final Method product = listMethods.first;
+          
+
+          print(product.id);
+          print(product.matchmakingId);
+
+          _formData['id'] = product.id;
+          _formData['method'] = product.method;
+          _formData['item'] = product.item;
+          _formData['team'] = product.team;
+          methods = product.method;
+          tolerances = product.tolerance;
+          _formData['matchmakingId'] = product.matchmakingId;
+        }
       }
-      else{        
-        // final List<Method> provider = Provider.of<MethodList>(context).getSpecificMethod(arg);
-        final Method product = listMethods.first;
-        
-
-        print(product.id);
-        print(product.matchmakingId);
-
-        _formData['id'] = product.id;
-        _formData['method'] = product.method;
-        _formData['item'] = product.item;
-        _formData['team'] = product.team;
-        _formData['tolerance'] = product.tolerance;
-        _formData['matchmakingId'] = product.matchmakingId;
+      if((arg as Map)['teams'] != null){
+        teams = arg['teams'];
+        teamValue = teams.first.team;
       }
     }
   }
@@ -77,6 +88,7 @@ class _MethodFormState extends State<MethodForm> {
 
     setState(() => _isLoading = true);
 
+  
     _formData['tolerance'] = tolerances;
     _formData['method'] = methods;
 
@@ -110,6 +122,8 @@ class _MethodFormState extends State<MethodForm> {
 
   @override
   Widget build(BuildContext context) {
+
+    _formData['team'] = teamValue.toString();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Método de Verificação'),
@@ -151,26 +165,30 @@ class _MethodFormState extends State<MethodForm> {
                         return null;
                       },
                     ),
-                    TextFormField(
-                      initialValue: _formData['team']?.toString(),
-                      decoration: const InputDecoration(
-                        labelText: 'Equipe',
+                    Divider(),
+                    Container(
+                    width: 200,
+                    child: SingleChildScrollView(
+                      child: DropdownButton<String?>(
+                        hint: const Text('Equipe'),
+                        isExpanded: true,
+                        isDense: true,
+                        value: (teamValue == '')? null : teamValue,
+                        onChanged: (escolha) {
+                          setState(() {
+                            teamValue = escolha.toString();
+                            _formData['team'] = escolha.toString();
+                          });
+                        },
+                        items: teams.map((team) => DropdownMenuItem(
+                          value: team.team,
+                          child: Text(team.team)
+                          ),
+                        ).toList(), 
+                      )
                       ),
-                      textInputAction: TextInputAction.next,
-                      onSaved: (team) => _formData['team'] = team ?? '',
-                      validator: (_team) {
-                        final team = _team ?? '';
-
-                        if (team.trim().isEmpty) {
-                          return 'Equipe é obrigatório';
-                        }
-
-                        if (team.trim().length < 3) {
-                          return 'Equipe precisa no mínimo de 3 letras.';
-                        }
-                        return null;
-                      },
                     ),
+                    Divider(),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
@@ -193,7 +211,7 @@ class _MethodFormState extends State<MethodForm> {
           children: [
             Flexible(
               child: TextFormField(
-                  initialValue: methods[index],
+                  initialValue: methods[index].toString(),
                   decoration: const InputDecoration(
                   labelText: 'Método',
                   ),

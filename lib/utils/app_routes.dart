@@ -11,6 +11,7 @@ class AppRoutes {
   static const LOCATION_FORM_SCREEN = '/location-form-screen';
   static const METHOD_FORM_SCREEN = '/method-form-screen';
   static const VERIFICATION_DISPLAY_SCREEN = '/verification-display-screen';
+  static const TEAM_FORM = '/team-form';
   static const ALTERNATIVE_STAGE_FORM = '/alternative-stage-form';
   static const METHOD_SCREEN = '/method-screen';
 }

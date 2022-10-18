@@ -9,6 +9,9 @@ import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/team.dart';
+import '../models/team_list.dart';
+
 enum FilterOptions {
   Andamento,
   All,
@@ -24,6 +27,8 @@ class MethodScreen extends StatefulWidget {
 class _MethodScreenState extends State<MethodScreen> {
   bool _isLoading = true;
 
+  List<Team> teams = [];
+
   @override
   void initState() {
     super.initState();
@@ -33,11 +38,10 @@ class _MethodScreenState extends State<MethodScreen> {
       });
     });
 
-    Provider.of<LocationList>(context,listen: false,).loadLocation().then((value) {
-      setState(() {
-       _isLoading = false;
-      });
-    });
+    Provider.of<LocationList>(context,listen: false,).loadLocation();
+
+    teams = Provider.of<TeamList>(context, listen: false).items;
+  
   }
 
   @override
@@ -51,7 +55,11 @@ class _MethodScreenState extends State<MethodScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: matchmakingId);
+              Navigator.of(context).pushNamed(AppRoutes.METHOD_FORM_SCREEN, arguments: {
+                  "id": matchmakingId,
+                  "teams": teams,
+               }
+              );
             },
             icon: const Icon(Icons.add),
           ),
