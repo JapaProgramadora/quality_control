@@ -88,9 +88,7 @@ class ItemList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      if(checkFirebase == 0){
-        await addToFirebase();
-      }
+      await addToFirebase();
     }else{
     final List<Items> loadedItems = await DB.getItemsFromDB('items');
       for(var item in loadedItems){

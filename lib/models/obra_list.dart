@@ -21,7 +21,7 @@ class ObraList with ChangeNotifier {
 
   List<Obra> get items => [..._items];
 
-  List<Obra> get andamentoItems => _items.where((prod) => prod.isIncomplete).toList();
+  List<Obra> get andamentoItems => _items.where((prod) => prod.isComplete).toList();
 
 
   int get itemsCount {
@@ -82,9 +82,7 @@ class ObraList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      if(checkFirebase == 0){
-        await addToFirebase();
-      }
+      await addToFirebase();
     }else{
       final List<Obra> loadedObra = await DB.getObrasFromDB('obras');
       for(var item in loadedObra){
@@ -135,7 +133,7 @@ class ObraList with ChangeNotifier {
             "engineer": product.engineer,
             "owner": product.owner,
             "address": product.address,
-            "isIncomplete": product.isIncomplete,
+            "isComplete": product.isComplete,
             "needFirebase": needFirebase,
           },
         ),

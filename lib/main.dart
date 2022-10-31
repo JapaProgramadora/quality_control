@@ -8,10 +8,11 @@ import 'package:control/models/method_list.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/models/team_list.dart';
 import 'package:control/screens/copy_stage_form.dart';
+import 'package:control/screens/evaluation_screen.dart';
 import 'package:control/screens/home_screen.dart';
 import 'package:control/screens/item_form.dart';
-import 'package:control/screens/item_screen.dart';
 import 'package:control/screens/location_form_screen.dart';
+import 'package:control/screens/location_screen.dart';
 import 'package:control/screens/method_form.dart';
 import 'package:control/screens/method_screen.dart';
 import 'package:control/screens/obra_form_screen.dart';
@@ -19,10 +20,12 @@ import 'package:control/screens/obra_stages_screen.dart';
 import 'package:control/screens/stage_form_screen.dart';
 import 'package:control/screens/evaluation_screen.dart';
 import 'package:control/screens/team_form.dart';
+import 'package:control/screens/teams_screen.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'components/image_input.dart';
 import 'models/stage_list.dart';
 
 void main() {
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Controle de Qualidade',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.blue,
         ),        
         home: const HomeScreen(),
         debugShowCheckedModeBanner: false,
@@ -56,14 +59,17 @@ class MyApp extends StatelessWidget {
           AppRoutes.OBRA_FORM_SCREEN: (ctx) => const ObraFormPage(),
           AppRoutes.OBRA_STAGES_SCREEN: (ctx) => const ObraStagesScreen(),
           AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageFormScreen(),
-          AppRoutes.ITEM_SCREEN: (ctx) => const ItemScreen(),
+          //AppRoutes.ITEM_SCREEN: (ctx) => const ItemScreen(),
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
           AppRoutes.METHOD_SCREEN: (ctx) => const MethodScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
+          AppRoutes.LOCATION_SCREEN: (ctx) => const LocationScreen(),
           AppRoutes.TEAM_FORM: (ctx) => const TeamForm(),
           AppRoutes.ALTERNATIVE_STAGE_FORM: (ctx) => const CopyStageForm(),
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),
-          AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const VerificationDisplayScreen(),
+          AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const EvaluationScreen(),
+          AppRoutes.TEAM_SCREEN: (ctx) => const TeamScreen(),
+          //AppRoutes.IMAGE_INPUT_FORM: (ctx) => const ImageInput(),
         },
       ),
     );

@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print, use_key_in_widget_constructors
 
 import 'package:control/models/location_list.dart';
+import 'package:control/models/obra.dart';
+import 'package:control/models/obra_list.dart';
 import 'package:control/models/stage.dart';
 import 'package:control/models/stage_list.dart';
 import 'package:flutter/material.dart';
@@ -21,25 +23,27 @@ class _LocationFormState extends State<LocationForm> {
 
   bool _isLoading = false;
 
+  String? obraValue = '';
+
   List<Location> listLocation = [];
   List<Stage> loadedStages = [];
   
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
-  //   listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
+    // listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
     
-  //   if(listLocation.isNotEmpty){
-  //     final Location product = listLocation.first;
+    // if(listLocation.isNotEmpty){
+    //   final Location product = listLocation.first;
       
-  //     _formData['location'] = product.location;
-  //     _formData['matchmakingId'] = product.matchmakingId;
-  //   }
-  //   final provider = Provider.of<StageList>(context);
-  //   loadedStages = provider.allMatchingStages(arg['obraId']);
-  // }
+    //   _formData['location'] = product.location;
+    //   _formData['matchmakingId'] = product.matchmakingId;
+    // }
+    // final provider = Provider.of<StageList>(context);
+    // loadedStages = provider.allMatchingStages(arg['obraId']);
+  }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -86,8 +90,7 @@ class _LocationFormState extends State<LocationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-    _formData['matchmakingId'] = arg['matchmakingId'].toString();
+    final List<Obra> loadedObras = Provider.of<ObraList>(context).items;
 
     return Scaffold(
       appBar: AppBar(
@@ -129,6 +132,29 @@ class _LocationFormState extends State<LocationForm> {
                         }
                         return null;
                       },
+                    ),
+                    const Divider(),
+                    Container(
+                    width: 200,
+                    child: SingleChildScrollView(
+                      child: DropdownButton<String?>(
+                        hint: const Text('Obra'),
+                        isExpanded: true,
+                        isDense: true,
+                        value: (obraValue == '')? null : obraValue,
+                        onChanged: (escolha) {
+                          setState(() {
+                            obraValue = escolha.toString();
+                            _formData['matchmakingId'] = escolha.toString();
+                          });
+                        },
+                        items: loadedObras.map((obra) => DropdownMenuItem(
+                          value: obra.id,
+                          child: Text(obra.name)
+                          ),
+                        ).toList(), 
+                      )
+                      ),
                     ),
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(

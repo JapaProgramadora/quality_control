@@ -9,6 +9,7 @@ import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
 enum FilterOptions {
   Andamento,
   All,
@@ -49,42 +50,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 9, 123, 143),
         centerTitle: true,
-        title: const Text('Obras'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.OBRA_FORM_SCREEN);
-            },
-            icon: const Icon(Icons.add),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30)
+          )
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(90),
+          child: Container(
+            padding: const EdgeInsets.only(bottom: 20, right: 230),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Obras',
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            )
           ),
-          PopupMenuButton(
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                child: Text('Em andamento'),
-                value: FilterOptions.Andamento,
-              ),
-              const PopupMenuItem(
-                child: Text('Todas'),
-                value: FilterOptions.All,
-              ),
-            ],
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Andamento) {
-                  _showDoneOnly = false;
-                } else {
-                  _showDoneOnly = true;
-                }
-            });
-          }),
-        ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 102, 183, 197),
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.OBRA_FORM_SCREEN);
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () => _refreshObras(context),
-        child: ObraGrid(_showDoneOnly,)
+        child: Padding(
+          padding: const EdgeInsets.only(top: 25),
+          child: ObraGrid(_showDoneOnly,),
+        )
         ),
     );
   }

@@ -1,32 +1,48 @@
 
-// ignore_for_file: use_key_in_widget_constructors
 
-import 'package:control/utils/app_routes.dart';
+// ignore_for_file: unused_local_variable
+
+import 'package:control/screens/item_screen.dart';
+
+import '../models/stage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/location.dart';
-import '../models/location_list.dart';
+import '../models/stage_list.dart';
+import '../models/team.dart';
+import '../models/team_list.dart';
+import '../utils/app_routes.dart';
+import '../utils/cache.dart';
 
-//ImagePicker()
-class LocationItem extends StatelessWidget {
+class TeamItem extends StatefulWidget {
+  
+  const TeamItem( {Key? key}) : super(key: key);
 
-  const LocationItem();
+  @override
+  State<TeamItem> createState() => _TeamItemState();
+}
+
+class _TeamItemState extends State<TeamItem> {
+
 
   @override
   Widget build(BuildContext context) {
-    final items = Provider.of<Location>(context, listen: false);
-    String id = items.id.toString();
+    final team = Provider.of<Team>(context, listen: false);
 
-    return InkWell(
-      onTap: () {},
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Color.fromARGB(255, 231, 231, 238),
+      ),
       child: ListTile(
-        leading: Consumer<Location>(          
-          builder: (ctx, method, _) => const CircleAvatar(
-            backgroundColor: Colors.green,
+        leading: Icon(Icons.engineering, color: Color.fromARGB(255, 81, 157, 219),),
+        title: Text(
+          team.team,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        title: Text(items.location),
         trailing: SizedBox(
           width: 100,
           child: Row(
@@ -35,9 +51,10 @@ class LocationItem extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: {
-                    "id": id,
-                  });
+                    Navigator.of(context).pushNamed(AppRoutes.TEAM_FORM, arguments: {
+                      'team':team,
+                    }
+                  );
                 },
               ),
               IconButton(
@@ -47,7 +64,7 @@ class LocationItem extends StatelessWidget {
                   showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Excluir Ambiente?'),
+                      title: const Text('Excluir Equipe?'),
                       content: const Text('Tem certeza?'),
                       actions: [
                         TextButton(
@@ -62,7 +79,7 @@ class LocationItem extends StatelessWidget {
                     ),
                   ).then((value) async {
                     if (value ?? false){
-                      await Provider.of<LocationList>(context, listen: false).removeLocation(items);
+                      await Provider.of<TeamList>(context, listen: false).removeTeam(team);
                     }
                   });
                 },

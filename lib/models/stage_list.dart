@@ -73,6 +73,7 @@ class StageList with ChangeNotifier {
               stage: stageData['stage'],
               matchmakingId: stageData['matchmakingId'],
               isDeleted: checkBool(stageData['isDeleted']),
+              isComplete: checkBool(stageData['isComplete']),
               needFirebase: checkBool(stageData['needFirebase']),
             ),
         );
@@ -86,9 +87,8 @@ class StageList with ChangeNotifier {
 
       _items.removeWhere((element) => toRemove.contains(element));
 
-      if(checkFirebase == 0){
-        await addToFirebase();
-      }
+      await addToFirebase();
+  
 
     }else{
       final List<Stage> loadedStage = await DB.getStagesFromDb('stages');

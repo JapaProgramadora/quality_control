@@ -4,7 +4,6 @@ import '../models/method_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/team.dart';
 import 'method_item.dart';
 
 class MethodGrid extends StatefulWidget {

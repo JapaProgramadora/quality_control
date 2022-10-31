@@ -25,22 +25,18 @@ class _TeamFormState extends State<TeamForm> {
 
   List<Team> listTeam = [];
   
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-
-  //   listLocation = Provider.of<LocationList>(context).getSpecificLocation(arg['id']);      
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     
-  //   if(listLocation.isNotEmpty){
-  //     final Location product = listLocation.first;
+    if(arg.isNotEmpty){
+      final Team product = arg['team'];
       
-  //     _formData['location'] = product.location;
-  //     _formData['matchmakingId'] = product.matchmakingId;
-  //   }
-  //   final provider = Provider.of<StageList>(context);
-  //   loadedStages = provider.allMatchingStages(arg['obraId']);
-  // }
+      _formData['id'] = product.id;
+      _formData['team'] = product.team;
+    }
+  }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;

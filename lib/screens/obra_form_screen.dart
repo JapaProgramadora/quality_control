@@ -83,6 +83,7 @@ class _ObraFormPageState extends State<ObraFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 9, 123, 143),
         title: const Text('Formulário de Obra'),
         actions: [
           IconButton(
@@ -189,7 +190,7 @@ class _ObraFormPageState extends State<ObraFormPage> {
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
+                          backgroundColor: Color.fromARGB(255, 102, 183, 197),
                           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
                       onPressed: _submitForm,
                       child: const Text('Salvar'),

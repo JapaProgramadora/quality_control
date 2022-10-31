@@ -68,7 +68,6 @@ class _MethodFormState extends State<MethodForm> {
       }
       if((arg as Map)['teams'] != null){
         teams = arg['teams'];
-        teamValue = teams.first.team;
       }
     }
   }

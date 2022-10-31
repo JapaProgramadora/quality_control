@@ -3,6 +3,7 @@
 
 import 'package:control/validation/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../utils/constants.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,7 @@ class Method with ChangeNotifier{
   bool isMethodGood;
   String matchmakingId;
   bool isDeleted;
+  bool isComplete;
   bool isUpdated;
   bool hasInternet = false;
   bool needFirebase;
@@ -35,6 +37,7 @@ class Method with ChangeNotifier{
     this.isMethodGood = true,
     this.isDeleted = false,
     this.isUpdated = false,
+    this.isComplete = false,
     this.needFirebase = false,
   });
 
@@ -70,6 +73,7 @@ class Method with ChangeNotifier{
       'isUpdated': boolToSql(isUpdated),
       'isDeleted': boolToSql(isDeleted),
       'isMethodGood': boolToSql(isMethodGood),
+      'isComplete': boolToSql(isComplete),
       'tolerance': tolerance.join(','),
       'team': team,
       'needFirebase': boolToSql(needFirebase),
@@ -79,13 +83,14 @@ class Method with ChangeNotifier{
   factory Method.fromSQLMap(Map<String, dynamic> map) {
     return Method(
       id: map['id'] as String,
-      method: map['method'] as List<String>,
+      method: map['method'].split(',') as List<String>,
       item: map['item'] as String,
       matchmakingId: map['matchmakingId'] as String,
       team: map['team'] as String,
-      tolerance: map['tolerance'] != null? map['tolerance'] as List<String> : [],
+      tolerance: map['tolerance'].split(',') as List<String>,
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
+      isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : false,
       isMethodGood: map['isMethodGood'] != null? checkBool(map['isMethodGood']) : false,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );

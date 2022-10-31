@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:control/models/method_list.dart';
 import '../models/item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,23 +20,42 @@ class ItemWidget extends StatefulWidget {
 }
 
 class _ItemWidgetState extends State<ItemWidget> {
+  int finished = 0;
+  int pending = 0;
   
   @override
   Widget build(BuildContext context) {
+    double percentage = 0;
     final item = Provider.of<Items>(context, listen: false);
-    if (kDebugMode) {
-      print(item);
+    final methods = Provider.of<MethodList>(context).items;
+
+    if(methods.isNotEmpty){
+      for(var method in methods){
+        if(method.isMethodGood == true){
+          finished +=1;
+        }else{
+          pending += 1;
+        }
+      }
+      int total = finished + pending;
+      percentage = finished / total;
+    }else{
+      percentage = 0;
     }
 
+
+    
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.METHOD_SCREEN, arguments: item.id);
       },
       child: ListTile(
-        leading: Consumer<Items>(          
-          builder: (ctx, method, _) => const CircleAvatar(
-            backgroundColor: Colors.green, //method.isMethodGood ? Colors.green : Colors.red
-          ),
+        leading: Text(
+          '${(percentage*100).toStringAsFixed(1)}%',
+          style: const TextStyle(
+            color: Color.fromARGB(255, 4, 34, 59),
+            fontSize: 20,
+          )
         ),
         title: Text(item.item),
         trailing: SizedBox(

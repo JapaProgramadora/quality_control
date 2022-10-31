@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/constants.dart';
+import '../utils/db.dart';
 import '../utils/util.dart';
 import '../validation/connectivity.dart';
 
@@ -24,6 +25,7 @@ class TeamList with ChangeNotifier {
   //final categoriesMeal = meals.where((meal){
        //return meal.categories.contains(category.id);
    // }).toList();
+   
 
   Future<List<Team>> getAllTeams() async {
     await loadTeams();
@@ -42,16 +44,33 @@ class TeamList with ChangeNotifier {
     hasInternet = await hasInternetConnection();
   }
 
-  Future<void> loadTeams() async {
-    _items.clear();
+  addToFirebase() async {
+    final List<Team> loadedStages = await DB.getTeamFromDB();
+      checkFirebase = 1;
+      countTeams = 1;
+      for(var item in loadedStages){
+        if(item.isDeleted == false && item.needFirebase == true){
+          item.needFirebase = false;
+          await DB.updateInfo('stages', item.id, item.toMapSQL());
+          await addTeam(item);
+        }
+      }
+    countTeams = 0;
+  }
 
-    
-    final response = await http.get(
-        Uri.parse('${Constants.TEAM_URL}.json'),
-      );
-      if (response.body == 'null') return;
-      Map<String, dynamic> data = jsonDecode(response.body);
-      data.forEach((locationId, locationData) {
+
+  Future<void> loadTeams() async {
+    List<Team> toRemove = [];
+    _items.clear();
+    await onLoad();
+
+    if(hasInternet == true){
+        final response = await http.get(
+          Uri.parse('${Constants.TEAM_URL}.json'),
+        );
+        if (response.body == 'null') return;
+        Map<String, dynamic> data = jsonDecode(response.body);
+        data.forEach((locationId, locationData) {
           _items.add(
             Team(
               id: locationId,
@@ -59,9 +78,25 @@ class TeamList with ChangeNotifier {
               isDeleted: checkBool(locationData['isDeleted']),
               isUpdated: checkBool(locationData['isUpdated']),
             ),
-        );
-    });
+          );
+        });
 
+        for(var item in _items){
+          if(item.isDeleted == true){
+            toRemove.add(item);
+          }
+        }
+      _items.removeWhere((element) => toRemove.contains(element));
+
+      if(checkFirebase == 0){
+        await addToFirebase();
+      }
+    }else{
+       final List<Team> loadedTeams = await DB.getTeamFromDB();
+      for(var item in loadedTeams){
+        _items.add(item);
+      }
+    }
     notifyListeners();
   }
 
@@ -81,9 +116,13 @@ class TeamList with ChangeNotifier {
   }
 
   Future<void> addTeam(Team product) async {
-
-    await http.post(Uri.parse('${Constants.TEAM_URL}.json'),
-    body: jsonEncode(
+    String id;
+    List<Team> toRemove = [];
+    bool needFirebase;
+    if(hasInternet == true){
+      needFirebase = false;
+      final response = await http.post(Uri.parse('${Constants.TEAM_URL}.json'),
+      body: jsonEncode(
           {
             "team": product.team,
             "isDeleted": product.isDeleted,
@@ -91,8 +130,26 @@ class TeamList with ChangeNotifier {
           },
         ),
       );
+      id = jsonDecode(response.body)['name']; 
+    }else{
+      id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
+    }
 
-    loadTeams();
+    Team novoStage = Team(
+        id: id,
+        team: product.team,
+        needFirebase: needFirebase,
+        isDeleted: product.isDeleted,
+        isUpdated: product.isUpdated,
+    );
+
+    if(countTeams == 0){
+      await DB.insert('teams', novoStage.toMapSQL());
+    } 
+    
+    await loadTeams();
     notifyListeners();
   }
 
@@ -100,26 +157,29 @@ class TeamList with ChangeNotifier {
   Future<void> updateLocation(Team product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    if (index >= 0) {
-      await http.patch(
-        Uri.parse('${Constants.TEAM_URL}/${product.id}.json'),
-        body: jsonEncode(
+    if(hasInternet == true){
+        if (index >= 0) {
+        await http.patch(
+          Uri.parse('${Constants.TEAM_URL}/${product.id}.json'),
+          body: jsonEncode(
           {
             "team": product.team,
           },
         ),
-      );
+        );
 
       _items[index] = product;
-      notifyListeners();
+      }
     }
+    await DB.updateInfo('teams', product.id, product.toMapSQL());
+    await loadTeams();
+    notifyListeners();
   }
 
   Future<void> removeTeam(Team product) async {
      if(hasInternet == true){
       product.toggleDeletion();
     }
-
     await loadTeams();
     notifyListeners();
   }

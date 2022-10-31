@@ -14,7 +14,7 @@ class Obra with ChangeNotifier {
   final String owner;
   final String address;
   bool isDeleted;
-  bool isIncomplete;
+  bool isComplete;
   bool isUpdated;
   bool needFirebase;
   
@@ -25,14 +25,14 @@ class Obra with ChangeNotifier {
     required this.engineer,
     required this.owner,
     required this.address,
-    this.isIncomplete = true,
+    this.isComplete = true,
     this.isDeleted = false,
     this.isUpdated = false,
     this.needFirebase = false,
   });
 
   void toggleDone() {
-    isIncomplete = !isIncomplete;
+    isComplete = !isComplete;
     notifyListeners();
   }
 
@@ -42,7 +42,7 @@ class Obra with ChangeNotifier {
 
       final response = await http.patch(
         Uri.parse('${Constants.PRODUCT_BASE_URL}/$id.json'),
-        body: jsonEncode({"isIncomplete": isIncomplete}),
+        body: jsonEncode({"isComplete": isComplete}),
       );
 
       if (response.statusCode >= 400) {
@@ -84,7 +84,7 @@ class Obra with ChangeNotifier {
       engineer: map['engineer'] as String,
       owner: map['owner'] as String,
       address: map['address'] as String,
-      isIncomplete: map['isIncomplete'] != null ? checkBool(map['isIncomplete']) : false,
+      isComplete: map['isComplete'] != null ? checkBool(map['isComplete']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
@@ -97,7 +97,7 @@ class Obra with ChangeNotifier {
       'engineer': engineer,
       'owner': owner,
       'address': address,
-      'isIncomplete': boolToSql(isIncomplete),
+      'isComplete': boolToSql(isComplete),
       'isUpdated': boolToSql(isUpdated),
       'needFirebase': boolToSql(needFirebase),
     };

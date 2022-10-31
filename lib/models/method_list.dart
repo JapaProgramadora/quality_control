@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/db.dart';
+import '../utils/util.dart';
 import '../validation/connectivity.dart';
 import '../validation/obra_validation.dart' as obra_validation;
 
@@ -37,7 +38,7 @@ class MethodList with ChangeNotifier {
   }
 
   addToFirebase() async {
-    final List<Method> loadedObra = await DB.getObrasFromDB('method');
+    final List<Method> loadedObra = await DB.getMethodsFromDB();
       checkFirebase = 1;
       countItems = 1;
       for(var item in loadedObra){
@@ -73,7 +74,9 @@ class MethodList with ChangeNotifier {
               item: methodData['item'],
               method: methodData['method'].cast<String>() as List<String>,
               team: methodData['team'],
+              isMethodGood: methodData['isMethodGood'],
               isDeleted: methodData['isDeleted'],
+              isComplete: checkBool(methodData['isComplete']),
               tolerance: methodData['tolerance'].cast<String>() as List<String>,
               matchmakingId: methodData['matchmakingId'],
             ),
@@ -86,9 +89,7 @@ class MethodList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      if(checkFirebase == 0){
-        await addToFirebase();
-      }
+      await addToFirebase();
 
     }else{
     final List<Method> loadedMethods = await DB.getMethodsFromDB();
@@ -132,6 +133,7 @@ class MethodList with ChangeNotifier {
             "method": product.method,
             "team": product.team,
             "item": product.item,
+            "isComplete": product.isComplete,
             "isMethodGood": product.isMethodGood,
             "isDeleted": product.isDeleted,
             "tolerance": product.tolerance,

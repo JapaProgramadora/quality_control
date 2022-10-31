@@ -29,8 +29,6 @@ class MethodItem extends StatelessWidget {
 
     Future<List<Location>> getLoadedLocations(List<Location> loaded) async{
       List<Location> toRemove = [];
-      List<Location> matchingItems = [];
-      List<Location> notMatchingItems = [];
       String obraId = await Cache().getObraId();
       for(var location in loaded){
         if(location.matchmakingId != obraId){
@@ -48,6 +46,7 @@ class MethodItem extends StatelessWidget {
         Navigator.of(context).pushNamed(AppRoutes.VERIFICATION_DISPLAY_SCREEN, arguments: {
             "method": method,
             "locations": loadedLocations,
+            "teams": loadedTeams,
           }  
         );
       },

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, unused_local_variable
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,8 @@ class Evaluation with ChangeNotifier{
   final String locationId;
   final String methodName;
   final String toleranceName;
+  final String team;
+  final String image;
   bool isEPI;
   bool isOrganized;
   bool isProductive;
@@ -34,6 +37,8 @@ class Evaluation with ChangeNotifier{
     required this.matchmakingId,
     required this.locationId,
     required this.evaluationDate,
+    required this.team,
+    required this.image,
     this.isEPI = false,
     this.isOrganized = false,
     this.isProductive = false,
@@ -130,8 +135,10 @@ class Evaluation with ChangeNotifier{
     return Evaluation(
       id: map['id'] as String,
       error: map['error'] as String,
+      image: map['image'] as String,
       matchmakingId: map['matchmakingId'] as String,
       locationId: map['locationId'] as String,
+      team: map['team'] as String,
       toleranceName: map['toleranceName'] as String,
       methodName: map['methodName'] as String,
       evaluationDate: DateTime.parse(map['evaluationDate']),
@@ -148,8 +155,10 @@ class Evaluation with ChangeNotifier{
     return {
       'id': id,
       'error': error,
+      'image': image,
       'evaluationDate': evaluationDate.toIso8601String(),
       'matchmakingId': matchmakingId,
+      'team': team,
       'isUpdated': boolToSql(isUpdated),
       'isOrganized': boolToSql(isOrganized),
       'locationId': locationId,

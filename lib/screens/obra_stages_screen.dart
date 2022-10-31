@@ -3,6 +3,7 @@
 
 import 'package:control/components/stage_grid.dart';
 import 'package:control/models/item_list.dart';
+import 'package:control/models/obra.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,80 +49,86 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
       });
       Provider.of<TeamList>(context,listen: false,).loadTeams();
   }
-
-  // bool _copyStage(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (_) {
-  //         CopyStageForm();
-  //         return true;
-  //     },
-  //   );
-  // }
   
           
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context)!.settings.arguments as String;
+    final obra = ModalRoute.of(context)!.settings.arguments as Obra;
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Estágios'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text(
-                    'Gostaria de carregar estágios de base?',
-                    textAlign: TextAlign.justify,
-                  ),
-                  content: const Text(
-                    'Caso existam estágios semelhantes em outra obra, carregue-os para economizar tempo!',
-                    textAlign: TextAlign.justify,
-                  ),
-                  actions: [
-                    TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Sim')),
-                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Não'))
-                  ],
-                ),
-              ).then((value) async {
-                if (value ?? true){
-                  Navigator.of(context).pushNamed(AppRoutes.ALTERNATIVE_STAGE_FORM, arguments: id);
-                }else{
-                  Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
-                }
-              });
-            },
-            icon: const Icon(Icons.add),
+        backgroundColor: Color.fromARGB(255, 9, 123, 143),
+        title: Text(
+          'Obra ${obra.name}',
+          style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
           ),
-          
-          PopupMenuButton(
-            child: Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: const Text('Adicionar Ambiente'),
-                value: 0
-              ),
-            ],
-            onSelected: (result){
-              if(result == 0){
-                Navigator.of(context).pushNamed(
-                  AppRoutes.LOCATION_FORM_SCREEN,
-                  arguments: {
-                    "matchmakingId": id.toString()
-                  }
-                );
-              }
-            },
-          )
-        ],
+
+        ),
+        centerTitle: true,
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       showDialog<bool>(
+        //         context: context,
+        //         builder: (ctx) => AlertDialog(
+        //           title: const Text(
+        //             'Gostaria de carregar estágios de base?',
+        //             textAlign: TextAlign.justify,
+        //           ),
+        //           content: const Text(
+        //             'Caso existam estágios semelhantes em outra obra, carregue-os para economizar tempo!',
+        //             textAlign: TextAlign.justify,
+        //           ),
+        //           actions: [
+        //             TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Sim')),
+        //             TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Não'))
+        //           ],
+        //         ),
+        //       ).then((value) async {
+        //         if (value ?? true){
+        //           Navigator.of(context).pushNamed(AppRoutes.ALTERNATIVE_STAGE_FORM, arguments: id);
+        //         }else{
+        //           Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
+        //         }
+        //       });
+        //     },
+        //     icon: const Icon(Icons.add),
+        //   ),
+        //   PopupMenuButton(
+        //     child: Icon(Icons.more_vert),
+        //     itemBuilder: (_) => [
+        //       PopupMenuItem(
+        //         child: const Text('Adicionar Ambiente'),
+        //         value: 0
+        //       ),
+        //     ],
+        //     onSelected: (result){
+        //       if(result == 0){
+        //         Navigator.of(context).pushNamed(
+        //           AppRoutes.LOCATION_FORM_SCREEN,
+        //           arguments: {
+        //             "matchmakingId": id.toString()
+        //           }
+        //         );
+        //       }
+        //     },
+        //   )
+        // ],
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 102, 183, 197),
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: obra.id);
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(context),
-        child: StageGrid(matchmakingId: id),
+        child: StageGrid(matchmakingId: obra.id),
       ),
     ); 
   }
