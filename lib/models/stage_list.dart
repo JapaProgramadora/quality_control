@@ -14,7 +14,7 @@ import '../utils/constants.dart';
 import '../validation/connectivity.dart';
 
 class StageList with ChangeNotifier {  
-  List<Stage> _items = [];
+  final List<Stage> _items = [];
   bool hasInternet = false; 
   List<Stage> newStages = [];
   List<Stage> needUpdate = [];
@@ -67,6 +67,7 @@ class StageList with ChangeNotifier {
       );
       if (response.body == 'null') return;
       Map<String, dynamic> data = jsonDecode(response.body);
+      
       data.forEach((stageId, stageData) {
           _items.add(
             Stage(

@@ -41,6 +41,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
   @override
     void initState() {
       super.initState();
+      
       Provider.of<StageList>(
         context,
         listen: false,
@@ -72,7 +73,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 9, 123, 143),
+        backgroundColor: const Color.fromARGB(255, 9, 123, 143),
         title: Text(
           'Obra ${obra.name}',
           style: const TextStyle(
@@ -85,8 +86,8 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 102, 183, 197),
-        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 102, 183, 197),
+        child: const Icon(Icons.add),
         onPressed: () async {
           if(stages.isEmpty){
             Future(_showDialog);

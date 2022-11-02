@@ -4,6 +4,7 @@ import 'package:control/models/location.dart';
 import 'package:control/models/method.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:sqflite/sqflite.dart';
 
 import '../models/item.dart';
 import '../models/obra.dart';
@@ -15,7 +16,7 @@ class DB {
     int version = 2;
     final dbPath = await sql.getDatabasesPath();
 
-    var database;
+    Database database;
 
     if(await sql.databaseExists(dbPath)){
       database = await sql.openDatabase(dbPath);
@@ -24,7 +25,7 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'teste74.db'),
+          path.join(dbPath, 'teste75.db'),
           onCreate:  (db, version) async {
             await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, isUpdated INT, isDeleted INT, needFirebase INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT, isComplete INT, needFirebase INT )');
@@ -40,8 +41,8 @@ class DB {
       return database;
     }
     //teste51 eh a versao atual da griselda
-    database = sql.openDatabase(
-      path.join(dbPath, 'teste74.db'),
+    database = await sql.openDatabase(
+      path.join(dbPath, 'teste75.db'),
       onCreate:  (db, version) async {
         await db.execute('CREATE TABLE obras (id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, isUpdated INT, isDeleted INT, needFirebase INT)');
         await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, isUpdated INT, isComplete INT, needFirebase INT )');
