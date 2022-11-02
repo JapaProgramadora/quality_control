@@ -1,4 +1,4 @@
-import 'package:control/components/stage_item_wat.dart';
+import 'package:control/components/stage_item.dart';
 import 'package:control/models/team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

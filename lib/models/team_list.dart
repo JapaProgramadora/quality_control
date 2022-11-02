@@ -45,13 +45,13 @@ class TeamList with ChangeNotifier {
   }
 
   addToFirebase() async {
-    final List<Team> loadedStages = await DB.getTeamFromDB();
+    final List<Team> loadedTeams = await DB.getTeamFromDB();
       checkFirebase = 1;
       countTeams = 1;
-      for(var item in loadedStages){
+      for(var item in loadedTeams){
         if(item.isDeleted == false && item.needFirebase == true){
           item.needFirebase = false;
-          await DB.updateInfo('stages', item.id, item.toMapSQL());
+          await DB.updateInfo('teams', item.id, item.toMapSQL());
           await addTeam(item);
         }
       }
@@ -68,6 +68,7 @@ class TeamList with ChangeNotifier {
         final response = await http.get(
           Uri.parse('${Constants.TEAM_URL}.json'),
         );
+        await addToFirebase();
         if (response.body == 'null') return;
         Map<String, dynamic> data = jsonDecode(response.body);
         data.forEach((locationId, locationData) {
@@ -87,10 +88,7 @@ class TeamList with ChangeNotifier {
           }
         }
       _items.removeWhere((element) => toRemove.contains(element));
-
-      if(checkFirebase == 0){
-        await addToFirebase();
-      }
+      
     }else{
        final List<Team> loadedTeams = await DB.getTeamFromDB();
       for(var item in loadedTeams){

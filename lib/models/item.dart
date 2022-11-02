@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:control/utils/db.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/constants.dart';
 import '../utils/util.dart';
+import '../validation/connectivity.dart';
 
 class Items with ChangeNotifier{
   final String id;
@@ -13,6 +15,7 @@ class Items with ChangeNotifier{
   final String description;
   bool isUpdated;
   bool isGood;
+  bool hasInternet = false;
   bool isDeleted;
   bool needFirebase;
 
@@ -80,6 +83,29 @@ class Items with ChangeNotifier{
       toggleDeleted();
     }
 
+    notifyListeners();
+  }
+
+  onLoad() async {
+    hasInternet = await hasInternetConnection();
+  }
+
+  Future<void> changeItemGood(bool isOkay, Items item) async {
+    await onLoad();
+    if(isOkay == true){
+      isGood = true;
+    }else{
+      isGood = false;
+    }
+
+    if(hasInternet == true){
+      final response = await http.patch(
+        Uri.parse('${Constants.ITEM_BASE_URL}/$id.json'),
+        body: jsonEncode({"isGood": isGood}),
+      );
+    }
+
+    await DB.updateInfo('items', item.id, item.toMapSQL());
     notifyListeners();
   }
 

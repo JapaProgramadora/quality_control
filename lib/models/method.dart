@@ -3,7 +3,6 @@
 
 import 'package:control/validation/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 import '../utils/constants.dart';
 import 'package:http/http.dart' as http;

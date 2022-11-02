@@ -27,7 +27,7 @@ class _ItemWidgetState extends State<ItemWidget> {
   Widget build(BuildContext context) {
     double percentage = 0;
     final item = Provider.of<Items>(context, listen: false);
-    final methods = Provider.of<MethodList>(context).items;
+    final methods = Provider.of<MethodList>(context).getAllItems(item.id);
 
     if(methods.isNotEmpty){
       for(var method in methods){
@@ -39,6 +39,9 @@ class _ItemWidgetState extends State<ItemWidget> {
       }
       int total = finished + pending;
       percentage = finished / total;
+      if(percentage*100.toInt() == 100){
+        item.changeItemGood(true, item);
+      }
     }else{
       percentage = 0;
     }
@@ -47,15 +50,19 @@ class _ItemWidgetState extends State<ItemWidget> {
     
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.METHOD_SCREEN, arguments: item.id);
+        Navigator.of(context).pushNamed(AppRoutes.TAB_SCREEN, arguments: item.id);
       },
       child: ListTile(
-        leading: Text(
-          '${(percentage*100).toStringAsFixed(1)}%',
-          style: const TextStyle(
-            color: Color.fromARGB(255, 4, 34, 59),
-            fontSize: 20,
-          )
+        leading: CircleAvatar(
+          child: Text(
+            '${(percentage*100).toStringAsFixed(1)}%', 
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w600
+              )
+          ),
+          backgroundColor: Color.fromARGB(255, 77, 133, 179),
         ),
         title: Text(item.item),
         trailing: SizedBox(

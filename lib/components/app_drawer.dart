@@ -36,11 +36,6 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.book_rounded),
-            title: const Text('Andamento'),
-            onTap: () {},
-          ),
-          ListTile(
             leading: const Icon(Icons.verified),
             title: const Text('Análise'),
             onTap: () {},
@@ -50,13 +45,6 @@ class _AppDrawerState extends State<AppDrawer> {
             title: const Text('Equipe'),
             onTap: () {
               Navigator.of(context).pushNamed(AppRoutes.TEAM_SCREEN);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.room),
-            title: const Text('Ambiente'),
-            onTap: () {
-               Navigator.of(context).pushNamed(AppRoutes.LOCATION_SCREEN);
             },
           ),
         ],

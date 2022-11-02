@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/constants.dart';
+import '../utils/db.dart';
 import '../utils/util.dart';
+import '../validation/connectivity.dart';
 
 class Stage with ChangeNotifier{
   String id;
@@ -14,6 +16,7 @@ class Stage with ChangeNotifier{
   bool isUpdated;
   bool isComplete;
   bool needFirebase;
+  bool hasInternet = false;
 
   Stage({
     required this.id,
@@ -57,7 +60,7 @@ class Stage with ChangeNotifier{
       isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : true,
-      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
+      needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : true,
     );
   }
 
@@ -71,5 +74,28 @@ class Stage with ChangeNotifier{
       'isComplete': boolToSql(isComplete),
       'needFirebase': boolToSql(needFirebase),
     };
+  }
+
+  onLoad() async {
+    hasInternet = await hasInternetConnection();
+  }
+
+  Future<void> changeStageGood(bool isOkay, Stage stage) async {
+    await onLoad();
+    if(isOkay == true){
+      isComplete = true;
+    }else{
+      isComplete = false;
+    }
+
+    if(hasInternet == true){
+      final response = await http.patch(
+        Uri.parse('${Constants.STAGE_BASE_URL}/$id.json'),
+        body: jsonEncode({"isComplete": isComplete}),
+      );
+    }
+
+    await DB.updateInfo('stages', stage.id, stage.toMapSQL());
+    notifyListeners();
   }
 }

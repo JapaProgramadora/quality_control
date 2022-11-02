@@ -5,6 +5,7 @@
 import 'package:control/components/app_drawer.dart';
 import 'package:control/components/obra_grid.dart';
 import 'package:control/models/obra_list.dart';
+import 'package:control/models/stage_list.dart';
 import 'package:control/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showDoneOnly = false;
 
   Future<void> _refreshObras(BuildContext context) async{
-    Provider.of<ObraList>(context, listen: false).loadProducts();
+    Provider.of<ObraList>(context, listen: false).loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
 
@@ -39,6 +44,14 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       listen: false,
     ).loadProducts().then((value) {
+      setState(() {
+       _isLoading = false;
+      });
+    });
+    Provider.of<StageList>(
+      context,
+      listen: false,
+    ).loadStage().then((value) {
       setState(() {
        _isLoading = false;
       });
@@ -86,7 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       drawer: const AppDrawer(),
-      body: RefreshIndicator(
+      body: _isLoading? 
+      const Center(child: CircularProgressIndicator(),)
+      : RefreshIndicator(
         onRefresh: () => _refreshObras(context),
         child: Padding(
           padding: const EdgeInsets.only(top: 25),

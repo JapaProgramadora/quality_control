@@ -2,11 +2,9 @@
 
 import 'package:control/models/evaluation.dart';
 import 'package:control/models/evaluation_list.dart';
-import 'package:control/models/obra.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/obra_list.dart';
 import 'gallery_item.dart';
 
 class GalleryGrid extends StatelessWidget {

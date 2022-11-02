@@ -90,7 +90,7 @@ class _LocationFormState extends State<LocationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Obra> loadedObras = Provider.of<ObraList>(context).items;
+    _formData['matchmakingId'] =  ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(
@@ -132,29 +132,6 @@ class _LocationFormState extends State<LocationForm> {
                         }
                         return null;
                       },
-                    ),
-                    const Divider(),
-                    Container(
-                    width: 200,
-                    child: SingleChildScrollView(
-                      child: DropdownButton<String?>(
-                        hint: const Text('Obra'),
-                        isExpanded: true,
-                        isDense: true,
-                        value: (obraValue == '')? null : obraValue,
-                        onChanged: (escolha) {
-                          setState(() {
-                            obraValue = escolha.toString();
-                            _formData['matchmakingId'] = escolha.toString();
-                          });
-                        },
-                        items: loadedObras.map((obra) => DropdownMenuItem(
-                          value: obra.id,
-                          child: Text(obra.name)
-                          ),
-                        ).toList(), 
-                      )
-                      ),
                     ),
                     const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(

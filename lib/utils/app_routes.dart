@@ -15,5 +15,6 @@ class AppRoutes {
   static const TEAM_FORM = '/team-form';
   static const ALTERNATIVE_STAGE_FORM = '/alternative-stage-form';
   static const METHOD_SCREEN = '/method-screen';
-   static const TEAM_SCREEN = '/team-screen';
+  static const TEAM_SCREEN = '/team-screen';
+  static const TAB_SCREEN = '/tab-screen';
 }

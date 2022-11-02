@@ -36,7 +36,7 @@ class StageList with ChangeNotifier {
   }
 
   addToFirebase() async {
-    final List<Stage> loadedStages = await DB.getStagesFromDb('stages');
+    final List<Stage> loadedStages= await DB.getStagesFromDb('stages');
       checkFirebase = 1;
       countStages = 1;
       for(var item in loadedStages){
@@ -61,6 +61,7 @@ class StageList with ChangeNotifier {
     _items.clear();
     
     if(hasInternet == true){
+      await addToFirebase();
       final response = await http.get(
         Uri.parse('${Constants.STAGE_BASE_URL}.json'),
       );
@@ -86,9 +87,6 @@ class StageList with ChangeNotifier {
       }
 
       _items.removeWhere((element) => toRemove.contains(element));
-
-      await addToFirebase();
-  
 
     }else{
       final List<Stage> loadedStage = await DB.getStagesFromDb('stages');

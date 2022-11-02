@@ -59,6 +59,7 @@ class ObraList with ChangeNotifier {
       final response = await http.get(
       Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
       );
+      await addToFirebase();
       if (response.body == 'null') return;
       Map<String, dynamic> data = jsonDecode(response.body);
       data.forEach((productId, productData) {
@@ -82,7 +83,6 @@ class ObraList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      await addToFirebase();
     }else{
       final List<Obra> loadedObra = await DB.getObrasFromDB('obras');
       for(var item in loadedObra){

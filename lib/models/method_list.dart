@@ -38,10 +38,10 @@ class MethodList with ChangeNotifier {
   }
 
   addToFirebase() async {
-    final List<Method> loadedObra = await DB.getMethodsFromDB();
+    final List<Method> loadedMethods = await DB.getMethodsFromDB();
       checkFirebase = 1;
       countItems = 1;
-      for(var item in loadedObra){
+      for(var item in loadedMethods){
         if(item.isDeleted == false && item.needFirebase == true){
           item.needFirebase = false;
           await DB.updateInfo('method', item.id, item.toMapSQL());
@@ -65,6 +65,7 @@ class MethodList with ChangeNotifier {
       final response = await http.get(
         Uri.parse('${Constants.METHOD_BASE_URL}.json'),
       );
+      await addToFirebase();
       if (response.body == 'null') return;
       Map<String, dynamic> data = jsonDecode(response.body);
       data.forEach((methodId, methodData) {
@@ -89,12 +90,11 @@ class MethodList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      await addToFirebase();
 
     }else{
-    final List<Method> loadedMethods = await DB.getMethodsFromDB();
+      final List<Method> loadedMethods = await DB.getMethodsFromDB();
       for(var method in loadedMethods){
-        _items.add(method);
+          _items.add(method);
       }
     }
     notifyListeners();

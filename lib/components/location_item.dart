@@ -21,11 +21,7 @@ class LocationItem extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: ListTile(
-        leading: Consumer<Location>(          
-          builder: (ctx, method, _) => const CircleAvatar(
-            backgroundColor: Colors.green,
-          ),
-        ),
+        leading: const Icon(Icons.house_rounded, color: Color.fromARGB(255, 181, 103, 197),),
         title: Text(items.location),
         trailing: SizedBox(
           width: 100,
@@ -33,7 +29,7 @@ class LocationItem extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit),
-                color: Theme.of(context).colorScheme.primary,
+                color: Color.fromARGB(255, 197, 105, 216),
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: {
                     "id": id,

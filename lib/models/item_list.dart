@@ -37,10 +37,10 @@ class ItemList with ChangeNotifier {
   }
 
   addToFirebase() async {
-    final List<Items> loadedObra = await DB.getItemsFromDB('items');
+    final List<Items> loadedItems = await DB.getItemsFromDB('items');
       checkFirebase = 1;
       countItems = 1;
-      for(var item in loadedObra){
+      for(var item in loadedItems){
         if(item.isDeleted == false && item.needFirebase == true){
           item.needFirebase = false;
           await DB.updateInfo('items', item.id, item.toMapSQL());
@@ -60,6 +60,7 @@ class ItemList with ChangeNotifier {
     await onLoad();
     _items.clear();
     if(hasInternet == true){
+      await addToFirebase();
       final response = await http.get(
         Uri.parse('${Constants.ITEM_BASE_URL}.json'),
       );
@@ -88,7 +89,6 @@ class ItemList with ChangeNotifier {
       }
       _items.removeWhere((element) => toRemove.contains(element));
 
-      await addToFirebase();
     }else{
     final List<Items> loadedItems = await DB.getItemsFromDB('items');
       for(var item in loadedItems){

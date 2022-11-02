@@ -25,8 +25,20 @@ class ItemScreen extends StatefulWidget {
 }
 
 class _ItemScreenState extends State<ItemScreen> {
+  bool _isLoading = false;
 
-  bool _isLoading = true;
+  Future<void> _onRefresh(BuildContext context) async{
+    setState(() {
+      _isLoading = true;
+    });
+    Provider.of<ItemList>(context, listen: false).loadItems().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  List<Team> teams = [];
 
   @override
     void initState() {
@@ -35,7 +47,12 @@ class _ItemScreenState extends State<ItemScreen> {
       if(widget.teams.isEmpty){
         Future(_showDialog);
       }
-      Provider.of<MethodList>(context,listen: false,).loadMethod();
+      Provider.of<MethodList>(context,listen: false,).loadMethod().then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+      teams = Provider.of<TeamList>(context, listen: false).items;
   }
 
           
@@ -64,7 +81,12 @@ class _ItemScreenState extends State<ItemScreen> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: ItemGrid(matchmakingId: widget.matchmakingId),
+      body: _isLoading? 
+        const Center(child: CircularProgressIndicator(),)
+        : RefreshIndicator(
+          onRefresh: () => _onRefresh(context),
+          child: ItemGrid(matchmakingId: widget.matchmakingId)
+        ),
     );
   }
 
@@ -75,12 +97,12 @@ class _ItemScreenState extends State<ItemScreen> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Não existem Equipes!"),
-          content: new Text("Para continuar, você precisa adicionar equipes que exercerão os trabalhos!"),
+          title: const Text("Não existem Equipes!"),
+          content: const Text("Para continuar, você precisa adicionar equipes que exercerão os trabalhos!"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new ElevatedButton(
-              child: new Text("Adicionar equipes"),
+            ElevatedButton(
+              child: const Text("Adicionar equipes"),
               onPressed: () async {
                 await Navigator.of(context).pushNamed(AppRoutes.TEAM_FORM);
                 Navigator.of(context).pop();

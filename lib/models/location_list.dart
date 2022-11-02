@@ -149,6 +149,7 @@ class LocationList with ChangeNotifier {
     } 
 
     _items.clear();
+    await loadLocation();
     notifyListeners();
   }
 

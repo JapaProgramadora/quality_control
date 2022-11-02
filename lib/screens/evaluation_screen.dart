@@ -12,7 +12,6 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import '../models/team.dart';
-import 'error_description.dart';
 import 'package:flutter/material.dart';
 
 import '../models/method.dart';
@@ -56,6 +55,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
     final method = arguments['method'] as Method;
     _formData['matchmakingId'] = method.id;
     File? _pickedImage;
+    File selectedImage;
     final loadedLocations = arguments['locations'] as List<Location>;
     List<String> allMethods = method.method;
     List<String> allTolerances = method.tolerance;
@@ -139,7 +139,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
                 currentStep -=1;
                 isLoading = true;
               }); 
-              await Provider.of<EvaluationList>(context, listen: false,).saveEvaluation(_formData);
+              await Provider.of<EvaluationList>(context, listen: false,).saveEvaluation(_formData, _pickedImage!);
               setState(() {
                 isLoading = false;
               });
@@ -255,7 +255,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
                                 }
                                 _formData['toleranceName'] = allTolerances[index];
                                 _formData['team'] = method.team;
-                                _formData['image'] = _pickedImage!.path;
+                                _formData['image'] = _pickedImage!;
                               });
                             },
                             items: allMethods.map((method) => DropdownMenuItem(

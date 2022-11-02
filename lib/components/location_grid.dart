@@ -1,5 +1,5 @@
 import 'package:control/components/location_item.dart';
-import 'package:control/components/stage_item_wat.dart';
+import 'package:control/components/stage_item.dart';
 import 'package:control/models/location.dart';
 import 'package:control/models/location_list.dart';
 import 'package:control/models/team_list.dart';

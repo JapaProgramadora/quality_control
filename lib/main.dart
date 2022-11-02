@@ -14,7 +14,7 @@ import 'package:control/screens/item_form.dart';
 import 'package:control/screens/location_form_screen.dart';
 import 'package:control/screens/location_screen.dart';
 import 'package:control/screens/method_form.dart';
-import 'package:control/screens/method_screen.dart';
+import 'package:control/screens/tabs_screen.dart';
 import 'package:control/screens/obra_form_screen.dart';
 import 'package:control/screens/obra_stages_screen.dart';
 import 'package:control/screens/stage_form_screen.dart';
@@ -27,6 +27,7 @@ import 'package:provider/provider.dart';
 
 import 'components/image_input.dart';
 import 'models/stage_list.dart';
+import 'screens/method_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,7 +62,6 @@ class MyApp extends StatelessWidget {
           AppRoutes.STAGES_FORM_SCREEN: (ctx) => const StageFormScreen(),
           //AppRoutes.ITEM_SCREEN: (ctx) => const ItemScreen(),
           AppRoutes.ITEM_FORM_SCREEN: (ctx) => const ItemForm(),
-          AppRoutes.METHOD_SCREEN: (ctx) => const MethodScreen(),
           AppRoutes.LOCATION_FORM_SCREEN: (ctx) => const LocationForm(),
           AppRoutes.LOCATION_SCREEN: (ctx) => const LocationScreen(),
           AppRoutes.TEAM_FORM: (ctx) => const TeamForm(),
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.METHOD_FORM_SCREEN: (ctx) => const MethodForm(),
           AppRoutes.VERIFICATION_DISPLAY_SCREEN: (ctx) => const EvaluationScreen(),
           AppRoutes.TEAM_SCREEN: (ctx) => const TeamScreen(),
-          //AppRoutes.IMAGE_INPUT_FORM: (ctx) => const ImageInput(),
+          AppRoutes.TAB_SCREEN: (ctx) => const TabScreen(),
         },
       ),
     );

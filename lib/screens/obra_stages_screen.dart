@@ -24,7 +24,14 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
   final bool _isClicked = false;
 
   Future<void> _onRefresh(BuildContext context) async{
-    Provider.of<StageList>(context, listen: false).loadStage();
+    setState(() {
+      _isLoading = true;
+    });
+    Provider.of<StageList>(context, listen: false).loadStage().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
 
@@ -68,55 +75,6 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
 
         ),
         centerTitle: true,
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       showDialog<bool>(
-        //         context: context,
-        //         builder: (ctx) => AlertDialog(
-        //           title: const Text(
-        //             'Gostaria de carregar estágios de base?',
-        //             textAlign: TextAlign.justify,
-        //           ),
-        //           content: const Text(
-        //             'Caso existam estágios semelhantes em outra obra, carregue-os para economizar tempo!',
-        //             textAlign: TextAlign.justify,
-        //           ),
-        //           actions: [
-        //             TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Sim')),
-        //             TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Não'))
-        //           ],
-        //         ),
-        //       ).then((value) async {
-        //         if (value ?? true){
-        //           Navigator.of(context).pushNamed(AppRoutes.ALTERNATIVE_STAGE_FORM, arguments: id);
-        //         }else{
-        //           Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: id);
-        //         }
-        //       });
-        //     },
-        //     icon: const Icon(Icons.add),
-        //   ),
-        //   PopupMenuButton(
-        //     child: Icon(Icons.more_vert),
-        //     itemBuilder: (_) => [
-        //       PopupMenuItem(
-        //         child: const Text('Adicionar Ambiente'),
-        //         value: 0
-        //       ),
-        //     ],
-        //     onSelected: (result){
-        //       if(result == 0){
-        //         Navigator.of(context).pushNamed(
-        //           AppRoutes.LOCATION_FORM_SCREEN,
-        //           arguments: {
-        //             "matchmakingId": id.toString()
-        //           }
-        //         );
-        //       }
-        //     },
-        //   )
-        // ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 102, 183, 197),
@@ -126,7 +84,9 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: RefreshIndicator(
+      body: _isLoading? 
+        const Center(child: CircularProgressIndicator(),)
+      : RefreshIndicator(
         onRefresh: () => _onRefresh(context),
         child: StageGrid(matchmakingId: obra.id),
       ),

@@ -25,28 +25,41 @@ class StageItemTeste extends StatefulWidget {
 }
 
 class _StageItemTesteState extends State<StageItemTeste> {
-
+  int finished =0;
+  int pending = 0;
+  double percentage = 0.0;
+  int total = 0;
 
   @override
   Widget build(BuildContext context) {
-    // final items = Provider.of<ItemList>(context).items;
-    // for(var item in items){
-    //   if(item.is == true){
-    //     finished +=1;
-    //   }else{
-    //     pending += 1;
-    //   }
-    // }
-    // int total = finished + pending;
-    // double percentage = finished / total;
     final stage = Provider.of<Stage>(context, listen: false);
-    String teste = stage.id.toString();
+    final items = Provider.of<ItemList>(context).loadMatchingItems(stage.id);
+
+    if(items.isNotEmpty){
+      for(var item in items){
+        if(item.isGood == true){
+          finished +=1;
+        }else{
+          pending += 1;
+        }
+      }
+      total = finished + pending;
+      if(finished == 0){
+        percentage = 0.0;
+      }else{
+        percentage = finished / total;
+        if(percentage*100.toInt() == 100){
+          stage.changeStageGood(true, stage);
+        }
+      }
+    }
+
     final provider = Provider.of<TeamList>(context);
     final List<Team> teams = provider.items;
 
     Cache().setObraId(stage.matchmakingId);
 
-   _openErrorDescriptionForm(BuildContext context) {
+   _openItemModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -66,15 +79,23 @@ class _StageItemTesteState extends State<StageItemTeste> {
       ),
       child: InkWell(
         onTap: ()  {
-          _openErrorDescriptionForm(context);
+          _openItemModal(context);
         },  
         child: ListTile(
-          leading: const CircleAvatar(
-              backgroundColor:  Color.fromARGB(255, 148, 188, 221),
+          leading: CircleAvatar(
+            child: Text(
+              '${(percentage*100).toStringAsFixed(1)}%', 
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w600
+              )
+            ),
+            backgroundColor: const Color.fromARGB(255, 148, 188, 221),
           ),
           title: Text(
             stage.stage,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),

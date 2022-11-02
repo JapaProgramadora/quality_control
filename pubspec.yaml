@@ -29,6 +29,8 @@ dependencies:
   connectivity_plus: ^2.3.7
   internet_connection_checker: ^0.0.1+4
   overlay_support: ^2.0.1
+  percent_indicator: ^4.2.2
+  firebase_storage: ^11.0.3
 
 dev_dependencies:
   flutter_test:

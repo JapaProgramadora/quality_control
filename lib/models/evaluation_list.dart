@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_print, file_names
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:control/models/item.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../utils/db.dart';
@@ -46,7 +48,7 @@ class EvaluationList with ChangeNotifier {
         if(item.isDeleted == false && item.needFirebase == true){
           item.needFirebase = false;
           await DB.updateInfo('evaluation', item.id, item.toMapSQL());
-          await addEvaluation(item);
+          await addEvaluation(item, File(item.image));
         }
       }
     countEvaluations = 0;
@@ -106,7 +108,7 @@ class EvaluationList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> saveEvaluation(Map<String, Object> data) async {
+  Future<String> saveEvaluation(Map<String, Object> data, File image) async {
     await onLoad();
     bool hasId = data['id'] != null;
 
@@ -122,19 +124,29 @@ class EvaluationList with ChangeNotifier {
       matchmakingId: data['matchmakingId'] as String,
     );
     
-    return await addEvaluation(product);
+    return await addEvaluation(product, image);
   }
 
-  Future<String> addEvaluation(Evaluation product) async {
+  Future<String> uploadImageFirebase(Evaluation product, File image) async{
+
+    final storage = FirebaseStorage.instance;
+    final imageRef = storage.ref().child('user_images').child(product.id);
+    await imageRef.putFile(image).whenComplete(() {});
+    return await imageRef.getDownloadURL();
+
+  }
+
+  Future<String> addEvaluation(Evaluation product, File image) async {
     String id;
     bool needFirebase;
     if(hasInternet == true){
       needFirebase = false;
+      String imageURL = await uploadImageFirebase(product, image);
       final response = await http.post(
       Uri.parse('${Constants.ERROR_METHOD_URL}.json'),
       body: jsonEncode(
           {
-            "image": product.image,
+            "image": imageURL,
             "matchmakingId": product.matchmakingId,
             "isEPI": product.isEPI,
             "isOrganized": product.isOrganized,
