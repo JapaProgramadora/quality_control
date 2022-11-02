@@ -65,7 +65,7 @@ class _StageItemTesteState extends State<StageItemTeste> {
       builder: (_) {
           return SizedBox(
             height: 900,
-            child: ItemScreen(matchmakingId: stage.id, teams: teams),
+            child: ItemScreen(matchmakingId: stage.id),
           );
       },
     );

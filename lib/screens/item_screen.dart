@@ -16,8 +16,7 @@ import '../utils/app_routes.dart';
 
 class ItemScreen extends StatefulWidget {
   final String matchmakingId;
-  final List<Team> teams;
-  const ItemScreen({ Key? key, required this.matchmakingId, required this.teams}) : super(key: key);
+  const ItemScreen({ Key? key, required this.matchmakingId}) : super(key: key);
 
   @override
   State<ItemScreen> createState() => _ItemScreenState();
@@ -44,7 +43,9 @@ class _ItemScreenState extends State<ItemScreen> {
     void initState() {
       super.initState();
 
-      if(widget.teams.isEmpty){
+      teams = Provider.of<TeamList>(context, listen: false).items;
+
+      if(teams.isEmpty){
         Future(_showDialog);
       }
       Provider.of<MethodList>(context,listen: false,).loadMethod().then((value) {
@@ -52,7 +53,6 @@ class _ItemScreenState extends State<ItemScreen> {
           _isLoading = false;
         });
       });
-      teams = Provider.of<TeamList>(context, listen: false).items;
   }
 
           

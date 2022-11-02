@@ -7,6 +7,7 @@ import 'package:control/models/obra.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/stage.dart';
 import '../models/stage_list.dart';
 import '../models/team_list.dart';
 import '../utils/app_routes.dart';
@@ -22,6 +23,8 @@ class ObraStagesScreen extends StatefulWidget {
 class _ObraStagesScreenState extends State<ObraStagesScreen> {
   bool _isLoading = true;
   final bool _isClicked = false;
+  Obra? newObra;
+  List<String> baseStages = ['stage1', 'stage2', 'stage3'];
 
   Future<void> _onRefresh(BuildContext context) async{
     setState(() {
@@ -55,12 +58,17 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         });
       });
       Provider.of<TeamList>(context,listen: false,).loadTeams();
+
   }
   
           
   @override
   Widget build(BuildContext context) {
     final obra = ModalRoute.of(context)!.settings.arguments as Obra;
+    newObra = obra;
+
+
+    List<Stage> stages = Provider.of<StageList>(context).allMatchingStages(obra.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +87,10 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 102, 183, 197),
         child: Icon(Icons.add),
-        onPressed: () {
+        onPressed: () async {
+          if(stages.isEmpty){
+            Future(_showDialog);
+          }
           Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: obra.id);
         },
       ),
@@ -90,6 +101,47 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         onRefresh: () => _onRefresh(context),
         child: StageGrid(matchmakingId: obra.id),
       ),
-    ); 
+    );
+ 
   }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: const Text("Gostaria de carregar estágios?"),
+          content: const Text("Aceitando você carregará estágios base para facilitar seu processo!"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            ElevatedButton(
+              child: const Text("Adicionar"),
+              onPressed: () async {
+                for(var stage in baseStages){
+                  await Provider.of<StageList>(context, listen: false).addBaseStage(stage, newObra!.id);
+                }
+                await Provider.of<StageList>(context, listen: false).loadStage();
+                Navigator.of(context).pop(true);
+              },
+            ),
+            ElevatedButton(
+              child: const Text("Cancelar"),
+              onPressed: () async {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if(value == true){
+        Navigator.of(context).pushNamed(AppRoutes.OBRA_STAGES_SCREEN, arguments: newObra);
+      }else{
+        return;
+      }
+    });
+  }
+
 }

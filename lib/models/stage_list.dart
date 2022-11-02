@@ -114,6 +114,43 @@ class StageList with ChangeNotifier {
     }
   }
 
+  Future<void> addBaseStage(String stage, String matchmakingId) async {
+    String id;
+    List<Stage> toRemove = [];
+    bool needFirebase;
+    if(hasInternet == true){
+      needFirebase = false;
+      final response = await http.post(
+      Uri.parse('${Constants.STAGE_BASE_URL}.json'),
+        body: jsonEncode(
+          {
+            "matchmakingId": matchmakingId,
+            "stage": stage,
+            "needFirebase": needFirebase
+          },
+        ),
+      );
+      id = jsonDecode(response.body)['name'];
+    }else{
+      id = Random().nextDouble().toString();
+      needFirebase = true;
+      checkFirebase = 0;
+    }
+
+    Stage novoStage = Stage(
+        id: id,
+        stage: stage,
+        matchmakingId: matchmakingId,
+        needFirebase: needFirebase,
+    );
+
+    if(countStages == 0){
+      await DB.insert('stages', novoStage.toMapSQL());
+    } 
+
+    notifyListeners();
+  }
+
   Future<String> addStage(Stage product) async {
     String id;
     List<Stage> toRemove = [];
