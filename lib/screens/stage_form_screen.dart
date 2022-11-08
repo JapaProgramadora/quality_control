@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/stage.dart';
 import '../models/stage_list.dart';
 
 class StageFormScreen extends StatefulWidget {
@@ -19,31 +20,31 @@ class _StageFormScreenState extends State<StageFormScreen> {
   bool _isLoading = false;
 
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final arg = ModalRoute.of(context)?.settings.arguments;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arg = ModalRoute.of(context)?.settings.arguments;
 
-  //   if(arg != null){
-  //     final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
+    if(arg != null){
+      final List<Stage> listStages = Provider.of<StageList>(context).getSpecificStage(arg);      
       
-  //     if (listStages.isEmpty) {
-  //       _formData['matchmakingId'] = arg.toString();
-  //     }
-  //     else{        
-  //       // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
-  //       final Stage product = listStages.first;
+      if (listStages.isEmpty) {
+        _formData['matchmakingId'] = arg.toString();
+      }
+      else{        
+        // final List<Stage> provider = Provider.of<StageList>(context).getSpecificStage(arg);
+        final Stage product = listStages.first;
         
 
-  //       print(product.id);
-  //       print(product.matchmakingId);
+        print(product.id);
+        print(product.matchmakingId);
 
-  //       _formData['id'] = product.id;
-  //       _formData['stage'] = product.stage;
-  //       _formData['matchmakingId'] = product.matchmakingId;
-  //     }
-  //   }
-  // }
+        _formData['id'] = product.id;
+        _formData['stage'] = product.stage;
+        _formData['matchmakingId'] = product.matchmakingId;
+      }
+    }
+  }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -96,6 +97,7 @@ class _StageFormScreenState extends State<StageFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Estágio'),
+        backgroundColor: const Color.fromARGB(255, 9, 123, 143),
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -132,6 +134,14 @@ class _StageFormScreenState extends State<StageFormScreen> {
                         }
                         return null;
                       },
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 9, 123, 143),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                      onPressed: () => _submitForm(),
+                      child: const Text('Salvar'),
                     ),
                   ],
                 ),

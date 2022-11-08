@@ -13,7 +13,7 @@ class Items with ChangeNotifier{
   final DateTime beginningDate;
   final DateTime endingDate;
   final String description;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool isGood;
   bool hasInternet = false;
   bool isDeleted;
@@ -26,8 +26,8 @@ class Items with ChangeNotifier{
     required this.endingDate,
     required this.matchmakingId,
     required this.description,
+    required this.lastUpdated,
     this.isGood = false,
-    this.isUpdated = false,
     this.isDeleted = false,
     this.needFirebase = false,
   });
@@ -37,7 +37,7 @@ class Items with ChangeNotifier{
       'id': id,
       'item': item,
       'matchmakingId': matchmakingId,
-      'isUpdated': boolToSql(isUpdated),
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'isGood': boolToSql(isGood),
       'description': description,
@@ -55,7 +55,7 @@ class Items with ChangeNotifier{
       description: map['description'] != null? map['description'] as String: '',
       beginningDate: DateTime.parse(map['beginningDate']),
       endingDate: DateTime.parse(map['endingDate']),
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       isGood: map['isGood'] != null? checkBool(map['isGood']) : false,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,

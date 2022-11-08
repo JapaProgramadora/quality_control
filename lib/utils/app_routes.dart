@@ -1,11 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
 class AppRoutes {
-  static const HOME = '/';
+  static const OBRA_SCREEN = '/obra-screen';
   static const OBRA_FORM_SCREEN = '/obra-form-screen';
   static const OBRA_STAGES_SCREEN = '/obra-stages-screen';
   static const STAGES_FORM_SCREEN = '/stages-form-screen';
-  static const ITEM_SCREEN = '/item-screen';
+  static const EVALUATION_DETAIL = '/evaluation-detail';
   static const ITEM_FORM_SCREEN = '/item-form-screen';
   static const LOCATION_SCREEN = '/location-screen';
   static const LOCATION_FORM_SCREEN = '/location-form-screen';

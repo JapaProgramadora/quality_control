@@ -77,7 +77,7 @@ class TeamList with ChangeNotifier {
               id: locationId,
               team: locationData['team'],
               isDeleted: checkBool(locationData['isDeleted']),
-              isUpdated: checkBool(locationData['isUpdated']),
+              lastUpdated: DateTime.parse(locationData['lastUpdated']),
             ),
           );
         });
@@ -104,6 +104,8 @@ class TeamList with ChangeNotifier {
     final product = Team(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       team: data['team'] as String,
+      lastUpdated: DateTime.now(),
+      isDeleted: false,
     );
 
     if (hasId) {
@@ -124,7 +126,7 @@ class TeamList with ChangeNotifier {
           {
             "team": product.team,
             "isDeleted": product.isDeleted,
-            "isUpdated": product.isUpdated,
+            "lastUpdated": product.lastUpdated.toIso8601String(),
           },
         ),
       );
@@ -140,7 +142,7 @@ class TeamList with ChangeNotifier {
         team: product.team,
         needFirebase: needFirebase,
         isDeleted: product.isDeleted,
-        isUpdated: product.isUpdated,
+        lastUpdated: product.lastUpdated,
     );
 
     if(countTeams == 0){

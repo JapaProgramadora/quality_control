@@ -73,6 +73,7 @@ class MethodList with ChangeNotifier {
             Method(
               id: methodId,
               item: methodData['item'],
+              lastUpdated: DateTime.parse(methodData['lastUpdated']),
               method: methodData['method'].cast<String>() as List<String>,
               team: methodData['team'],
               isMethodGood: methodData['isMethodGood'],
@@ -107,6 +108,7 @@ class MethodList with ChangeNotifier {
     final product = Method(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       method: data['method'] as List<String>,
+      lastUpdated: DateTime.now(),
       team: data['team'] as String,
       item: data['item'] as String,
       tolerance: data['tolerance'] as List<String>,
@@ -133,6 +135,7 @@ class MethodList with ChangeNotifier {
             "method": product.method,
             "team": product.team,
             "item": product.item,
+            "latsUpdated": DateTime.now().toIso8601String(),
             "isComplete": product.isComplete,
             "isMethodGood": product.isMethodGood,
             "isDeleted": product.isDeleted,
@@ -154,6 +157,7 @@ class MethodList with ChangeNotifier {
       id: id, 
       item: product.item,
       method: product.method,
+      lastUpdated: DateTime.now(),
       team: product.team,
       isMethodGood: product.isMethodGood,
       tolerance: product.tolerance,

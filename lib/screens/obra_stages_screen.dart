@@ -2,13 +2,17 @@
 // ignore_for_file: unused_field
 
 import 'package:control/components/stage_grid.dart';
+import 'package:control/models/base_list.dart';
 import 'package:control/models/item_list.dart';
+import 'package:control/models/location_list.dart';
 import 'package:control/models/obra.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/method_list.dart';
 import '../models/stage.dart';
 import '../models/stage_list.dart';
+import '../models/team.dart';
 import '../models/team_list.dart';
 import '../utils/app_routes.dart';
 
@@ -23,8 +27,21 @@ class ObraStagesScreen extends StatefulWidget {
 class _ObraStagesScreenState extends State<ObraStagesScreen> {
   bool _isLoading = true;
   final bool _isClicked = false;
+  List<Team> teams = [];
   Obra? newObra;
-  List<String> baseStages = ['stage1', 'stage2', 'stage3'];
+  List<Map<String, String>> baseStage = [
+    {'stage': 'Serviços Preliminares', 'class': '1'},
+    {'stage': 'Compactação de Solo', 'class': '2'},
+    {'stage': 'Infraestrutura', 'class': '3'},
+    {'stage': 'Superestrutura', 'class': '4'},
+    {'stage': 'Fechamento', 'class': '5'},
+    {'stage': 'Cobertura', 'class': '6'},
+    {'stage': 'Revestimento', 'class': '7'},
+    {'stage': 'Pavimentação', 'class': '8'},
+    {'stage': 'Instalações Hidrossanitárias', 'class': '9'},
+    {'stage': 'Instalações Elétricas', 'class': '10'},
+    {'stage': 'Pintura', 'class': '10'},
+  ];
 
   Future<void> _onRefresh(BuildContext context) async{
     setState(() {
@@ -45,11 +62,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
       Provider.of<StageList>(
         context,
         listen: false,
-      ).loadStage().then((value) {
-        setState(() {
-        _isLoading = false;
-        });
-      });
+      ).loadStage();
       Provider.of<ItemList>(
         context,
         listen: false,
@@ -59,7 +72,8 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         });
       });
       Provider.of<TeamList>(context,listen: false,).loadTeams();
-
+      Provider.of<LocationList>(context,listen: false,).loadLocation();
+      teams = Provider.of<TeamList>(context,listen: false,).items;
   }
   
           
@@ -68,7 +82,7 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
     final obra = ModalRoute.of(context)!.settings.arguments as Obra;
     newObra = obra;
 
-
+  
     List<Stage> stages = Provider.of<StageList>(context).allMatchingStages(obra.id);
 
     return Scaffold(
@@ -91,8 +105,9 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         onPressed: () async {
           if(stages.isEmpty){
             Future(_showDialog);
+          }else{
+            Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: obra.id);
           }
-          Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: obra.id);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -120,10 +135,16 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
             ElevatedButton(
               child: const Text("Adicionar"),
               onPressed: () async {
-                for(var stage in baseStages){
-                  await Provider.of<StageList>(context, listen: false).addBaseStage(stage, newObra!.id);
+                if(teams.isEmpty){
+                  await TeamList().saveTeam({'team': 'Marcio da Rosa'});
+                }
+                for(var stage in baseStage){
+                  await Provider.of<BaseList>(context, listen: false).addBaseStage(stage, newObra!.id);
                 }
                 await Provider.of<StageList>(context, listen: false).loadStage();
+                await Provider.of<TeamList>(context, listen: false).loadTeams();
+                await Provider.of<ItemList>(context, listen: false).loadItems();
+                await Provider.of<MethodList>(context, listen: false).loadMethod();
                 Navigator.of(context).pop(true);
               },
             ),
@@ -137,10 +158,8 @@ class _ObraStagesScreenState extends State<ObraStagesScreen> {
         );
       },
     ).then((value) {
-      if(value == true){
-        Navigator.of(context).pushNamed(AppRoutes.OBRA_STAGES_SCREEN, arguments: newObra);
-      }else{
-        return;
+      if(value == false){
+        Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: newObra!.id);
       }
     });
   }

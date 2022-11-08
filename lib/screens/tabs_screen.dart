@@ -34,18 +34,10 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin{
   List<Team> teams = [];
 
   @override
-  void initState() {
-    super.initState();
-
-
-    Provider.of<LocationList>(context,listen: false,).loadLocation();
-    Provider.of<EvaluationList>(context,listen: false,).loadEvaluation();
-  
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final matchmakingId = ModalRoute.of(context)?.settings.arguments as String;
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    final matchmakingId = arguments['matchmakingId'];
+    final internetConnection = arguments['hasInternet'];
     TabController _tabController = TabController(length: 2, vsync: this);
 
     return DefaultTabController(
@@ -53,32 +45,36 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin{
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Color.fromARGB(255, 9, 123, 143),
         ),
         body: Column(
           children: [
-            Container(
-              alignment: Alignment.topLeft,
-              padding: const EdgeInsets.only(left: 20),
-              child: const Text(
-                'Verificações', 
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700
-                )
-              ,),
-            ),
-            const SizedBox(height: 30,),
-            Container(
-              child: TabBar(
-              controller: _tabController,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: const [
-                Tab(text: 'Tarefas', icon: Icon(Icons.assignment)),
-                Tab(text: 'Galeria', icon: Icon(Icons.photo),),
-              ]
+            Material(
+              color: const Color.fromARGB(255, 9, 123, 143),
+              child: Column(
+                children: [
+                    const Text(
+                      'Verificações',
+                      style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  const SizedBox(height: 10,),
+                  TabBar(
+                  indicatorWeight: 5,
+                  indicatorColor: const Color.fromARGB(255, 118, 204, 219),
+                  controller: _tabController,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Color.fromARGB(255, 194, 191, 191),
+                  tabs: const [
+                    Tab(text: 'Tarefas', icon: Icon(Icons.assignment)),
+                    Tab(text: 'Galeria', icon: Icon(Icons.photo)),
+                  ]
+                  ),
+                ],
               ),
             ),
             Container(
@@ -88,7 +84,7 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin{
                 controller: _tabController,
                 children: [
                   MethodScreen(matchmakingId: matchmakingId,),
-                  GalleryGrid(),
+                  GalleryGrid(hasInternet: internetConnection),
                 ],
               ),
             )

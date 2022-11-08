@@ -69,6 +69,7 @@ class LocationList with ChangeNotifier {
           _items.add(
             Location(
               id: locationId,
+              lastUpdated: DateTime.parse(locationData['lastUpdated']),
               location: locationData['location'],
               matchmakingId: locationData['matchmakingId'],
               needFirebase: checkBool(locationData['needFirebase']),
@@ -101,6 +102,7 @@ class LocationList with ChangeNotifier {
     bool hasId = data['id'] != null;
 
     final product = Location(
+      lastUpdated: DateTime.now(),
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       location: data['location'] as String,
       matchmakingId: data['matchmakingId'] as String,
@@ -125,6 +127,7 @@ class LocationList with ChangeNotifier {
             "matchmakingId": product.matchmakingId,
             "location": product.location,
             "needFirebase": needFirebase,
+            "lastUpdated": DateTime.now().toIso8601String(),
           },
         ),
       );
@@ -138,6 +141,7 @@ class LocationList with ChangeNotifier {
 
     Location newLocation = Location(
         id: id,
+        lastUpdated: DateTime.now(),
         location: product.location,
         isDeleted: product.isDeleted,
         matchmakingId: product.matchmakingId,

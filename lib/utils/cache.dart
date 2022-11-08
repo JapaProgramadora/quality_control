@@ -1,10 +1,48 @@
 
+import 'package:control/validation/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Cache {
   static final String obraId = 'obraId';
+  static final String hasInternet = 'hasInternet'; 
   //static final String cacheObra = 'cacheObra';
+
+  Future<bool> setHasInternet() async {
+    String value = '';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool hasInternetVar = await hasInternetConnection();
+    if(hasInternetVar == true){
+      value = 'yes';
+    }else{
+      value = 'no';
+    }
+
+    bool result = await prefs.setString(hasInternet, value);
+    
+    return result;
+  }
+
+  
+
+  Future<String> getHasInternet() async {
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      var result = prefs.getString(hasInternet);
+      print(result.toString());
+
+      if(result != null){
+        return result.toString();
+      }
+    }
+    catch(err){
+      print(err);
+    }
+    return 'null';
+  }
+
 
   Future<bool> setObraId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -30,28 +68,4 @@ class Cache {
     }
     return 'null';
   }
-
-  // Future<bool> setUserInfo(Obra obra) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   bool result = await prefs.setString(cacheObra, obra.toJson());
-
-  //   return result;
-  // }
-
-  // Future<Obra?> getUserInfo() async {
-  //   try{
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //     var result = await prefs.getString(userInfo);
-
-  //     if(result != null){
-  //       return Obra.fromJson(result);
-  //     }
-  //   }
-  //   catch(err){
-  //     print(err);
-  //   }
-  //   return null;
-  // }
 }

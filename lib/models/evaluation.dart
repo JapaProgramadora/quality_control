@@ -24,7 +24,6 @@ class Evaluation with ChangeNotifier{
   bool isEPI;
   bool isOrganized;
   bool isProductive;
-  bool isUpdated;
   bool isDeleted;
   bool needFirebase;
   final DateTime evaluationDate;
@@ -43,7 +42,6 @@ class Evaluation with ChangeNotifier{
     this.isOrganized = false,
     this.isProductive = false,
     this.isDeleted = false,
-    this.isUpdated = false,
     this.needFirebase = false,
   });
 
@@ -145,7 +143,6 @@ class Evaluation with ChangeNotifier{
       isOrganized: map['isOrganized'] != null ? checkBool(map['isOrganized']) : false,
       isEPI: map['isEPI'] != null ? checkBool(map['isEPI']) : false,
       isProductive: map['isProductive'] != null ? checkBool(map['isProductive']) : false,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
@@ -159,7 +156,6 @@ class Evaluation with ChangeNotifier{
       'evaluationDate': evaluationDate.toIso8601String(),
       'matchmakingId': matchmakingId,
       'team': team,
-      'isUpdated': boolToSql(isUpdated),
       'isOrganized': boolToSql(isOrganized),
       'locationId': locationId,
       'toleranceName': toleranceName,

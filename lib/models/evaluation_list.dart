@@ -81,6 +81,9 @@ class EvaluationList with ChangeNotifier {
               methodName: stageData['methodName'],
               error: stageData['error'],
               team: stageData['team'],
+              isProductive: checkBool(stageData['isProductive']),
+              isEPI: checkBool(stageData['isEPI']),
+              isOrganized: checkBool(stageData['isOrganized']),
               evaluationDate: DateTime.parse(stageData['evaluationDate']),
               matchmakingId: stageData['matchmakingId'],
               isDeleted: checkBool(stageData['isDeleted']),
@@ -115,9 +118,12 @@ class EvaluationList with ChangeNotifier {
     final product = Evaluation(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       error: data['error'] as String,
-      image: data['image'] as String,
       locationId: data['locationId'] as String,
       team: data['team'] as String,
+      image: '',
+      isProductive: data['isProductive'] as bool,
+      isEPI: data['isEPI'] as bool,
+      isOrganized: data['isOrganized'] as bool,
       toleranceName: data['toleranceName'] as String,
       methodName: data['methodName'] as String,
       evaluationDate: data['evaluationDate'] == null ? DateTime.now() : data['evaluationDate'] as DateTime,
@@ -172,7 +178,7 @@ class EvaluationList with ChangeNotifier {
 
     Evaluation evaluation = Evaluation(
       id: id,
-      image: product.image,
+      image: image.path,
       error: product.error,
       locationId: product.locationId,
       team: product.team,

@@ -1,8 +1,10 @@
 // ignore_for_file: unused_field
 
+import 'package:control/models/location_list.dart';
 import 'package:control/models/team_list.dart';
 
 import '../components/item_grid.dart';
+import '../models/evaluation_list.dart';
 import '../models/method.dart';
 import '../models/method_list.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,7 @@ class _ItemScreenState extends State<ItemScreen> {
           _isLoading = false;
         });
       });
+       Provider.of<EvaluationList>(context, listen: false).loadEvaluation();
   }
 
           

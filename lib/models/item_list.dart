@@ -73,6 +73,7 @@ class ItemList with ChangeNotifier {
               beginningDate: DateTime.parse(productData['beginningDate']),
               endingDate: DateTime.parse(productData['endingDate']),
               item: productData['item'],
+              lastUpdated: DateTime.parse(productData['lastUpdated']),
               isDeleted: checkBool(productData['isDeleted']),
               matchmakingId: productData['matchmakingId'],
               isGood: checkBool(productData['isGood']),
@@ -104,6 +105,7 @@ class ItemList with ChangeNotifier {
     final product = Items(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       item: data['item'] as String,
+      lastUpdated: DateTime.now(),
       beginningDate: data['beginningDate'] == null ? DateTime.now() : data['beginningDate'] as DateTime,
       endingDate: data['endingDate'] == null ? DateTime.now() : data['endingDate'] as DateTime,
       description: data['description'] as String,
@@ -137,6 +139,7 @@ class ItemList with ChangeNotifier {
               "matchmakingId": product.matchmakingId,
               "isDeleted": product.isDeleted,
               "needFirebase": needFirebase,
+              "lastUpdated": product.lastUpdated.toIso8601String(),
             },
           ),
         );
@@ -151,6 +154,7 @@ class ItemList with ChangeNotifier {
       novoItems = Items(
           id: id,
           item: product.item,
+          lastUpdated: DateTime.now(),
           description: product.description,
           matchmakingId: product.matchmakingId,
           isGood: product.isGood,

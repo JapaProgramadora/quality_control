@@ -112,7 +112,7 @@ class _ObraItemState extends State<ObraItem> {
                           showDialog<bool>(
                             context: context,
                             builder: (ctx) => AlertDialog(
-                              title: const Text('Excluir Estágio?'),
+                              title: const Text('Excluir Obra?'),
                               content: const Text('Tem certeza?'),
                               actions: [
                                 TextButton(

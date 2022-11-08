@@ -15,7 +15,7 @@ class Obra with ChangeNotifier {
   final String address;
   bool isDeleted;
   bool isComplete;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool needFirebase;
   
 
@@ -25,9 +25,9 @@ class Obra with ChangeNotifier {
     required this.engineer,
     required this.owner,
     required this.address,
+    required this.lastUpdated,
     this.isComplete = true,
     this.isDeleted = false,
-    this.isUpdated = false,
     this.needFirebase = false,
   });
 
@@ -84,6 +84,7 @@ class Obra with ChangeNotifier {
       engineer: map['engineer'] as String,
       owner: map['owner'] as String,
       address: map['address'] as String,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isComplete: map['isComplete'] != null ? checkBool(map['isComplete']) : false,
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
@@ -97,9 +98,10 @@ class Obra with ChangeNotifier {
       'engineer': engineer,
       'owner': owner,
       'address': address,
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isComplete': boolToSql(isComplete),
-      'isUpdated': boolToSql(isUpdated),
       'needFirebase': boolToSql(needFirebase),
     };
   }
+
 }

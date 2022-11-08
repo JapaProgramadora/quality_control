@@ -22,7 +22,7 @@ class Method with ChangeNotifier{
   String matchmakingId;
   bool isDeleted;
   bool isComplete;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool hasInternet = false;
   bool needFirebase;
 
@@ -35,7 +35,7 @@ class Method with ChangeNotifier{
     required this.matchmakingId,
     this.isMethodGood = true,
     this.isDeleted = false,
-    this.isUpdated = false,
+    required this.lastUpdated,
     this.isComplete = false,
     this.needFirebase = false,
   });
@@ -69,7 +69,7 @@ class Method with ChangeNotifier{
       'method': method.join(','),
       'item': item,
       'matchmakingId': matchmakingId,
-      'isUpdated': boolToSql(isUpdated),
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'isMethodGood': boolToSql(isMethodGood),
       'isComplete': boolToSql(isComplete),
@@ -87,7 +87,7 @@ class Method with ChangeNotifier{
       matchmakingId: map['matchmakingId'] as String,
       team: map['team'] as String,
       tolerance: map['tolerance'].split(',') as List<String>,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : false,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
       isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : false,
       isMethodGood: map['isMethodGood'] != null? checkBool(map['isMethodGood']) : false,

@@ -13,7 +13,7 @@ class Stage with ChangeNotifier{
   String stage;
   String matchmakingId;
   bool isDeleted;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool isComplete;
   bool needFirebase;
   bool hasInternet = false;
@@ -24,7 +24,7 @@ class Stage with ChangeNotifier{
     this.isComplete = false,
     required this.matchmakingId,
     this.isDeleted = false,
-    this.isUpdated = false,
+    required this.lastUpdated,
     this.needFirebase = false,
   });
 
@@ -57,7 +57,7 @@ class Stage with ChangeNotifier{
       id: map['id'] as String,
       stage: map['stage'] as String,
       matchmakingId: map['matchmakingId'] as String,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : true,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : true,
@@ -69,7 +69,7 @@ class Stage with ChangeNotifier{
       'id': id,
       'stage': stage,
       'matchmakingId': matchmakingId,
-      'isUpdated': boolToSql(isUpdated),
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'isComplete': boolToSql(isComplete),
       'needFirebase': boolToSql(needFirebase),

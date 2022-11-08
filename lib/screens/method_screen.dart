@@ -4,6 +4,7 @@
 import 'package:control/components/method_grid.dart';
 import 'package:control/components/stage_grid.dart';
 import 'package:control/models/item_list.dart';
+import 'package:control/models/location_list.dart';
 import 'package:control/models/method_list.dart';
 import 'package:control/models/obra.dart';
 import 'package:flutter/material.dart';

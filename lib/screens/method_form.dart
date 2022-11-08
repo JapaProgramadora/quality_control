@@ -125,6 +125,7 @@ class _MethodFormState extends State<MethodForm> {
     _formData['team'] = teamValue.toString();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:  const Color.fromARGB(255, 9, 123, 143),
         title: const Text('Formulário de Método de Verificação'),
         actions: [
           IconButton(
@@ -164,30 +165,28 @@ class _MethodFormState extends State<MethodForm> {
                         return null;
                       },
                     ),
-                    Divider(),
-                    Container(
+                    const SizedBox(height: 10,),
+                    SizedBox(
                     width: 200,
-                    child: SingleChildScrollView(
-                      child: DropdownButton<String?>(
-                        hint: const Text('Equipe'),
-                        isExpanded: true,
-                        isDense: true,
-                        value: (teamValue == '')? null : teamValue,
-                        onChanged: (escolha) {
-                          setState(() {
-                            teamValue = escolha.toString();
-                            _formData['team'] = escolha.toString();
-                          });
-                        },
-                        items: teams.map((team) => DropdownMenuItem(
-                          value: team.team,
-                          child: Text(team.team)
-                          ),
-                        ).toList(), 
-                      )
-                      ),
+                    height: 30,
+                    child: DropdownButton<String?>(
+                      hint: const Text('Equipe'),
+                      isExpanded: true,
+                      isDense: true,
+                      value: (teamValue == '')? null : teamValue,
+                      onChanged: (escolha) {
+                        setState(() {
+                          teamValue = escolha.toString();
+                          _formData['team'] = escolha.toString();
+                        });
+                      },
+                      items: teams.map((team) => DropdownMenuItem(
+                        value: team.team,
+                        child: Text(team.team)
+                        ),
+                      ).toList(), 
                     ),
-                    Divider(),
+                    ),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
@@ -195,6 +194,14 @@ class _MethodFormState extends State<MethodForm> {
                         return Column(children: [emailUi(index)],);
                       },
                       itemCount: methods.length,
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 9, 123, 143),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                      onPressed: () => _submitForm(),
+                      child: const Text('Salvar'),
                     ),
                   ],
                 ),

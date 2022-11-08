@@ -26,12 +26,9 @@ class _MethodGridState extends State<MethodGrid> {
       itemCount: phaseItem.length,
       itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
         value: phaseItem[i],
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300 , width: 1),
-            borderRadius: BorderRadius.circular(6)
-          ),
-          child: MethodItem(widget.matchmakingId)
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: MethodItem(widget.matchmakingId),
         ),
       ),
     );

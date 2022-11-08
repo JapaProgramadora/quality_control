@@ -8,7 +8,7 @@ import '../utils/util.dart';
 class Team with ChangeNotifier{
   String id;
   String team;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool isDeleted;
   bool needFirebase;
 
@@ -16,7 +16,7 @@ class Team with ChangeNotifier{
     required this.id,
     required this.team,
     this.isDeleted = false,
-    this.isUpdated = false,
+    required this.lastUpdated,
     this.needFirebase = false,
   });
 
@@ -24,7 +24,7 @@ class Team with ChangeNotifier{
     return Team(
       id: map['id'] as String,
       team: map['team'] as String,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
@@ -60,7 +60,7 @@ class Team with ChangeNotifier{
     return {
       'id': id,
       'team': team,
-      'isUpdated': boolToSql(isUpdated),
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'needFirebase': boolToSql(needFirebase),
     };

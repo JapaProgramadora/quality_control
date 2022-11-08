@@ -58,6 +58,7 @@ class _StageItemTesteState extends State<StageItemTeste> {
     final List<Team> teams = provider.items;
 
     Cache().setObraId(stage.matchmakingId);
+    Cache().setHasInternet();
 
    _openItemModal(BuildContext context) {
     showModalBottomSheet(
@@ -108,7 +109,7 @@ class _StageItemTesteState extends State<StageItemTeste> {
                   icon: const Icon(Icons.edit),
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: stage);
+                      Navigator.of(context).pushNamed(AppRoutes.STAGES_FORM_SCREEN, arguments: stage.id);
                   },
                 ),
                 IconButton(

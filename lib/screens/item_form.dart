@@ -36,8 +36,8 @@ class _ItemFormState extends State<ItemForm> {
         _formData['id'] = product.id;
         _formData['item'] = product.item;
         _formData['description'] = product.description;
-        _formData['beginningDate'] = product.beginningDate;
-        _formData['endingDate'] = product.endingDate;
+        _selectedBeginningDate = product.beginningDate;
+        _selectedEndingDate = product.endingDate;
         _formData['matchmakingId'] = product.matchmakingId;
       
       }
@@ -96,6 +96,7 @@ class _ItemFormState extends State<ItemForm> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:  const Color.fromARGB(255, 9, 123, 143),
         title: const Text('Formulário de Item'),
         actions: [
           IconButton(
@@ -152,10 +153,15 @@ class _ItemFormState extends State<ItemForm> {
                       child: Row(
                         children: <Widget> [
                             Expanded(
-                              child: Text('Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedBeginningDate)}',),
+                              child: Text(
+                                'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedBeginningDate)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                             TextButton(
-                              child: const Text('Selecionar Data de Início'),
+                              child: const Text('Selecionar Inicio'),
                               onPressed: () {
                                 showDatePicker(
                                     context: context, 
@@ -178,32 +184,50 @@ class _ItemFormState extends State<ItemForm> {
                     ),
                     SizedBox(
                       height: 70,
-                      child: Row(
-                        children: <Widget> [
-                            Expanded(
-                              child: Text('Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedEndingDate)}',),
-                            ),
-                            TextButton(
-                              child: const Text('Selecionar Data de Previsão de Término'),
-                              onPressed: () {
-                                showDatePicker(
-                                    context: context, 
-                                    initialDate: DateTime.now(), 
-                                    firstDate: DateTime(2019), 
-                                    lastDate: DateTime(2025),
-                                  ).then((pickedDate) {
-                                    setState(() {
-                                      if (pickedDate == null){
-                                        return;
-                                      }
-                                      _selectedEndingDate = pickedDate;
-                                      _formData['endingDate'] = _selectedEndingDate;
-                                    });
-                                  });
-                              }
-                            )
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget> [
+                                Expanded(
+                                  child: Text(
+                                    'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedEndingDate)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  child: const Text(
+                                    'Selecionar Final',
+                                  ),
+                                  onPressed: () {
+                                    showDatePicker(
+                                        context: context, 
+                                        initialDate: DateTime.now(), 
+                                        firstDate: DateTime(2019), 
+                                        lastDate: DateTime(2025),
+                                      ).then((pickedDate) {
+                                        setState(() {
+                                          if (pickedDate == null){
+                                            return;
+                                          }
+                                          _selectedEndingDate = pickedDate;
+                                          _formData['endingDate'] = _selectedEndingDate;
+                                        });
+                                      });
+                                  }
+                                ),
+                            ],
+                          ),
                         ],
                       ),
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 9, 123, 143),
+                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                        onPressed: () => _submitForm(),
+                        child: const Text('Salvar'),
                     ),
                   ],
                 ),

@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import 'gallery_item.dart';
 
 class GalleryGrid extends StatelessWidget {
-  
-  GalleryGrid();
+  final String hasInternet;
+  const GalleryGrid({ Key? key, required this.hasInternet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class GalleryGrid extends StatelessWidget {
           itemCount: loadedEva.length,
           itemBuilder: (ctx,i) => ChangeNotifierProvider.value(
             value: loadedEva[i],
-            child: GalleryItem(),
+            child: GalleryItem(hasInternet: hasInternet,),
           ),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: 3 / 2,

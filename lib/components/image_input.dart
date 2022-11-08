@@ -40,27 +40,31 @@ class _ImageInputState extends State<ImageInput> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 180,
-          height: 100,
-          decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey),
-          ),
-          alignment: Alignment.center,
-          child: _storedImage != null
-              ? Image.file(
-                  _storedImage!,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                )
-              : const Text('Nenhuma imagem!'),
-        ),
         const SizedBox(width: 10),
         Expanded(
           child: TextButton.icon(
             icon: const Icon(Icons.camera),
             label: const Text('Tirar Foto'),
             onPressed: _takePicture,
+          ),
+        ),
+        Visibility(
+          visible: _storedImage != null,
+          child: Container(
+            width: 180,
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Colors.grey),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            alignment: Alignment.center,
+            child: _storedImage != null
+                ? Image.file(
+                    _storedImage!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : const Text('Nenhuma imagem!'),
           ),
         ),
       ],

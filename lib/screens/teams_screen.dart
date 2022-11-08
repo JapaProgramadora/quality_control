@@ -5,6 +5,7 @@ import 'package:control/components/stage_grid.dart';
 import 'package:control/components/team_grid.dart';
 import 'package:control/models/item_list.dart';
 import 'package:control/models/obra.dart';
+import 'package:control/screens/team_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,23 +48,23 @@ class _TeamScreenState extends State<TeamScreen> {
   @override
   Widget build(BuildContext context) {
 
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 9, 123, 143),
-        title: Text(
+        backgroundColor: const Color.fromARGB(255, 9, 123, 143),
+        title: const Text(
           'Equipes',
-          style: const TextStyle(
+          style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
           ),
-
         ),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 102, 183, 197),
-        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 102, 183, 197),
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.TEAM_FORM);
         },
@@ -71,7 +72,7 @@ class _TeamScreenState extends State<TeamScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: RefreshIndicator(
         onRefresh: () => _onRefresh(context),
-        child: TeamGrid(),
+        child: const TeamGrid(),
       ),
     ); 
   }

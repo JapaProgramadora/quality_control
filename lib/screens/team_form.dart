@@ -85,7 +85,7 @@ class _TeamFormState extends State<TeamForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple.shade900,
+        backgroundColor: const Color.fromARGB(255, 9, 123, 143),
         title: const Text('Formulário de Equipe'),
         actions: [
           IconButton(
@@ -124,10 +124,10 @@ class _TeamFormState extends State<TeamForm> {
                         return null;
                       },
                     ),
-                    const Padding(padding: EdgeInsets.all(10)),
+                    const SizedBox(height: 10,),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade900,
+                          backgroundColor: const Color.fromARGB(255, 9, 123, 143),
                           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
                       onPressed: () => _submitForm(),
                       child: const Text('Salvar'),

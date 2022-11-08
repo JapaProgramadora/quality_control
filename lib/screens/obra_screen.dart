@@ -7,6 +7,7 @@ import 'package:control/components/obra_grid.dart';
 import 'package:control/models/obra_list.dart';
 import 'package:control/models/stage_list.dart';
 import 'package:control/utils/app_routes.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,20 +17,20 @@ enum FilterOptions {
   All,
 }
 
-class HomeScreen extends StatefulWidget {
+class ObraScreen extends StatefulWidget {
 
-  const HomeScreen({ Key? key}) : super(key: key);
+  const ObraScreen({ Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ObraScreen> createState() => _ObraScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ObraScreenState extends State<ObraScreen> {
   bool _isLoading = true;
   bool _showDoneOnly = false;
 
   Future<void> _refreshObras(BuildContext context) async{
-    Provider.of<ObraList>(context, listen: false).loadProducts().then((value) {
+    await Provider.of<ObraList>(context, listen: false).loadProducts().then((value) {
       setState(() {
         _isLoading = false;
       });
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 9, 123, 143),
+        backgroundColor: const Color.fromARGB(255, 9, 123, 143),
         centerTitle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -76,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(bottom: 20, right: 230),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children: const [
+                 Text(
                   'Obras',
                   style: TextStyle(
                     fontSize: 45,
@@ -91,8 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 102, 183, 197),
-        child: Icon(Icons.add),
+        backgroundColor:const  Color.fromARGB(255, 102, 183, 197),
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.OBRA_FORM_SCREEN);
         },

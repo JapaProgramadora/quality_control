@@ -9,7 +9,7 @@ class Location with ChangeNotifier{
   String id;
   String location;
   String matchmakingId;
-  bool isUpdated;
+  DateTime lastUpdated;
   bool isDeleted;
   bool needFirebase;
 
@@ -18,7 +18,7 @@ class Location with ChangeNotifier{
     required this.location,
     required this.matchmakingId,
     this.isDeleted = false,
-    this.isUpdated = false,
+    required this.lastUpdated,
     this.needFirebase = false,
   });
 
@@ -27,7 +27,7 @@ class Location with ChangeNotifier{
       id: map['id'] as String,
       location: map['location'] as String,
       matchmakingId: map['matchmakingId'] as String,
-      isUpdated: map['isUpdated'] != null ? checkBool(map['isUpdated']) : true,
+      lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
     );
@@ -64,7 +64,7 @@ class Location with ChangeNotifier{
       'id': id,
       'location': location,
       'matchmakingId': matchmakingId,
-      'isUpdated': boolToSql(isUpdated),
+      'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'needFirebase': boolToSql(needFirebase),
     };

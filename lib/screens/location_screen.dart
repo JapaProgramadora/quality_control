@@ -40,12 +40,12 @@ class _LocationScreenState extends State<LocationScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 153, 105, 212),
+        backgroundColor: const Color.fromARGB(255, 20, 81, 92),
         title: const Text('Ambientes'),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 175, 102, 197),
-        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 20, 122, 140),
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.LOCATION_FORM_SCREEN, arguments: matchId);
         },

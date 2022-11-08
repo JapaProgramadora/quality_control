@@ -35,11 +35,11 @@ class _AppDrawerState extends State<AppDrawer> {
             backgroundColor:const  Color.fromARGB(255, 9, 123, 143),
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.verified),
-            title: const Text('Análise'),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.verified),
+          //   title: const Text('Análise'),
+          //   onTap: () {},
+          // ),
           ListTile(
             leading: const Icon(Icons.engineering),
             title: const Text('Equipe'),

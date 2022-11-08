@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/item.dart';
 import '../utils/app_routes.dart';
+import '../utils/cache.dart';
 
 
 class ItemWidget extends StatefulWidget {
@@ -49,8 +50,13 @@ class _ItemWidgetState extends State<ItemWidget> {
 
     
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.TAB_SCREEN, arguments: item.id);
+      onTap: () async {
+        String result = await Cache().getHasInternet();
+        Navigator.of(context).pushNamed(AppRoutes.TAB_SCREEN, arguments: {
+          'matchmakingId' : item.id,
+          'hasInternet': result, 
+          }
+        );
       },
       child: ListTile(
         leading: CircleAvatar(
@@ -62,7 +68,7 @@ class _ItemWidgetState extends State<ItemWidget> {
                 fontWeight: FontWeight.w600
               )
           ),
-          backgroundColor: Color.fromARGB(255, 77, 133, 179),
+          backgroundColor: const Color.fromARGB(255, 77, 133, 179),
         ),
         title: Text(item.item),
         trailing: SizedBox(
