@@ -52,6 +52,13 @@ class StageList with ChangeNotifier {
     
   }
 
+  bool getSpecificStageBool(String id){
+    if(_items.isEmpty){
+      return true;
+    }
+    return _items.where((p) => p.id == id).toList().isEmpty ? false : true;
+  }
+
 
   Future<void> loadStage() async {
     List<Stage> toRemove = [];
@@ -117,73 +124,109 @@ class StageList with ChangeNotifier {
     }
   }
 
-  Future<void> checkSQLData() async {
+  Future<void> checkData() async {
     hasInternet = true;
-    final List<Stage> loadedStages = await DB.getStagesFromDb('stages');
+    List<Stage> toRemove = [];
+    List<Stage> localUpdates = [];
+    List<Stage> fireUpdates = [];
+    final List<Stage> loadedObras = await DB.getObrasFromDB('obras');
+
+    //if there's nothing on each;
+    if(firebaseItems.isEmpty && loadedObras.isEmpty){
+      return;
+    }
 
     //adding if there's nothing on firebase;
-    if(firebaseItems.isEmpty && loadedStages.isNotEmpty){
+    if(firebaseItems.isEmpty && loadedObras.isNotEmpty){
       countStages = 1;
-      for(var obra in loadedStages){
+      for(var obra in loadedObras){
         await addStage(obra);
       }
       countStages = 0;
     }
 
     //adding if there's nothing on SQL;
-    if(loadedStages.isEmpty && firebaseItems.isNotEmpty){
+    if(loadedObras.isEmpty && firebaseItems.isNotEmpty){
       for(var obra in firebaseItems){
-        await DB.insert('stages', obra.toMapSQL());
+        if(obra.isDeleted == false){
+          await DB.insert('obras', obra.toMapSQL());
+        }
       }
-    }
-
-    for(var item in firebaseItems){
-      if(!loadedStages.contains(item)){
-        await DB.insert('stages', item.toMapSQL());
-      }
-      if(item.isDeleted == true && loadedStages.contains(item)){
-        await DB.deleteInfo('stages', item.id);
-      }
-    }
-  }
-
-  Future<void> checkUpdate() async {
-    hasInternet = true;
-    final List<Stage> loadedStages = await DB.getStagesFromDb('stages');
-    if(firebaseItems.isEmpty){
+    }else if(firebaseItems.isEmpty && loadedObras.isNotEmpty){
       countStages = 1;
-      for(var item in loadedStages){
-        await addStage(item);
+      for(var obra in loadedObras){
+        await addStage(obra);
       }
       countStages = 0;
     }
-    for(var stageFirebase in firebaseItems){
-      for(var stageSQL in loadedStages){
-        if(stageSQL.id == stageFirebase.id){
-          if((stageSQL.lastUpdated).isBefore(stageFirebase.lastUpdated)){
-            //updating SQL information
-            stageSQL.lastUpdated = DateTime.now();
-            await DB.updateInfo('stages', stageSQL.id, stageSQL.toMapSQL());
 
-            //setting lastUpdated to now in Firebase
-            await http.patch(Uri.parse('${Constants.PRODUCT_BASE_URL}/${stageFirebase.id}.json'),
-              body: jsonEncode({ "lastUpdated": DateTime.now().toIso8601String()}));
-          }else{
-            await http.patch(Uri.parse('${Constants.PRODUCT_BASE_URL}/${stageFirebase.id}.json'),
+    //if there's any obra needing firebase;
+    for(var obra in loadedObras){
+      countStages = 1;
+      if(obra.needFirebase == true && obra.isDeleted == false){
+        await addStage(obra);
+      }
+      if(obra.isDeleted == true){
+        await http.patch(Uri.parse('${Constants.PRODUCT_BASE_URL}/${obra.id}.json'),body: jsonEncode({"isDeleted": obra.isDeleted}),);
+        await DB.deleteInfo('obras', obra.id);
+      }
+      if(obra.isUpdated == true && obra.isDeleted == false){
+        localUpdates.add(obra);
+      }
+      countStages = 0;
+    }
+    
+    //if there's any obra needing sql
+    for(var item in firebaseItems){
+      bool value = getSpecificStageBool(item.id);
+      if(value == false && item.isDeleted == false){
+        await DB.insert('obras', item.toMapSQL());
+      }
+      //this should delete something from different devices
+      if(item.isDeleted == true && value == true){
+        await DB.deleteInfo('obras', item.id);
+      }
+      if(item.isUpdated == true && item.isDeleted == false){
+        fireUpdates.add(item);
+      }
+    }
+
+    //checking for updates on both firebase and sql and updating stuff
+    for(var fire in fireUpdates){
+      for(var obra in loadedObras){
+        if(fire.id == obra.id){
+          if((fire.lastUpdated).isAfter(obra.lastUpdated)){
+            await DB.updateInfo('obras', obra.id, fire.toMapSQL());
+             await http.patch(Uri.parse('${Constants.PRODUCT_BASE_URL}/${fire.id}.json'),
+              body: jsonEncode({ 
+                "lastUpdated": DateTime.now().toIso8601String(),
+                "isUpdated": false,
+                }
+            ));
+          }
+        }
+      }
+      for(var obra in localUpdates){
+        if(obra.id == fire.id){
+          if((obra.lastUpdated).isAfter(fire.lastUpdated)){
+            await http.patch(Uri.parse('${Constants.PRODUCT_BASE_URL}/${fire.id}.json'),
               body: jsonEncode(
                 { 
-                  "matchmakingId": stageSQL.matchmakingId,
-                  "stage": stageSQL.stage,
+                  "stage": obra.stage,
                   "lastUpdated": DateTime.now().toIso8601String(),
+                  "isComplete": obra.isComplete,
                   "needFirebase": false,
                 }
               ),
             );
           }
         }
+        obra.isUpdated = false;
+        await DB.updateInfo('obras', obra.id, obra.toMapSQL());
       }
     }
   }
+
 
   Future<String> addStage(Stage product) async {
     String id;
@@ -197,7 +240,8 @@ class StageList with ChangeNotifier {
             "matchmakingId": product.matchmakingId,
             "stage": product.stage,
             "lastUpdated": DateTime.now().toIso8601String(),
-            "needFirebase": needFirebase
+            "needFirebase": needFirebase,
+            "isUpdated": false,
           },
         ),
       );

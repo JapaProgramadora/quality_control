@@ -7,16 +7,15 @@ import '../models/obra_list.dart';
 import 'obra_item.dart';
 
 class ObraGrid extends StatelessWidget {
-  final bool showDoneOnly;
   
-  ObraGrid(this.showDoneOnly);
+  ObraGrid();
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ObraList>(context);
-    final List<Obra> loadedObras = showDoneOnly? provider.items : provider.andamentoItems;
+    final List<Obra> loadedObras = provider.items;
     
-    return Container(
+    return SizedBox(
       height: 450,
       child: ListView.builder(
         itemCount: loadedObras.length,

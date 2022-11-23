@@ -17,10 +17,10 @@ class ImageInput extends StatefulWidget {
 class _ImageInputState extends State<ImageInput> {
   File? _storedImage;
 
-  _takePicture() async {
+  _takePicture(bool value) async {
     final ImagePicker picker = ImagePicker();
     XFile imageFile = await picker.pickImage(
-      source: ImageSource.camera,
+      source: value == true? ImageSource.camera : ImageSource.gallery,
       maxWidth: 600,
     ) as XFile;
 
@@ -38,16 +38,8 @@ class _ImageInputState extends State<ImageInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        const SizedBox(width: 10),
-        Expanded(
-          child: TextButton.icon(
-            icon: const Icon(Icons.camera),
-            label: const Text('Tirar Foto'),
-            onPressed: _takePicture,
-          ),
-        ),
         Visibility(
           visible: _storedImage != null,
           child: Container(
@@ -66,6 +58,25 @@ class _ImageInputState extends State<ImageInput> {
                   )
                 : const Text('Nenhuma imagem!'),
           ),
+        ),
+        Row(
+          children: [
+            const SizedBox(width: 10),
+            Expanded(
+              child: TextButton.icon(
+                icon: const Icon(Icons.camera),
+                label: const Text('Tirar Foto'),
+                onPressed: () => _takePicture(true),
+              ),
+            ),
+            Expanded(
+              child: TextButton.icon(
+                icon: const Icon(Icons.camera),
+                label: const Text('Carregar da Galeria'),
+                onPressed: () => _takePicture(false),
+              ),
+            ),
+          ],
         ),
       ],
     );

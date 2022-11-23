@@ -33,6 +33,10 @@ class MethodList with ChangeNotifier {
     return _items.where((p) => p.id == matchId).toList();
   }
 
+  List<Method> getSpecificMethodEvaluation(matchId){
+    return _items.where((p) => p.matchmakingId == matchId).toList();
+  }
+
   int get itemsCount {
     return _items.length;
   }
@@ -73,9 +77,10 @@ class MethodList with ChangeNotifier {
             Method(
               id: methodId,
               item: methodData['item'],
-              lastUpdated: DateTime.parse(methodData['lastUpdated']),
+              lastUpdated: methodData['lastUpdated'] == null ? DateTime.now(): DateTime.parse(methodData['lastUpdated']),
               method: methodData['method'].cast<String>() as List<String>,
               team: methodData['team'],
+              isDependent: checkBool(methodData['isDependent']),
               isMethodGood: methodData['isMethodGood'],
               isDeleted: methodData['isDeleted'],
               isComplete: checkBool(methodData['isComplete']),
@@ -135,6 +140,7 @@ class MethodList with ChangeNotifier {
             "method": product.method,
             "team": product.team,
             "item": product.item,
+            "isDependent": false, 
             "latsUpdated": DateTime.now().toIso8601String(),
             "isComplete": product.isComplete,
             "isMethodGood": product.isMethodGood,
@@ -159,6 +165,7 @@ class MethodList with ChangeNotifier {
       method: product.method,
       lastUpdated: DateTime.now(),
       team: product.team,
+      isDependent: false,
       isMethodGood: product.isMethodGood,
       tolerance: product.tolerance,
       isDeleted: product.isDeleted,

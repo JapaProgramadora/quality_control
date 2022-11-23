@@ -160,43 +160,57 @@ class _ObraItemState extends State<ObraItem> {
                 padding: const EdgeInsets.only(top: 60,left: 10,),
                 child: Column(
                   children: [
-                    FittedBox(
-                      fit: BoxFit.cover,
-                      child: Text(
-                        obras.name,
-                        style: const TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              obras.name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 10,),
+                      ],
                     ),
                     Row(
                       children: [
                       const Icon(Icons.house, color: Colors.white,),
                       const Padding(padding: EdgeInsets.only(left: 5)),
-                        Text(
-                          obras.address,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                        Expanded(
+                          child: Text(
+                            obras.address,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
                     ),
                     Row(
                       children: [
-                      Icon(Icons.engineering, color: Colors.white,),
-                      Padding(padding: EdgeInsets.only(left: 5)),
-                      Text(
-                          obras.engineer,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                      const Icon(Icons.engineering, color: Colors.white,),
+                      const Padding(padding: EdgeInsets.only(left: 5)),
+                      Expanded(
+                        child: Text(
+                            obras.engineer,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
+                      ),
                       ],
                     ),
                   ],

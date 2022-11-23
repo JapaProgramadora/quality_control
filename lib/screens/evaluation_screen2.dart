@@ -20,10 +20,12 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
   final _textController = TextEditingController();
+   final _textControllerEngenheiro = TextEditingController();
   bool _isLoading = false;
   bool isOrganized = false;
   bool isEPI = false;
   bool isProductive = false;
+  bool isDependent = false;
   String team = '';
   String newMethod = '';
   String newPlace = '';
@@ -60,14 +62,14 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
     _formData['methodName'] = newMethod;
     _formData['locationId'] = newPlace;
     _formData['toleranceName'] = newTolerance;
-    _formData['error'] = error;
+    _formData['error'] = _textController.text;
     setState(() => _isLoading = true);
 
     try {
       await Provider.of<EvaluationList>(
         context,
         listen: false,
-      ).saveEvaluation(_formData, _pickedImage!);
+      ).saveEvaluation(_formData, _pickedImage);
 
       Navigator.of(context).pop();
     } catch (error) {
@@ -98,7 +100,7 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
     final loadedLocations = arguments['locations'] as List<Location>;
     List<String> allMethods = method.method;
     List<String> allTolerances = method.tolerance;
-    _formData['matchmakingId'] = method.id;
+    _formData['matchmakingId'] = method.matchmakingId;
     _formData['team'] = method.team;
 
     if(allMethods.length == 1){
@@ -198,14 +200,12 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                                 setState(() {
                                   methodValue = escolha;
                                   newMethod = escolha.toString();
-                                  print(newMethod);
                                   for(int i = 0; i < allMethods.length; i++){
                                       if(method.method[i] == escolha){
                                         index = i;
                                       }
                                   }
                                   newTolerance = allTolerances[index];
-                                  print(newTolerance);
                                 });
                               },
                               items: allMethods.map((method) => DropdownMenuItem(
@@ -218,7 +218,7 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                         ],
                       ),
                     ),
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.only(left: 25, top: 10),
                       child: Row(
                         children: [
@@ -236,13 +236,18 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                           ),
                           const SizedBox(height: 15, width: 15,),
                           Container(
-                          width: 100,
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                              methodValue == null? '': allTolerances[index],
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                    methodValue == null? '': allTolerances[index],
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ],
@@ -290,6 +295,41 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                           ),
                         ],
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25, top: 0, bottom: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                              'avaliador:',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 66, 66, 66),
+                              ),
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 25, right: 25),
+                              child: TextField(
+                                controller: _textControllerEngenheiro,
+                                maxLines: 1,
+                                decoration: const InputDecoration(
+                                  hintText: 'Engenheiro Avaliador',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextButton(onPressed: () {
+                      _formData['engineer'] = _textControllerEngenheiro.text;
+                    }, 
+                      child: const Text('OK')
                     ),
                   ],
                 ),
@@ -436,7 +476,7 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                 height: 40,
                 alignment: Alignment.centerLeft,
                 child: const Text(
-                  'n o t a',
+                  's i t u a ç ã o',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
@@ -450,7 +490,49 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                        'avaliação geral:',
+                        'pendente:',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 66, 66, 66),
+                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Transform.scale(
+                        scale: 0.7,
+                        child: RollingSwitch.icon(
+                          onChanged: (bool value) {
+                            if(value == true){
+                              method.changeDependent(true, method);
+                            }else{
+                              method.changeDependent(false, method);
+                            }
+                          },
+                          rollingInfoRight: const RollingIconInfo(
+                            backgroundColor: Colors.greenAccent,
+                            icon: Icons.check,
+                            text: Text(''),
+                          ),
+                          rollingInfoLeft: const RollingIconInfo(
+                            icon: Icons.flag,
+                            backgroundColor: Colors.grey,
+                            text: Text(''),
+                          ),
+                        )
+                      )
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, top: 0, bottom: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                        'conforme:',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 20,
@@ -502,9 +584,9 @@ class _EvaluationScreen2State extends State<EvaluationScreen2> {
                 ),
               ),
               TextButton(onPressed: () {
-                _formData['error'] = _textController.text;
-              }, 
-              child: const Text('OK')
+                _formData['engineer'] = _textControllerEngenheiro.text;
+                }, 
+                child: const Text('OK')
               ),
             ],
           ),

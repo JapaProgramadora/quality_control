@@ -1,15 +1,10 @@
 
 // ignore_for_file: unused_field
 
-import 'package:control/components/stage_grid.dart';
 import 'package:control/components/team_grid.dart';
-import 'package:control/models/item_list.dart';
-import 'package:control/models/obra.dart';
-import 'package:control/screens/team_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/stage_list.dart';
 import '../models/team_list.dart';
 import '../utils/app_routes.dart';
 

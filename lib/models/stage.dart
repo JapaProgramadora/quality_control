@@ -15,6 +15,7 @@ class Stage with ChangeNotifier{
   bool isDeleted;
   DateTime lastUpdated;
   bool isComplete;
+  bool isUpdated;
   bool needFirebase;
   bool hasInternet = false;
 
@@ -26,6 +27,7 @@ class Stage with ChangeNotifier{
     this.isDeleted = false,
     required this.lastUpdated,
     this.needFirebase = false,
+    this.isUpdated = false,
   });
 
   void toggleDeleted(){
@@ -60,6 +62,7 @@ class Stage with ChangeNotifier{
       lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : true,
       isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : true,
+      isUpdated: map['isUpdated'] != null? checkBool(map['isUpdated']) : true,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : true,
     );
   }
@@ -72,6 +75,7 @@ class Stage with ChangeNotifier{
       'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
       'isComplete': boolToSql(isComplete),
+      'isUpdated': boolToSql(isUpdated),
       'needFirebase': boolToSql(needFirebase),
     };
   }
@@ -89,7 +93,7 @@ class Stage with ChangeNotifier{
     }
 
     if(hasInternet == true){
-      final response = await http.patch(
+      await http.patch(
         Uri.parse('${Constants.STAGE_BASE_URL}/$id.json'),
         body: jsonEncode({"isComplete": isComplete}),
       );

@@ -106,7 +106,7 @@ class _ObraScreenState extends State<ObraScreen> {
         onRefresh: () => _refreshObras(context),
         child: Padding(
           padding: const EdgeInsets.only(top: 25),
-          child: ObraGrid(_showDoneOnly,),
+          child: ObraGrid(),
         )
         ),
     );

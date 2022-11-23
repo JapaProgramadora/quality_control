@@ -9,12 +9,13 @@ import 'gallery_item.dart';
 
 class GalleryGrid extends StatelessWidget {
   final String hasInternet;
-  const GalleryGrid({ Key? key, required this.hasInternet}) : super(key: key);
+  final String matchmakingId;
+  const GalleryGrid({ Key? key, required this.hasInternet, required this.matchmakingId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<EvaluationList>(context);
-    final List<Evaluation> loadedEva = provider.items;
+    final List<Evaluation> loadedEva = provider.allMatchingEvaluations(matchmakingId);
     
     return Padding(
         padding: const EdgeInsets.all(10),

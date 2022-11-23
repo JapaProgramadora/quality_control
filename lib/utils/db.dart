@@ -25,11 +25,11 @@ class DB {
         await sql.deleteDatabase(dbPath);
         
         database = await sql.openDatabase(
-          path.join(dbPath, 'teste123.db'),
+          path.join(dbPath, 'teste170.db'),
           onCreate:  (db, version) async {
-            await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');
-            await db.execute('CREATE TABLE IF NOT EXISTS stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, lastUpdated TEXT, isComplete INT, needFirebase INT )');
-            await db.execute('CREATE TABLE IF NOT EXISTS method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, item TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, lastUpdated TEXT, isDeleted INT, isUpdated INT, needFirebase INT)');
+            await db.execute('CREATE TABLE IF NOT EXISTS stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, lastUpdated TEXT, isComplete INT, isUpdated INT, needFirebase INT )');
+            await db.execute('CREATE TABLE IF NOT EXISTS method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, isDependent INT, item TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS evaluation (id TEXT PRIMARY KEY, error TEXT, image TEXT, team TEXT, methodName TEXT, toleranceName TEXT, isEPI INT, isOrganized INT, isProductive INT, evaluationDate TEXT, matchmakingId TEXT, locationId TEXT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');
             await db.execute('CREATE TABLE IF NOT EXISTS location (id TEXT PRIMARY KEY, location TEXT, matchmakingId TEXT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');
@@ -40,13 +40,13 @@ class DB {
       }
       return database;
     }
-    //teste122 eh a versao atual da griselda
+    //169 eh a versao atual da griselda
     database = await sql.openDatabase(
-      path.join(dbPath, 'teste123.db'),
+      path.join(dbPath, 'teste170.db'),
       onCreate:  (db, version) async {
-        await db.execute('CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');
-            await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, lastUpdated TEXT, isComplete INT, needFirebase INT )');
-            await db.execute('CREATE TABLE method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, item TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
+        await db.execute('CREATE TABLE obras(id TEXT PRIMARY KEY, address TEXT, name TEXT, owner TEXT, engineer TEXT, isComplete INT, lastUpdated TEXT, isDeleted INT, isUpdated INT,needFirebase INT)');
+            await db.execute('CREATE TABLE stages (id TEXT PRIMARY KEY, stage TEXT, matchmakingId TEXT, isDeleted INT, lastUpdated TEXT, isComplete INT, isUpdated INT, needFirebase INT )');
+            await db.execute('CREATE TABLE method (id TEXT PRIMARY KEY, tolerance TEXT, method TEXT, isDependent INT, item TEXT, team TEXT, matchmakingId TEXT, isMethodGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
             await db.execute('CREATE TABLE items (id TEXT PRIMARY KEY, item TEXT, description TEXT, endingDate TEXT, beginningDate TEXT, matchmakingId TEXT, isGood INT, lastUpdated TEXT, isDeleted INT, isComplete INT, needFirebase INT)');
             await db.execute('CREATE TABLE evaluation (id TEXT PRIMARY KEY, error TEXT, image TEXT, team TEXT, methodName TEXT, toleranceName TEXT, isEPI INT, isOrganized INT, isProductive INT, evaluationDate TEXT, matchmakingId TEXT, locationId TEXT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');
             await db.execute('CREATE TABLE location (id TEXT PRIMARY KEY, location TEXT, matchmakingId TEXT, lastUpdated TEXT, isDeleted INT, needFirebase INT)');

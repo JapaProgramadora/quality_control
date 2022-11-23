@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:rolling_switch/rolling_switch.dart';
 
 import '../models/evaluation.dart';
-import '../models/method.dart';
 import '../models/method_list.dart';
 
 class EvaluationDetailScreen extends StatelessWidget {
@@ -16,13 +14,14 @@ class EvaluationDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     final evaluation = arguments['evaluation'] as Evaluation;
-    final method = Provider.of<MethodList>(context, listen: false).getSpecificMethod(evaluation.matchmakingId).first;
+    final method = Provider.of<MethodList>(context, listen: false).getSpecificMethodEvaluation(evaluation.matchmakingId).first;
     final hasInternet = arguments['hasInternet'] as String;
   
     
     return Scaffold(
       appBar: AppBar(
-        // title: Text(product.name),
+        backgroundColor: const Color.fromARGB(255, 7, 71, 122),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -30,16 +29,18 @@ class EvaluationDetailScreen extends StatelessWidget {
             SizedBox(
               height: 300,
               width: double.infinity,
-              child: hasInternet == 'yes' 
-              ? Image.network(
-                  evaluation.image,
-                  fit: BoxFit.cover,
-                )
-                : Image.file(
-                    File(evaluation.image),
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                  ),
+              child: evaluation.image == ''
+              ? Container(color: const Color.fromARGB(255, 7, 71, 122),) 
+              : hasInternet == 'yes' 
+                ? Image.network(
+                    evaluation.image,
+                    fit: BoxFit.cover,
+                  )
+                  : Image.file(
+                      File(evaluation.image),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                    ),
             ),
             Container(
                 color: const Color.fromARGB(255, 187, 217, 231),
@@ -91,7 +92,7 @@ class EvaluationDetailScreen extends StatelessWidget {
                                 color: Color.fromARGB(255, 66, 66, 66),
                               ),
                             ),
-                            SizedBox(child: Text(evaluation.methodName)),
+                            Flexible(child: Text(evaluation.methodName)),
                         ],
                       ),
                     ),
@@ -131,6 +132,29 @@ class EvaluationDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                              'engenheiro:',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 66, 66, 66),
+                              ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: SizedBox(
+                              child: Text('Griselda'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -167,8 +191,8 @@ class EvaluationDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(5),
                       child: SizedBox(
                         child: evaluation.isOrganized
-                        ? Text('Conforme')
-                        : Text('Não conforme'),
+                        ? const Text('Conforme')
+                        : const Text('Não conforme'),
                       ),
                     ),
                   ],
@@ -217,8 +241,8 @@ class EvaluationDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(5),
                       child: SizedBox(
                         child: evaluation.isEPI
-                        ? Text('Conforme')
-                        : Text('Não conforme'),
+                        ? const Text('Conforme')
+                        : const Text('Não conforme'),
                       ),
                     ),
                   ],
@@ -231,7 +255,7 @@ class EvaluationDetailScreen extends StatelessWidget {
                 height: 40,
                 alignment: Alignment.centerLeft,
                 child: const Text(
-                  'n o t a',
+                  's i t u a ç ã o',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
@@ -245,7 +269,7 @@ class EvaluationDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                        'avaliação geral:',
+                        'conforme:',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 20,
@@ -259,6 +283,30 @@ class EvaluationDetailScreen extends StatelessWidget {
                         child: method.isMethodGood
                         ? const Text('Conforme')
                         : const Text('Não conforme'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+               Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                        'descrição:',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 66, 66, 66),
+                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: SizedBox(
+                        child: Text(
+                          evaluation.error == ''? 'Sem descrição' : evaluation.error)
                       ),
                     ),
                   ],

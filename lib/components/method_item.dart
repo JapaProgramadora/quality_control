@@ -23,6 +23,7 @@ class MethodItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final method = Provider.of<Method>(context, listen: false);
     String id = method.id.toString();
+    bool isOkay = false;
   
 
     List<Location> loadedLocations = Provider.of<LocationList>(context, listen: false).items;
@@ -58,10 +59,22 @@ class MethodItem extends StatelessWidget {
         },
         child: ListTile(
           leading: Consumer<Method>(
-            builder: (ctx, method, _) => CircleAvatar(
-              backgroundColor: method.isMethodGood ? Colors.green : const Color.fromARGB(255, 238, 80, 68)
+            builder: (ctx, obras, _) => IconButton(
+              onPressed: () {
+                isOkay = !isOkay;
+                obras.changeMethodGood(isOkay, method);
+              },
+              icon: Icon(
+                obras.isMethodGood? Icons.check_box : Icons.check_box_outline_blank,
+              ),
+              color: method.isMethodGood? Colors.green.shade400 : Colors.red.shade400 ,
             ),
           ),
+          // leading: Consumer<Method>(
+          //   builder: (ctx, method, _) => CircleAvatar(
+          //     backgroundColor: method.isDependent ? Colors.yellow : method.isMethodGood ? Colors.green : const Color.fromARGB(255, 238, 80, 68)
+          //   ),
+          // ),
           title: Text(
             method.item,
             style: const TextStyle(

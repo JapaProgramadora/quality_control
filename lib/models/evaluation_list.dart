@@ -28,7 +28,7 @@ class EvaluationList with ChangeNotifier {
   //final categoriesMeal = meals.where((meal){
        //return meal.categories.contains(category.id);
    // }).toList();
-  List<Evaluation> testItems(matchId){
+  List<Evaluation> allMatchingEvaluations(matchId){
     return _items.where((prod) => prod.matchmakingId == matchId).toList();
   }
 
@@ -111,7 +111,7 @@ class EvaluationList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> saveEvaluation(Map<String, Object> data, File image) async {
+  Future<String> saveEvaluation(Map<String, Object> data, File? image) async {
     await onLoad();
     bool hasId = data['id'] != null;
 
@@ -129,7 +129,7 @@ class EvaluationList with ChangeNotifier {
       evaluationDate: data['evaluationDate'] == null ? DateTime.now() : data['evaluationDate'] as DateTime,
       matchmakingId: data['matchmakingId'] as String,
     );
-    
+
     return await addEvaluation(product, image);
   }
 
@@ -142,12 +142,16 @@ class EvaluationList with ChangeNotifier {
 
   }
 
-  Future<String> addEvaluation(Evaluation product, File image) async {
+  Future<String> addEvaluation(Evaluation product, File? image) async {
     String id;
     bool needFirebase;
+    String imageURL = '';
+
     if(hasInternet == true){
       needFirebase = false;
-      String imageURL = await uploadImageFirebase(product, image);
+      if(image != null){
+        imageURL = await uploadImageFirebase(product, image);
+      }
       final response = await http.post(
       Uri.parse('${Constants.ERROR_METHOD_URL}.json'),
       body: jsonEncode(
@@ -178,7 +182,7 @@ class EvaluationList with ChangeNotifier {
 
     Evaluation evaluation = Evaluation(
       id: id,
-      image: image.path,
+      image: image == null? '': image.path,
       error: product.error,
       locationId: product.locationId,
       team: product.team,

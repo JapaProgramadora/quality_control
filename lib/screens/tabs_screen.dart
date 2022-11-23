@@ -84,7 +84,7 @@ class _TabScreenState extends State<TabScreen> with TickerProviderStateMixin{
                 controller: _tabController,
                 children: [
                   MethodScreen(matchmakingId: matchmakingId,),
-                  GalleryGrid(hasInternet: internetConnection),
+                  GalleryGrid(hasInternet: internetConnection, matchmakingId: matchmakingId,),
                 ],
               ),
             )

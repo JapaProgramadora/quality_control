@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(await hasInternetConnection()){
       await Firebase.initializeApp();
       await Provider.of<ObraList>(context, listen: false).loadProducts();
-      // await Provider.of<ObraList>(context, listen: false).checkSQLData();
+      // await Provider.of<ObraList>(context, listen: false).checkData();
       // await Provider.of<ObraList>(context, listen: false).checkUpdate();
       await Future.delayed(const Duration(milliseconds: 1500), () {
         Navigator.pushReplacementNamed(context, AppRoutes.OBRA_SCREEN);

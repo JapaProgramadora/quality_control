@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:control/models/item.dart';
@@ -12,7 +11,6 @@ import '../data/base_data.dart';
 import '../utils/constants.dart';
 import '../utils/db.dart';
 import '../validation/connectivity.dart';
-import 'team_list.dart';
 
 class BaseList with ChangeNotifier { 
   bool hasInternet = false; 

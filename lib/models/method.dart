@@ -22,6 +22,7 @@ class Method with ChangeNotifier{
   String matchmakingId;
   bool isDeleted;
   bool isComplete;
+  bool isDependent;
   DateTime lastUpdated;
   bool hasInternet = false;
   bool needFirebase;
@@ -37,11 +38,31 @@ class Method with ChangeNotifier{
     this.isDeleted = false,
     required this.lastUpdated,
     this.isComplete = false,
+    this.isDependent = false,
     this.needFirebase = false,
   });
 
   onLoad() async {
     hasInternet = await hasInternetConnection();
+  }
+
+  Future<void> changeDependent(bool isOkay, Method method) async {
+    await onLoad();
+    if(isOkay == true){
+      isDependent = true;
+    }else{
+      isDependent = false;
+    }
+
+    if(hasInternet == true){
+      final response = await http.patch(
+        Uri.parse('${Constants.METHOD_BASE_URL}/$id.json'),
+        body: jsonEncode({"isDependent": isDependent}),
+      );
+    }
+
+    await DB.updateInfo('method', method.id, method.toMapSQL());
+    notifyListeners();
   }
 
   Future<void> changeMethodGood(bool isOkay, Method method) async {
@@ -71,6 +92,7 @@ class Method with ChangeNotifier{
       'matchmakingId': matchmakingId,
       'lastUpdated': lastUpdated.toIso8601String(),
       'isDeleted': boolToSql(isDeleted),
+      'isDependent': boolToSql(isDependent),
       'isMethodGood': boolToSql(isMethodGood),
       'isComplete': boolToSql(isComplete),
       'tolerance': tolerance.join(','),
@@ -89,6 +111,7 @@ class Method with ChangeNotifier{
       tolerance: map['tolerance'].split(',') as List<String>,
       lastUpdated: DateTime.parse(map['lastUpdated']),
       isDeleted: map['isDeleted'] != null? checkBool(map['isDeleted']) : false,
+      isDependent: map['isDependent'] != null? checkBool(map['isDependent']) : false,
       isComplete: map['isComplete'] != null? checkBool(map['isComplete']) : false,
       isMethodGood: map['isMethodGood'] != null? checkBool(map['isMethodGood']) : false,
       needFirebase: map['needFirebase'] != null? checkBool(map['needFirebase']) : false,
